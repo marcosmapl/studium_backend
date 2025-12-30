@@ -1,0 +1,313 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+}
+
+model UnidadeFederativa {
+    id    BigInt @id @default(autoincrement())
+    nome  String
+    sigla String
+
+    usuarios Usuario[]
+    cidades  Cidade[]
+
+    @@index([nome])
+    @@index([sigla])
+    @@map("unidade_federativa")
+}
+
+model Cidade {
+    id     BigInt @id @default(autoincrement())
+    cidade String
+
+    unidadeFederativaId BigInt            @map("unidade_federativa_id")
+    unidadeFederativa   UnidadeFederativa @relation(fields: [unidadeFederativaId], references: [id])
+
+    usuarios Usuario[]
+
+    @@index([cidade])
+    @@map("cidade")
+}
+
+model GeneroUsuario {
+    id     BigInt @id @default(autoincrement())
+    genero String
+
+    usuarios Usuario[]
+
+    @@index([genero])
+    @@map("genero_usuario")
+}
+
+model SituacaoUsuario {
+    id       BigInt @id @default(autoincrement())
+    situacao String @unique
+
+    usuarios Usuario[]
+
+    @@index([situacao])
+    @@map("situacao_usuario")
+}
+
+model Usuario {
+    id             BigInt    @id @default(autoincrement())
+    nome           String
+    sobrenome      String
+    username       String    @unique
+    email          String    @unique
+    dataNascimento DateTime? @map("data_nascimento")
+    fotoUrl        String?   @db.VarChar(500)
+    createdAt      DateTime  @default(now()) @map("created_at")
+    updatedAt      DateTime  @updatedAt @map("updated_at")
+
+    generoUsuarioId BigInt        @map("genero_id")
+    generoUsuario   GeneroUsuario @relation(fields: [generoUsuarioId], references: [id])
+
+    cidadeId BigInt @map("cidade_id")
+    cidade   Cidade @relation(fields: [cidadeId], references: [id])
+
+    situacaoUsuarioId BigInt          @map("situacao_id")
+    situacaoUsuario   SituacaoUsuario @relation(fields: [situacaoUsuarioId], references: [id])
+
+    planosEstudo PlanoEstudo[]
+
+    @@index([username])
+    @@index([email])
+    @@index([generoUsuarioId], map: "usuario_genero_id_fkey")
+    @@index([cidadeId], map: "usuario_cidade_id_fkey")
+    @@index([situacaoUsuarioId], map: "usuario_situacao_id_fkey")
+    @@map("usuario")
+}
+
+model SituacaoPlanoEstudo {
+    id       BigInt @id @default(autoincrement())
+    situacao String @unique
+
+    planosEstudo PlanoEstudo[]
+
+    @@index([situacao])
+    @@map("situacao_plano_estudo")
+}
+
+model PlanoEstudo {
+    id              BigInt   @id @default(autoincrement())
+    titulo          String
+    descricao       String
+    questoesAcertos Int      @default(0) @map("questoes_acertos")
+    questoesErros   Int      @default(0) @map("questoes_erros")
+    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
+    paginasLidas    Int      @default(0) @map("paginas_lidas")
+    progresso       Int      @default(0) @map("progresso")
+    concluido       Boolean  @default(false)
+    observacoes     String?
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
+
+    usuarioId BigInt  @map("usuario_id")
+    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+    situacaoId BigInt              @map("situacao_id")
+    situacao   SituacaoPlanoEstudo @relation(fields: [situacaoId], references: [id])
+
+    disciplinas Disciplina[]
+
+    sessoesEstudo SessaoEstudo[]
+
+    revisoes Revisao[]
+
+    @@index([titulo])
+    @@index([usuarioId], map: "planoestudo_usuario_id_fkey")
+    @@index([situacaoId], map: "planoestudo_situacao_id_fkey")
+    @@map("plano_estudo")
+}
+
+model Disciplina {
+    id              BigInt   @id @default(autoincrement())
+    titulo          String
+    descricao       String
+    cor             String
+    importancia     Decimal  @default(0.00) @map("importancia") @db.Decimal(10, 2)
+    conhecimento    Decimal  @default(0.00) @map("conhecimento") @db.Decimal(10, 2)
+    prioridade      Decimal  @default(0.00) @map("prioridade") @db.Decimal(10, 2)
+    questoesAcertos Int      @default(0) @map("questoes_acertos")
+    questoesErros   Int      @default(0) @map("questoes_erros")
+    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
+    paginasLidas    Int      @default(0) @map("paginas_lidas")
+    progresso       Int      @default(0) @map("progresso")
+    concluido       Boolean  @default(false)
+    observacoes     String?
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
+
+    planoId BigInt      @map("plano_id")
+    plano   PlanoEstudo @relation(fields: [planoId], references: [id])
+
+    topicos Topico[]
+
+    sessoesEstudo SessaoEstudo[]
+
+    revisoes Revisao[]
+
+    @@index([titulo])
+    @@index([planoId], map: "disciplina_plano_id_fkey")
+    @@map("disciplina")
+}
+
+model SituacaoTopico {
+    id       BigInt @id @default(autoincrement())
+    situacao String @unique
+
+    topicos Topico[]
+
+    @@index([situacao])
+    @@map("situacao_topico")
+}
+
+model Topico {
+    id              BigInt   @id @default(autoincrement())
+    titulo          String
+    ordem           Int
+    descricao       String   @unique
+    questoesAcertos Int      @default(0) @map("questoes_acertos")
+    questoesErros   Int      @default(0) @map("questoes_erros")
+    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
+    paginasLidas    Int      @default(0) @map("paginas_lidas")
+    concluido       Boolean  @default(false)
+    estabilidade    Float    @default(1.0)
+    dificuldade     Float    @default(5.0)
+    observacoes     String?
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
+
+    disciplinaId BigInt     @map("plano_disciplina_id")
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+
+    situacaoId BigInt         @map("situacao_id")
+    situacao   SituacaoTopico @relation(fields: [situacaoId], references: [id])
+
+    sessoesEstudo SessaoEstudo[]
+
+    revisoes Revisao[]
+
+    @@index([titulo])
+    @@index([disciplinaId], map: "topico_disciplina_id_fkey")
+    @@index([situacaoId], map: "topico_situacao_id_fkey")
+    @@map("topico")
+}
+
+// t = -S x ln(0.9)
+// Difícil = 1.15
+// Mediano = 1.40
+// Fácil = 1.80
+
+model CategoriaSessao {
+    id        BigInt @id @default(autoincrement())
+    categoria String @unique
+
+    sessoesEstudo SessaoEstudo[]
+
+    @@index([categoria])
+    @@map("categoria_sessao")
+}
+
+model SituacaoSessao {
+    id       BigInt @id @default(autoincrement())
+    situacao String @unique
+
+    sessoesEstudo SessaoEstudo[]
+
+    @@index([situacao])
+    @@map("situacao_sessao")
+}
+
+model SessaoEstudo {
+    id               BigInt   @id @default(autoincrement())
+    dataSessao       DateTime @default(now()) @map("data_sessao")
+    questoesAcertos  Int      @default(0) @map("questoes_acertos")
+    questoesErros    Int      @default(0) @map("questoes_erros")
+    tempoEstudo      Float    @default(0.0) @map("tempo_estudo")
+    paginasLidas     Int      @default(0) @map("paginas_lidas")
+    topicoFinalizado Boolean  @default(false) @map("topico_finalizado")
+    observacoes      String?
+    createdAt        DateTime @default(now()) @map("created_at")
+    updatedAt        DateTime @updatedAt @map("updated_at")
+
+    planoEstudoId BigInt      @map("plano_estudo_id")
+    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id])
+
+    disciplinaId BigInt     @map("disciplina_id")
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+
+    topicoId BigInt @map("topico_id")
+    topico   Topico @relation(fields: [topicoId], references: [id])
+
+    categoriaSessaoId BigInt          @map("categoria_id")
+    categoriaSessao   CategoriaSessao @relation(fields: [categoriaSessaoId], references: [id])
+
+    situacaoSessaoId BigInt         @map("situacao_id")
+    situacaoSessao   SituacaoSessao @relation(fields: [situacaoSessaoId], references: [id])
+
+    @@index([dataSessao])
+    @@index([topicoFinalizado])
+    @@index([planoEstudoId], map: "sessao_estudo__plano_estudo_id_fkey")
+    @@index([disciplinaId], map: "sessao_estudo__disciplina_id_fkey")
+    @@index([topicoId], map: "sessao_estudo__topico_id_fkey")
+    @@index([categoriaSessaoId], map: "sessao_estudo__categoria_sessao_id_fkey")
+    @@index([situacaoSessaoId], map: "sessao_estudo__situacao_sessao_id_fkey")
+    @@map("sessao_estudo")
+}
+
+model CategoriaRevisao {
+    id        BigInt @id @default(autoincrement())
+    categoria String @unique
+
+    revisoes Revisao[]
+
+    @@index([categoria])
+    @@map("categoria_revisao")
+}
+
+model SituacaoRevisao {
+    id       BigInt @id @default(autoincrement())
+    situacao String @unique
+
+    revisoes Revisao[]
+
+    @@index([situacao])
+    @@map("situacao_revisao")
+}
+
+model Revisao {
+    id             BigInt   @id @default(autoincrement())
+    dataProgramada DateTime @map("data_programada")
+    dataRealizada  DateTime @map("data_realizada")
+    numero         Int
+    desempenho     Int
+
+    categoriaRevisaoId BigInt           @map("categoria_id")
+    categoriaRevisao   CategoriaRevisao @relation(fields: [categoriaRevisaoId], references: [id])
+
+    situacaoRevisaoId BigInt          @map("situacao_id")
+    situacaoRevisao   SituacaoRevisao @relation(fields: [situacaoRevisaoId], references: [id])
+
+    planoEstudoId BigInt      @map("plano_estudo_id")
+    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id])
+
+    disciplinaId BigInt     @map("disciplina_id")
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+
+    topicoId BigInt @map("topico_id")
+    topico   Topico @relation(fields: [topicoId], references: [id])
+
+    @@index([dataProgramada])
+    @@index([dataRealizada])
+    @@index([categoriaRevisaoId], map: "revisao__categoria_revisao_id_fkey")
+    @@index([situacaoRevisaoId], map: "revisao__situacao_revisao_id_fkey")
+    @@index([planoEstudoId], map: "revisao__plano_estudo_id_fkey")
+    @@index([disciplinaId], map: "revisao__disciplina_id_fkey")
+    @@index([topicoId], map: "revisao__topico_id_fkey")
+    @@map("revisao")
+}
