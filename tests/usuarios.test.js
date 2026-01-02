@@ -123,6 +123,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
       expect(response.status).toBe(201);
@@ -143,6 +145,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
       expect(response.status).toBe(409);
@@ -161,6 +165,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
       expect(response.status).toBe(409);
@@ -191,6 +197,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
       expect(response.status).toBe(201);
@@ -210,6 +218,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
       expect(response.status).toBe(201);
@@ -306,6 +316,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         },
       });
 
@@ -362,6 +374,8 @@ describe("Usuários - /api/usuarios", () => {
           generoUsuarioId: seedData.generoUsuario.id,
           cidadeId: seedData.cidade.id,
           situacaoUsuarioId: seedData.situacaoUsuario.id,
+          unidadeFederativaId: seedData.unidadeFederativa.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
         },
       });
 

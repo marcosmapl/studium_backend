@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const grupoUsuarioController = require("../controllers/grupoUsuarioController");
+const grupoUsuarioController = require("../controllers/GrupoUsuarioController");
 const { verifyToken } = require("../middleware/auth");
 
 
@@ -19,9 +19,9 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - descricao
+ *               - grupo
  *             properties:
- *               descricao:
+ *               grupo:
  *                 type: string
  *                 description: Descrição do grupo de usuário
  *                 example: "ADMINISTRADOR"
@@ -36,15 +36,9 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 descricao:
+ *                 grupo:
  *                   type: string
  *                   example: "ADMINISTRADOR"
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
  *       400:
  *         description: Dados inválidos ou campo obrigatório ausente
  *         content:
@@ -75,15 +69,9 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   descricao:
+ *                   grupo:
  *                     type: string
  *                     example: "ADMINISTRADOR"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                   updatedAt:
- *                     type: string
- *                     format: date-time
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
@@ -91,6 +79,45 @@ const { verifyToken } = require("../middleware/auth");
  */
 router.post("/", verifyToken, grupoUsuarioController.createGrupoUsuario);
 router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
+
+/**
+ * @swagger
+ * /api/gruposUsuario/grupo/{grupo}:
+ *   get:
+ *     summary: Busca grupo de usuário por nome (busca exata)
+ *     tags: [Grupo de Usuário]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: grupo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome do grupo (busca exata)
+ *         example: "Admin"
+ *     responses:
+ *       200:
+ *         description: Grupo de usuário encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 grupo:
+ *                   type: string
+ *                   example: "ADMINISTRADOR"
+ *       404:
+ *         description: Nenhum grupo de usuário encontrado
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/grupo/:grupo", verifyToken, grupoUsuarioController.findGrupoUsuarioByGrupo);
 
 /**
  * @swagger
@@ -118,14 +145,8 @@ router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
  *               properties:
  *                 id:
  *                   type: integer
- *                 descricao:
+ *                 grupo:
  *                   type: string
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
  *       404:
  *         description: Grupo de usuário não encontrado
  *       401:
@@ -152,9 +173,11 @@ router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
  *           schema:
  *             type: object
  *             properties:
- *               descricao:
+ *               id:
+ *                 type: integer
+ *               grupo:
  *                 type: string
- *                 description: Nova descrição do grupo
+ *                 description: Novo nome de grupo
  *                 example: "GERENTE"
  *     responses:
  *       200:
@@ -166,20 +189,14 @@ router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
  *               properties:
  *                 id:
  *                   type: integer
- *                 descricao:
+ *                 grupo:
  *                   type: string
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
  *       400:
  *         description: Dados inválidos
  *       404:
  *         description: Grupo de usuário não encontrado
  *       409:
- *         description: Descrição já cadastrada
+ *         description: Grupo já cadastrado
  *       401:
  *         description: Não autorizado
  *       500:

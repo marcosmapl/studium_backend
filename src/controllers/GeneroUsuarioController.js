@@ -1,6 +1,7 @@
 const BaseController = require("./BaseController");
 const repository = require("../repositories/GeneroUsuarioRepository");
 const logger = require("../config/logger");
+const HttpStatus = require("../utils/httpStatus");
 
 class GeneroUsuarioController extends BaseController {
 
@@ -33,7 +34,7 @@ class GeneroUsuarioController extends BaseController {
                     genero: generoDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({
+                return res.status(HttpStatus.NOT_FOUND).json({
                     error: `Nenhum ${this.entityName} encontrado com esse nome`
                 });
             }

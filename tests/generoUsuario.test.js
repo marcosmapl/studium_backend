@@ -63,7 +63,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
   describe("GET /api/generoUsuario/:id", () => {
     it("deve buscar gênero de usuário por ID", async () => {
       const genero = await prisma.generoUsuario.create({
-        data: { genero: "Masculino" },
+        data: { genero: "Masculino Teste" },
       });
 
       const response = await request(app)
@@ -72,7 +72,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(genero.id);
-      expect(response.body.genero).toBe("Masculino");
+      expect(response.body.genero).toBe("Masculino Teste");
     });
 
     it("deve retornar 404 para gênero inexistente", async () => {

@@ -16,7 +16,7 @@ const authRouter = require("./routes/auth");
 const unidadeFederativaRouter = require("./routes/unidadeFederativa");
 const generoUsuarioRouter = require("./routes/generoUsuario");
 const usuarioRouter = require("./routes/usuario");
-// const grupoUsuarioRouter = require("./routes/grupoUsuario"); // Tabela não existe no schema
+const grupoUsuarioRouter = require("./routes/grupoUsuario");
 // const dashboardRouter = require("./routes/dashboard");
 const healthRouter = require("./routes/health");
 
@@ -104,7 +104,7 @@ app.use("/api", authRouter);
 app.use("/api/unidadeFederativa", unidadeFederativaRouter);
 app.use("/api/generoUsuario", generoUsuarioRouter);
 app.use("/api/usuarios", usuarioRouter);
-// app.use("/api/gruposUsuario", grupoUsuarioRouter); // Tabela não existe no schema
+app.use("/api/gruposUsuario", grupoUsuarioRouter);
 // app.use("/api/dashboard", dashboardRouter);
 app.use("/health", healthRouter);
 

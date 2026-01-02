@@ -52,6 +52,13 @@ const seedBasicData = async () => {
         data: { situacao: "Ativo" },
     });
 
+    // Criar ou buscar grupo de usuário
+    const grupoUsuario = await prisma.grupoUsuario.upsert({
+        where: { grupo: "Administrador" },
+        update: {},
+        create: { grupo: "Administrador" },
+    });
+
     // Hash da senha
     const hashedPassword = await bcrypt.hash("admin123", 10);
 
@@ -66,6 +73,8 @@ const seedBasicData = async () => {
             generoUsuarioId: generoUsuario.id,
             cidadeId: cidade.id,
             situacaoUsuarioId: situacaoUsuario.id,
+            unidadeFederativaId: unidadeFederativa.id,
+            grupoUsuarioId: grupoUsuario.id,
         },
     });
 
@@ -74,6 +83,7 @@ const seedBasicData = async () => {
         cidade,
         generoUsuario,
         situacaoUsuario,
+        grupoUsuario,
         usuario,
     };
 };

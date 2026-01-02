@@ -5,28 +5,31 @@ class PrismaCidadeRepository extends BaseRepository {
     constructor() {
         super("cidade", "CidadeRepository.js", {
             defaultOrderBy: "cidade",
-            orderDirection: "asc"
+            orderDirection: "asc",
+            includeRelations: {
+                usuarios: true,
+            }
         });
     }
 
     /**
      * Busca cidade por nome
-     * @param {string} nomeCidade - Nome da cidade
+     * @param {string} cidade - Nome da cidade
      * @returns {Promise<object|null>} Cidade encontrada ou null
      */
-    async findByNome(nomeCidade) {
-        return await this.findByUniqueField("cidade", nomeCidade);
+    async findByCidade(cidade) {
+        return await this.findByUniqueField("cidade", cidade);
     }
 
     /**
      * Busca cidades por nome (busca parcial)
-     * @param {string} nomeCidade - Nome da cidade para buscar
+     * @param {string} cidade - Nome da cidade para buscar
      * @returns {Promise<Array>} Lista de cidades
      */
-    async findByNomeParcial(nomeCidade) {
+    async findByCidadeParcial(cidade) {
         return await this.findMany({
             cidade: {
-                contains: nomeCidade,
+                contains: cidade,
             },
         });
     }

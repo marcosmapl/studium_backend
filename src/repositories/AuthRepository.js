@@ -35,7 +35,7 @@ class AuthRepository {
         return await prisma.usuario.update({
             where: { id },
             data: {
-                updatedAt: new Date(),
+                ultimoAcesso: new Date(),
             },
         });
     }

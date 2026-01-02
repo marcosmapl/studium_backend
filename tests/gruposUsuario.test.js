@@ -40,33 +40,32 @@ describe("Grupos de Usuário - /api/gruposUsuario", () => {
       .post("/api/gruposUsuario")
       .set("Authorization", `Bearer ${token}`)
       .send({
-        nome: "Vendedores",
-        descricao: "Equipe de vendas",
+        grupo: "Vendedores Teste " + Date.now(),
       });
 
     expect(response.status).toBe(201);
-    expect(response.body.nome).toBe("Vendedores");
+    expect(response.body.grupo).toContain("Vendedores Teste");
   });
 
   it("deve buscar grupo por ID", async () => {
     const response = await request(app)
-      .get(`/api/gruposUsuario/${seedData.grupoAdmin.id}`)
+      .get(`/api/gruposUsuario/${seedData.grupoUsuario.id}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.id).toBe(seedData.grupoAdmin.id);
+    expect(response.body.id).toBe(seedData.grupoUsuario.id);
   });
 
   it("deve atualizar um grupo", async () => {
     const response = await request(app)
-      .put(`/api/gruposUsuario/${seedData.grupoAdmin.id}`)
+      .put(`/api/gruposUsuario/${seedData.grupoUsuario.id}`)
       .set("Authorization", `Bearer ${token}`)
       .send({
-        descricao: "Descrição atualizada",
+        grupo: "Administrador Atualizado " + Date.now(),
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.descricao).toBe("Descrição atualizada");
+    expect(response.body.grupo).toContain("Administrador Atualizado");
   });
 
   it("deve retornar 404 para grupo inexistente", async () => {
@@ -91,8 +90,7 @@ describe("Grupos de Usuário - /api/gruposUsuario", () => {
       .post("/api/gruposUsuario")
       .set("Authorization", `Bearer ${token}`)
       .send({
-        nome: "Administradores", // Nome já existente
-        descricao: "Teste duplicado",
+        grupo: "Administrador", // Nome já existente do seedBasicData
       });
 
     expect(response.status).toBe(409);

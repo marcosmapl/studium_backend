@@ -1,6 +1,7 @@
 const BaseController = require("./BaseController");
 const repository = require("../repositories/CidadeRepository");
 const logger = require("../config/logger");
+const HttpStatus = require("../utils/httpStatus");
 
 class CidadeController extends BaseController {
 
@@ -14,31 +15,31 @@ class CidadeController extends BaseController {
     /**
      * Busca cidades por nome (busca parcial)
      */
-    async findByNome(req, res, next) {
+    async findByCidade(req, res, next) {
         try {
-            const { nome } = req.params;
-            const nomeDecodificado = decodeURIComponent(nome);
+            const { nome: cidade } = req.params;
+            const cidadeDecodificado = decodeURIComponent(cidade);
 
-            logger.info("Buscando cidade por nome", {
-                nome: nomeDecodificado,
+            logger.info("Buscando cidade por nome da cidade", {
+                nome: cidadeDecodificado,
                 route: req.originalUrl,
             });
 
-            const cidades = await this.repository.findByNomeParcial(
-                nomeDecodificado
+            const cidades = await this.repository.findByCidade(
+                cidadeDecodificado
             );
 
-            if (!cidades || cidades.length === 0) {
+            if (!cidade) {
                 logger.info("Nenhuma cidade encontrada com o nome", {
-                    nome: nomeDecodificado,
+                    nome: cidadeDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({
+                return res.status(HttpStatus.NOT_FOUND).json({
                     error: `Nenhuma ${this.entityName} encontrada com esse nome`
                 });
             }
 
-            return res.json(cidades);
+            return res.json(cidade);
         } catch (error) {
             logger.error("Erro ao buscar cidade por nome", {
                 error: error.message,
@@ -70,7 +71,7 @@ class CidadeController extends BaseController {
                     unidadeFederativaId,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({
+                return res.status(HttpStatus.NOT_FOUND).json({
                     error: `Nenhuma ${this.entityName} encontrada para essa Unidade Federativa`
                 });
             }
@@ -94,7 +95,7 @@ module.exports = {
     createCidade: controller.create.bind(controller),
     findAllCidades: controller.findAll.bind(controller),
     findCidadeById: controller.findById.bind(controller),
-    findCidadeByNome: controller.findByNome.bind(controller),
+    findCidadeByCidade: controller.findByCidade.bind(controller),
     findCidadesByUnidadeFederativa: controller.findByUnidadeFederativa.bind(controller),
     updateCidade: controller.update.bind(controller),
     deleteCidade: controller.delete.bind(controller)

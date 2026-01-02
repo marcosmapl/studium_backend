@@ -1,5 +1,7 @@
 const BaseController = require("./BaseController");
 const repository = require("../repositories/UnidadeFederativaRepository");
+const logger = require("../config/logger");
+const HttpStatus = require("../utils/httpStatus");
 
 class UnidadeFederativaController extends BaseController {
 
@@ -32,7 +34,7 @@ class UnidadeFederativaController extends BaseController {
                     nome: nomeDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({
+                return res.status(HttpStatus.NOT_FOUND).json({
                     error: `Nenhuma ${this.entityName} encontrada com esse nome`
                 });
             }
@@ -70,7 +72,7 @@ class UnidadeFederativaController extends BaseController {
                     sigla: siglaDecodificada,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({
+                return res.status(HttpStatus.NOT_FOUND).json({
                     error: `Nenhuma ${this.entityName} encontrada com essa sigla`
                 });
             }

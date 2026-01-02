@@ -1,7 +1,9 @@
 const { PrismaClient } = require("../src/orm/prismaClient");
 const logger = require("../src/config/logger");
+const prisma = require("../src/orm/prismaClient");
 
 async function main() {
+
     logger.info("Seeding database...");
 
     // Seed UnidadeFederativa
@@ -141,7 +143,7 @@ async function main() {
         skipDuplicates: true,
     });
     logger.info("Created 2 GeneroUsuario");
-    
+
     const generoMasculino = await prisma.generoUsuario.findUnique({
         where: { genero: "Masculino" },
     });
@@ -167,6 +169,26 @@ async function main() {
         where: { situacao: "Ativo" },
     });
 
+    // Seed Grupo Usuário
+    await prisma.grupoUsuario.createMany({
+        data: [
+            {
+                grupo: "Administrador",
+            },
+            {
+                grupo: "Básico"
+            },
+            {
+                grupo: "Assinante"
+            }
+        ]
+    });
+    logger.info("Created 3 GrupoUsuario");
+
+    const grupoAdmin = await prisma.grupoUsuario.findUnique({
+        where: { grupo: "Administrador" },
+    });
+
     // Seed Admin User
     await prisma.usuario.createMany({
         data: [
@@ -178,8 +200,10 @@ async function main() {
                 email: "admin@studium.com",
                 dataNascimento: new Date("2026-01-01"),
                 generoUsuarioId: generoMasculino.id,
-                cidadeId: cidadeManaus.id,
                 situacaoUsuarioId: situacaoAtivo.id,
+                cidadeId: cidadeManaus.id,
+                unidadeFederativaId: ufAM.id,
+                grupoUsuarioId: grupoAdmin.id,
                 updatedAt: new Date(),
             },
         ],

@@ -1,14 +1,15 @@
+const { Prisma } = require("@prisma/client");
 const BaseController = require("./BaseController");
 const repository = require("../repositories/UsuarioRepository");
 const logger = require("../config/logger");
-const { Prisma } = require("@prisma/client");
+const HttpStatus = require("../utils/httpStatus");
 
 class UsuarioController extends BaseController {
 
     constructor() {
         super(repository, "usuário", {
             entityNamePlural: "usuários",
-            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuarioId", "cidadeId", "situacaoUsuarioId"]
+            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuarioId", "cidadeId", "situacaoUsuarioId", "unidadeFederativaId", "grupoUsuarioId"]
         });
     }
 
@@ -24,31 +25,23 @@ class UsuarioController extends BaseController {
                 password,
                 email,
                 generoUsuarioId,
-                cidadeId,
                 situacaoUsuarioId,
+                cidadeId,
+                unidadeFederativaId,
+                grupoUsuarioId,
                 dataNascimento,
                 fotoUrl
             } = req.body;
 
             // Validação de campos obrigatórios
-            const requiredFields = [
-                "username",
-                "password",
-                "email",
-                "nome",
-                "sobrenome",
-                "generoUsuarioId",
-                "cidadeId",
-                "situacaoUsuarioId"
-            ];
-            const missingFields = requiredFields.filter((field) => !req.body[field]);
+            const missingFields = this.requiredFields.filter((field) => !req.body[field]);
 
             if (missingFields.length > 0) {
                 logger.warn("Campos obrigatórios ausentes ao criar usuário", {
                     route: req.originalUrl,
                     missingFields,
                 });
-                return res.status(400).json({
+                return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "Campos obrigatórios ausentes",
                     missingFields,
                 });
@@ -61,7 +54,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     email,
                 });
-                return res.status(400).json({
+                return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "Email inválido",
                 });
             }
@@ -71,7 +64,7 @@ class UsuarioController extends BaseController {
                 logger.warn("Senha com menos de 6 caracteres ao criar usuário", {
                     route: req.originalUrl,
                 });
-                return res.status(400).json({
+                return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "A senha deve ter no mínimo 6 caracteres",
                 });
             }
@@ -85,6 +78,8 @@ class UsuarioController extends BaseController {
                 generoUsuarioId: parseInt(generoUsuarioId),
                 cidadeId: parseInt(cidadeId),
                 situacaoUsuarioId: parseInt(situacaoUsuarioId),
+                unidadeFederativaId: parseInt(unidadeFederativaId),
+                grupoUsuarioId: parseInt(grupoUsuarioId),
                 dataNascimento: dataNascimento ? new Date(dataNascimento) : null,
                 fotoUrl: fotoUrl || null
             });
@@ -96,7 +91,7 @@ class UsuarioController extends BaseController {
                 usuarioId: usuario.id,
                 username: usuario.username,
             });
-            return res.status(201).json(usuarioSemSenha);
+            return res.status(HttpStatus.CREATED).json(usuarioSemSenha);
         } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 if (error.code === "P2002") {
@@ -105,7 +100,7 @@ class UsuarioController extends BaseController {
                         route: req.originalUrl,
                         field,
                     });
-                    return res.status(409).json({
+                    return res.status(HttpStatus.CONFLICT).json({
                         error: `Já existe um usuário com este ${field}`,
                     });
                 }
@@ -113,12 +108,12 @@ class UsuarioController extends BaseController {
                     logger.warn("Relação não encontrada ao criar usuário", {
                         route: req.originalUrl,
                     });
-                    return res.status(400).json({
-                        error: "Gênero, cidade ou situação não encontrada",
+                    return res.status(HttpStatus.BAD_REQUEST).json({
+                        error: "Gênero, cidade, situação, unidade federativa ou grupo de usuário não encontrado",
                     });
                 }
                 if (error.code === "P2022") {
-                    return res.status(500).json({
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                         error: "Erro no banco de dados: coluna não encontrada",
                         details:
                             'Execute "npx prisma migrate dev" para sincronizar o schema',
@@ -166,7 +161,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     providedId: req.params.id,
                 });
-                return res.status(400).json({ error: "ID inválido" });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: "ID inválido" });
             }
 
             const usuario = await this.repository.findById(id);
@@ -176,7 +171,7 @@ class UsuarioController extends BaseController {
                     usuarioId: id,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({ error: "Usuário não encontrado" });
+                return res.status(HttpStatus.NOT_FOUND).json({ error: "Usuário não encontrado" });
             }
 
             // Remove a senha da resposta
@@ -188,7 +183,7 @@ class UsuarioController extends BaseController {
                 error instanceof Prisma.PrismaClientKnownRequestError &&
                 error.code === "P2022"
             ) {
-                return res.status(500).json({
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: "Erro no banco de dados: coluna não encontrada",
                     details: 'Execute "npx prisma migrate dev" para sincronizar o schema',
                 });
@@ -212,6 +207,8 @@ class UsuarioController extends BaseController {
                 generoUsuarioId,
                 cidadeId,
                 situacaoUsuarioId,
+                unidadeFederativaId,
+                grupoUsuarioId,
                 dataNascimento,
                 fotoUrl
             } = req.body;
@@ -221,7 +218,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     providedId: req.params.id,
                 });
-                return res.status(400).json({ error: "ID inválido" });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: "ID inválido" });
             }
 
             // Validação de email se fornecido
@@ -233,7 +230,7 @@ class UsuarioController extends BaseController {
                         usuarioId: id,
                         email,
                     });
-                    return res.status(400).json({
+                    return res.status(HttpStatus.BAD_REQUEST).json({
                         error: "Email inválido",
                     });
                 }
@@ -245,7 +242,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     usuarioId: id,
                 });
-                return res.status(400).json({
+                return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "A senha deve ter no mínimo 6 caracteres",
                 });
             }
@@ -259,6 +256,8 @@ class UsuarioController extends BaseController {
             if (generoUsuarioId !== undefined) updateData.generoUsuarioId = parseInt(generoUsuarioId);
             if (cidadeId !== undefined) updateData.cidadeId = parseInt(cidadeId);
             if (situacaoUsuarioId !== undefined) updateData.situacaoUsuarioId = parseInt(situacaoUsuarioId);
+            if (unidadeFederativaId !== undefined) updateData.unidadeFederativaId = parseInt(unidadeFederativaId);
+            if (grupoUsuarioId !== undefined) updateData.grupoUsuarioId = parseInt(grupoUsuarioId);
             if (dataNascimento) updateData.dataNascimento = new Date(dataNascimento);
             if (fotoUrl !== undefined) updateData.fotoUrl = fotoUrl;
 
@@ -279,7 +278,7 @@ class UsuarioController extends BaseController {
                         usuarioId: req.params.id,
                         route: req.originalUrl,
                     });
-                    return res.status(404).json({ error: "Usuário não encontrado" });
+                    return res.status(HttpStatus.NOT_FOUND).json({ error: "Usuário não encontrado" });
                 }
                 if (error.code === "P2002") {
                     const field = error.meta?.target?.[0] || "campo único";
@@ -288,7 +287,7 @@ class UsuarioController extends BaseController {
                         route: req.originalUrl,
                         field,
                     });
-                    return res.status(400).json({
+                    return res.status(HttpStatus.BAD_REQUEST).json({
                         error: `Já existe um usuário com este ${field}`,
                     });
                 }
@@ -297,12 +296,12 @@ class UsuarioController extends BaseController {
                         usuarioId: req.params.id,
                         route: req.originalUrl,
                     });
-                    return res.status(400).json({
-                        error: "Gênero, cidade ou situação não encontrada",
+                    return res.status(HttpStatus.BAD_REQUEST).json({
+                        error: "Gênero, cidade, situação, unidade federativa ou grupo de usuário não encontrado",
                     });
                 }
                 if (error.code === "P2022") {
-                    return res.status(500).json({
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                         error: "Erro no banco de dados: coluna não encontrada",
                         details:
                             'Execute "npx prisma migrate dev" para sincronizar o schema',
@@ -325,21 +324,21 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     providedId: req.params.id,
                 });
-                return res.status(400).json({ error: "ID inválido" });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: "ID inválido" });
             }
 
             await this.repository.delete(id);
             logger.info("Usuário excluído com sucesso", {
                 usuarioId: id,
             });
-            return res.status(204).send();
+            return res.status(HttpStatus.NO_CONTENT).send();
         } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 if (error.code === "P2025") {
-                    return res.status(404).json({ error: "Usuário não encontrado" });
+                    return res.status(HttpStatus.NOT_FOUND).json({ error: "Usuário não encontrado" });
                 }
                 if (error.code === "P2022") {
-                    return res.status(500).json({
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                         error: "Erro no banco de dados: coluna não encontrada",
                         details:
                             'Execute "npx prisma migrate dev" para sincronizar o schema',
@@ -366,7 +365,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     username,
                 });
-                return res.status(400).json({ error: "Nome de usuário inválido" });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: "Nome de usuário inválido" });
             }
 
             const usuario = await this.repository.findByUsername(username);
@@ -376,7 +375,7 @@ class UsuarioController extends BaseController {
                     username,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({ error: "Usuário não encontrado" });
+                return res.status(HttpStatus.NOT_FOUND).json({ error: "Usuário não encontrado" });
             }
 
             // Remove a senha da resposta
@@ -400,7 +399,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     nome,
                 });
-                return res.status(400).json({ error: "Nome inválido" });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: "Nome inválido" });
             }
 
             const usuarios = await this.repository.findByNome(nome);
@@ -425,7 +424,7 @@ class UsuarioController extends BaseController {
                 logger.warn("Email vazio fornecido para busca", {
                     route: req.originalUrl,
                 });
-                return res.status(400).json({ error: "Email inválido" });
+                return res.status(HttpStatus.BAD_REQUEST).json({ error: "Email inválido" });
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -434,7 +433,7 @@ class UsuarioController extends BaseController {
                     route: req.originalUrl,
                     email,
                 });
-                return res.status(400).json({
+                return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "Formato de email inválido",
                 });
             }
@@ -446,7 +445,7 @@ class UsuarioController extends BaseController {
                     email,
                     route: req.originalUrl,
                 });
-                return res.status(404).json({ error: "Usuário não encontrado" });
+                return res.status(HttpStatus.NOT_FOUND).json({ error: "Usuário não encontrado" });
             }
 
             // Remove a senha da resposta

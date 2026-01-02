@@ -2,22 +2,26 @@ const authRepository = require("../repositories/AuthRepository");
 const { generateToken } = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
 const logger = require("../config/logger");
+const HttpStatus = require("../utils/httpStatus");
 
 class AuthController {
+
     /**
      * Método de login
      */
     async login(req, res, next) {
         try {
+            // get user information
             const { username, password } = req.body;
 
+            // bad request
             if (!username || !password) {
                 logger.warn("Tentativa de login sem credenciais completas", {
                     route: req.originalUrl,
                     username: !!username,
                     password: !!password,
                 });
-                return res.status(400).json({
+                return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "Nome de usuário e senha são obrigatórios",
                 });
             }
@@ -29,7 +33,7 @@ class AuthController {
                     route: req.originalUrl,
                     username,
                 });
-                return res.status(401).json({ error: "Credenciais inválidas" });
+                return res.status(HttpStatus.UNAUTHORIZED).json({ error: "Credenciais inválidas" });
             }
 
             // Comparar senha usando bcrypt
@@ -42,8 +46,23 @@ class AuthController {
                     username: usuario.username,
                 });
 
-                return res.status(401).json({
+                // TODO: when user enters the wrong password, reduce the number o remaining attempts  
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
                     error: "Credenciais inválidas",
+                });
+            }
+
+            // Verificar se o usuário está ativo
+            if (usuario.situacaoUsuario.situacao !== "Ativo") {
+                logger.warn("Tentativa de login com usuário não ativo", {
+                    route: req.originalUrl,
+                    usuarioId: usuario.id,
+                    username: usuario.username,
+                    situacao: usuario.situacaoUsuario.situacao,
+                });
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    error: "Usuário não ativo",
                 });
             }
 
@@ -69,6 +88,7 @@ class AuthController {
                 usuario: usuarioSemSenha,
                 token,
             });
+
         } catch (error) {
             logger.error("Erro ao realizar login", {
                 error: error.message,

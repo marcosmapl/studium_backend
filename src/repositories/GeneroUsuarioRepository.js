@@ -5,7 +5,10 @@ class PrismaGeneroUsuarioRepository extends BaseRepository {
     constructor() {
         super("generoUsuario", "GeneroUsuarioRepository.js", {
             defaultOrderBy: "genero",
-            orderDirection: "asc"
+            orderDirection: "asc",
+            includeRelations: {
+                usuarios: true,
+            }
         });
     }
 
