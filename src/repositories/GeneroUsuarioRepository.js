@@ -3,19 +3,32 @@ const BaseRepository = require("./BaseRepository");
 class PrismaGeneroUsuarioRepository extends BaseRepository {
 
     constructor() {
-        super("genero_usuario", "GeneroUsuarioRepository.js", {
+        super("generoUsuario", "GeneroUsuarioRepository.js", {
             defaultOrderBy: "genero",
             orderDirection: "asc"
         });
     }
 
     /**
-     * Busca o gênero de usuaário pela descrição
-     * @param {string} genero - descriçaõ
+     * Busca gênero por nome
+     * @param {string} genero - Nome do gênero
      * @returns {Promise<object|null>} Gênero encontrado ou null
      */
     async findByGenero(genero) {
-        return await this.findByUniqueField("genero", genero.toUpperCase());
+        return await this.findByUniqueField("genero", genero);
+    }
+
+    /**
+     * Busca gêneros por nome (busca parcial)
+     * @param {string} genero - Nome do gênero para buscar
+     * @returns {Promise<Array>} Lista de gêneros
+     */
+    async findByGeneroParcial(genero) {
+        return await this.findMany({
+            genero: {
+                contains: genero,
+            },
+        });
     }
 }
 

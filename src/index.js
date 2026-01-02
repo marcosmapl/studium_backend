@@ -30,28 +30,12 @@ const {
 } = require("./middleware/loggerMiddleware");
 
 // Importação de todas as rotas da API
-const categoriaAtendimentoRouter = require("./routes/categoriaAtendimento");
-const categoriaVeiculoRouter = require("./routes/categoriaVeiculo");
-const clienteRouter = require("./routes/cliente");
-const compraVeiculoRouter = require("./routes/compraVeiculo");
-const dashboardRouter = require("./routes/dashboard");
-const estadoVeiculoRouter = require("./routes/estadoVeiculo");
-const fornecedorRouter = require("./routes/fornecedor");
-const grupoUsuarioRouter = require("./routes/grupoUsuario");
+const authRouter = require("./routes/auth");
 const healthRouter = require("./routes/health");
-const situacaoCompraRouter = require("./routes/situacaoCompra");
-const situacaoLicenciamentoRouter = require("./routes/situacaoLicenciamento");
-const situacaoVeiculoRouter = require("./routes/situacaoVeiculo");
-const situacaoVendaRouter = require("./routes/situacaoVenda");
-const tipoTransmissaoRouter = require("./routes/tipoTransmissao");
-const tipoDirecaoRouter = require("./routes/tipoDirecao");
-const tipoCombustivelRouter = require("./routes/tipoCombustivel");
-const tipoCompraRouter = require("./routes/tipoCompra");
-const tipoVendaRouter = require("./routes/tipoVenda");
-const unidadesRouter = require("./routes/unidade");
+// const grupoUsuarioRouter = require("./routes/grupoUsuario");
+const unidadeFederativaRouter = require("./routes/unidadeFederativa");
+const generoUsuarioRouter = require("./routes/generoUsuario");
 const usuarioRouter = require("./routes/usuario");
-const vehiclesRouter = require("./routes/veiculo");
-const vendaVeiculoRouter = require("./routes/vendaVeiculo");
 
 // Inicialização da aplicação Express
 const app = express();
@@ -151,44 +135,18 @@ app.get("/api", (req, res) => res.redirect("/api-docs"));
  * Cada módulo da aplicação possui seu próprio conjunto de rotas
  */
 
-// ===== CONFIGURAÇÕES DE VEÍCULOS =====
-app.use("/api/categoriasVeiculo", categoriaVeiculoRouter); // Categorias (SUV, Sedan, etc)
-app.use("/api/estadosVeiculo", estadoVeiculoRouter); // Estado físico (Novo, Usado, Revisado)
-app.use("/api/tiposCombustivel", tipoCombustivelRouter); // Tipos de combustível (Gasolina, Diesel, etc)
-app.use("/api/tiposTransmissao", tipoTransmissaoRouter); // Transmissão (Manual, Automática)
-app.use("/api/tiposDirecao", tipoDirecaoRouter); // Tipos de direção (Hidráulica, Elétrica)
-
-// ===== GESTÃO DE VEÍCULOS =====
-app.use("/api/veiculos", vehiclesRouter); // CRUD de veículos
-app.use("/api/situacoesVeiculo", situacaoVeiculoRouter); // Situação do veículo (Disponível, Vendido)
-
-// ===== GESTÃO DE CLIENTES =====
-app.use("/api/clientes", clienteRouter); // CRUD de clientes
+// ===== AUTENTICAÇÃO =====
+app.use("/api", authRouter); // Rotas de login, logout e gestão de tentativas
 
 // ===== GESTÃO DE UNIDADES =====
-app.use("/api/unidades", unidadesRouter); // Filiais/Unidades da empresa
+app.use("/api/unidades", unidadeFederativaRouter); // Filiais/Unidades da empresa
 
 // ===== GESTÃO DE USUÁRIOS E PERMISSÕES =====
+app.use("/api/generoUsuario", generoUsuarioRouter); // Gêneros de usuário
 app.use("/api/usuarios", usuarioRouter); // CRUD de usuários
-app.use("/api/gruposUsuario", grupoUsuarioRouter); // Grupos de permissões
-
-// ===== GESTÃO DE COMPRAS =====
-app.use("/api/fornecedores", fornecedorRouter); // CRUD de fornecedores
-app.use("/api/comprasVeiculos", compraVeiculoRouter); // Registro de compras de veículos
-app.use("/api/tiposCompra", tipoCompraRouter); // Tipos de compra (Direta, Leilão, etc)
-app.use("/api/situacoesCompra", situacaoCompraRouter); // Status da compra (Pendente, Concluída)
-
-// ===== GESTÃO DE VENDAS =====
-app.use("/api/vendasVeiculos", vendaVeiculoRouter); // Registro de vendas de veículos
-app.use("/api/tiposVenda", tipoVendaRouter); // Tipos de venda (À Vista, Financiamento, etc)
-app.use("/api/situacoesVenda", situacaoVendaRouter); // Status da venda (Em Negociação, Concluída)
-app.use("/api/situacoesLicenciamento", situacaoLicenciamentoRouter); // Gestão de situações de licenciamento
-
-// ===== GESTÃO DE ATENDIMENTOS =====
-app.use("/api/categoriasAtendimento", categoriaAtendimentoRouter); // Categorias de atendimento (Dúvida, Reclamação, etc)
+// app.use("/api/gruposUsuario", grupoUsuarioRouter); // Grupos de permissões
 
 // ===== MONITORAMENTO E ANALYTICS =====
-app.use("/api/dashboard", dashboardRouter); // KPIs e métricas do dashboard
 app.use("/health", healthRouter); // Health check da aplicação
 
 /**
@@ -226,20 +184,20 @@ app.listen(port, () => {
  * Garante que o servidor feche todas as conexões adequadamente
  * antes de encerrar o processo
  */
-const prisma = require("./orm/prismaClient");
+// const prisma = require("./orm/prismaClient");
 
-// Escuta sinais de término do sistema operacional
-["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
-  process.on(signal, async () => {
-    logger.info("Iniciando desligamento gracioso do servidor...", { signal });
+// // Escuta sinais de término do sistema operacional
+// ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+//   process.on(signal, async () => {
+//     logger.info("Iniciando desligamento gracioso do servidor...", { signal });
 
-    // Desconecta do banco de dados Prisma
-    await prisma.$disconnect();
+//     // Desconecta do banco de dados Prisma
+//     await prisma.$disconnect();
 
-    logger.info("Servidor desligado com sucesso");
-    process.exit(0);
-  });
-});
+//     logger.info("Servidor desligado com sucesso");
+//     process.exit(0);
+//   });
+// });
 
 /**
  * Tratamento de Exceções Não Capturadas

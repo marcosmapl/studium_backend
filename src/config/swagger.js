@@ -8,13 +8,13 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "SIGA Backend API",
-            version: "1.2.0",
-            description: "API REST para gestão integrada de concessionária de carros",
+            title: "Studium Backend API",
+            version: "1.0.0",
+            description: "API REST integrada para planejamento e gestão do seu estudo",
             contact: {
                 name: "MAPL IT Solutions",
                 email: "suporte@maplitsolutions.com.br",
-                url: "https://github.com/marcosmapl/siga_backend",
+                url: "https://github.com/marcosmapl/studium_backend",
             },
             license: {
                 name: "MIT",
@@ -27,7 +27,7 @@ const options = {
                 description: "Servidor de Desenvolvimento",
             },
             {
-                url: "https://api.siga.com.br",
+                url: "https://api.studium.com.br",
                 description: "Servidor de Produção",
             },
         ],
@@ -84,80 +84,20 @@ const options = {
                 description: "Endpoints de autenticação e gerenciamento de usuários",
             },
             {
-                name: "Categorias de Veículos",
-                description: "Gerenciamento de categorias de veículos",
+                name: "Cidade",
+                description: "Endpoints de cidades",
             },
             {
-                name: "Clientes",
-                description: "Gerenciamento de clientes",
+                name: "Gênero de Usuário",
+                description: "Endpoints de gêneros de usuários",
             },
             {
-                name: "Compras de Veículos",
-                description: "Gerenciamento de compras de veículos de fornecedores",
+                name: "Grupo de Usuário",
+                description: "Endpoints de grupos de usuários",
             },
             {
-                name: "Estados de Veículo",
-                description: "Gerenciamento de estados de veículos",
-            },
-            {
-                name: "Compras",
-                description: "Gerenciamento de compras de veículos",
-            },
-            {
-                name: "Fornecedores",
-                description: "Gerenciamento de fornecedores",
-            },
-            {
-                name: "Grupos de Usuário",
-                description: "Gerenciamento de grupos de usuário",
-            },
-            {
-                name: "Situações de Compra",
-                description: "Gerenciamento de situações de compra",
-            },
-            {
-                name: "Situações de Licenciamento",
-                description: "Gerenciamento de situações de licenciamento",
-            },
-            {
-                name: "Situações de Veículo",
-                description: "Gerenciamento de situações de veículo",
-            },
-            {
-                name: "Situações de Venda",
-                description: "Gerenciamento de situações de venda",
-            },
-            {
-                name: "Tipos de Combustível",
-                description: "Gerenciamento de tipos de combustível",
-            },
-            {
-                name: "Tipos de Compra",
-                description: "Gerenciamento de tipos de compra",
-            },
-            {
-                name: "Tipos de Direção",
-                description: "Gerenciamento de tipos de direção",
-            },
-            {
-                name: "Tipos de Transmissão",
-                description: "Gerenciamento de tipos de transmissão",
-            },
-            {
-                name: "Tipos de Venda",
-                description: "Gerenciamento de tipos de venda",
-            },
-            {
-                name: "Unidades",
-                description: "Gerenciamento de tipos de unidades",
-            },
-            {
-                name: "Veículos",
-                description: "Gerenciamento de veículos",
-            },
-            {
-                name: "Vendas de Veículos",
-                description: "Gerenciamento de vendas de veículos",
+                name: "Unidade Federativa",
+                description: "Gerenciamento de unidades federativas",
             },
             {
                 name: "Dashboard",

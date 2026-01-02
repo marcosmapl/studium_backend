@@ -1,94 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const usuarioController = require("../controllers/usuarioController");
+const usuarioController = require("../controllers/UsuarioController");
 const { verifyToken } = require("../middleware/auth");
-
-/**
- * @swagger
- * /api/usuarios/login:
- *   post:
- *     tags:
- *       - Autenticação
- *     summary: Fazer login na aplicação
- *     description: Autentica um usuário e retorna um token JWT
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - nomeUsuario
- *               - senha
- *             properties:
- *               nomeUsuario:
- *                 type: string
- *                 example: admin
- *               senha:
- *                 type: string
- *                 format: password
- *                 example: senha123
- *     responses:
- *       200:
- *         description: Login bem-sucedido
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: true
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *                 usuario:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     nomeUsuario:
- *                       type: string
- *                       example: admin
- *                     nomeFuncionario:
- *                       type: string
- *                       example: João Silva
- *       401:
- *         description: Credenciais inválidas
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.post("/login", usuarioController.login);
-
-/**
- * @swagger
- * /api/usuarios/logout:
- *   post:
- *     summary: Fazer logout da aplicação
- *     tags: [Autenticação]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Logout bem-sucedido
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Logout realizado com sucesso"
- *       401:
- *         description: Não autorizado
- *       500:
- *         description: Erro interno do servidor
- */
-router.post("/logout", verifyToken, usuarioController.logout);
 
 /**
  * @swagger
@@ -291,16 +204,16 @@ router.get("/", verifyToken, usuarioController.findAllUsuarios);
  *         description: Erro interno do servidor
  */
 router.get(
-  "/nomeUsuario/:nomeUsuario",
+  "/username/:username",
   verifyToken,
-  usuarioController.findByNomeUsuario
+  usuarioController.findByUsername
 );
 
 /**
  * @swagger
- * /api/usuarios/nomeFuncionario/{nome}:
+ * /api/usuarios/nome/{nome}:
  *   get:
- *     summary: Busca usuários por nome de funcionário
+ *     summary: Busca usuários por nome
  *     tags: [Usuários]
  *     security:
  *       - bearerAuth: []
@@ -310,7 +223,7 @@ router.get(
  *         required: true
  *         schema:
  *           type: string
- *         description: Nome do funcionário (busca parcial)
+ *         description: Nome do usuário (busca parcial)
  *         example: "João"
  *     responses:
  *       200:
@@ -324,15 +237,19 @@ router.get(
  *                 properties:
  *                   id:
  *                     type: integer
- *                   nomeUsuario:
+ *                   username:
  *                     type: string
- *                   nomeFuncionario:
+ *                   nome:
+ *                     type: string
+ *                   sobrenome:
  *                     type: string
  *                   email:
  *                     type: string
- *                   grupoUsuarioId:
+ *                   generoUsuarioId:
  *                     type: integer
- *                   unidadeId:
+ *                   cidadeId:
+ *                     type: integer
+ *                   situacaoUsuarioId:
  *                     type: integer
  *                   createdAt:
  *                     type: string
@@ -348,9 +265,9 @@ router.get(
  *         description: Erro interno do servidor
  */
 router.get(
-  "/nomeFuncionario/:nome",
+  "/nome/:nome",
   verifyToken,
-  usuarioController.findByNomeFuncionario
+  usuarioController.findByNome
 );
 
 /**

@@ -4,18 +4,18 @@ class PrismaUsuarioRepository extends BaseRepository {
 
     constructor() {
         super("usuario", "UsuarioRepository.js", {
-            defaultOrderBy: "nomeFuncionario",
+            defaultOrderBy: "nome",
             orderDirection: "asc"
         });
     }
 
     /**
-     * Busca usuário por nome de usuário
-     * @param {string} nomeUsuario - Nome de usuário
+     * Busca usuário por username
+     * @param {string} username - Username do usuário
      * @returns {Promise<object|null>} Usuário encontrado ou null
      */
-    async findByNomeUsuario(nomeUsuario) {
-        return await this.findByUniqueField("nomeUsuario", nomeUsuario);
+    async findByUsername(username) {
+        return await this.findByUniqueField("username", username);
     }
 
     /**
@@ -28,37 +28,15 @@ class PrismaUsuarioRepository extends BaseRepository {
     }
 
     /**
-     * Busca usuários por nome de funcionário (busca parcial)
-     * @param {string} nomeFuncionario - Nome para buscar
+     * Busca usuários por nome (busca parcial)
+     * @param {string} nome - Nome para buscar
      * @returns {Promise<Array>} Lista de usuários
      */
-    async findByNomeFuncionario(nomeFuncionario) {
+    async findByNome(nome) {
         return await this.findMany({
-            nomeFuncionario: {
-                contains: nomeFuncionario,
+            nome: {
+                contains: nome,
             },
-        });
-    }
-
-    /**
-     * Atualiza tentativas de login
-     * @param {number} id - ID do usuário
-     * @param {number} tentativasRestantes - Número de tentativas restantes
-     * @returns {Promise<object>} Usuário atualizado
-     */
-    async updateLoginAttempts(id, tentativasRestantes) {
-        return await this.update(id, { tentativasRestantes });
-    }
-
-    /**
-     * Atualiza data do último acesso e reseta tentativas
-     * @param {number} id - ID do usuário
-     * @returns {Promise<object>} Usuário atualizado
-     */
-    async updateUltimoAcesso(id) {
-        return await this.update(id, {
-            dataUltimoAcesso: new Date(),
-            tentativasRestantes: 5,
         });
     }
 }

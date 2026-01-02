@@ -26,27 +26,27 @@ describe("Usuários - /api/usuarios", () => {
     await prisma.$disconnect();
   });
 
-  describe("POST /api/usuarios/login", () => {
+  describe("POST /api/login", () => {
     it("deve fazer login com credenciais válidas", async () => {
       const response = await request(app)
-        .post("/api/usuarios/login")
+        .post("/api/login")
         .send({
-          nomeUsuario: "admin",
-          senha: "admin123",
+          username: "admin",
+          password: "admin123",
         });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("token");
       expect(response.body).toHaveProperty("usuario");
-      expect(response.body.usuario.nomeUsuario).toBe("admin");
+      expect(response.body.usuario.username).toBe("admin");
     });
 
     it("deve rejeitar login com credenciais inválidas", async () => {
       const response = await request(app)
-        .post("/api/usuarios/login")
+        .post("/api/login")
         .send({
-          nomeUsuario: "admin",
-          senha: "senhaerrada",
+          username: "admin",
+          password: "senhaerrada",
         });
 
       expect(response.status).toBe(401);
@@ -54,7 +54,7 @@ describe("Usuários - /api/usuarios", () => {
 
     it("deve rejeitar login sem credenciais", async () => {
       const response = await request(app)
-        .post("/api/usuarios/login")
+        .post("/api/login")
         .send({});
 
       expect(response.status).toBe(400);
@@ -62,20 +62,20 @@ describe("Usuários - /api/usuarios", () => {
 
     it("deve rejeitar login com usuário inexistente", async () => {
       const response = await request(app)
-        .post("/api/usuarios/login")
+        .post("/api/login")
         .send({
-          nomeUsuario: "usuarioinexistente",
-          senha: "senha123",
+          username: "usuarioinexistente",
+          password: "senha123",
         });
 
       expect(response.status).toBe(401);
     });
   });
 
-  describe("POST /api/usuarios/logout", () => {
+  describe("POST /api/logout", () => {
     it("deve fazer logout com sucesso", async () => {
       const response = await request(app)
-        .post("/api/usuarios/logout")
+        .post("/api/logout")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
@@ -84,7 +84,7 @@ describe("Usuários - /api/usuarios", () => {
 
     it("deve rejeitar logout sem token", async () => {
       const response = await request(app)
-        .post("/api/usuarios/logout");
+        .post("/api/logout");
 
       expect(response.status).toBe(401);
     });
@@ -115,15 +115,18 @@ describe("Usuários - /api/usuarios", () => {
         .post("/api/usuarios")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeUsuario: "vendedor1",
-          nomeFuncionario: "João Vendedor",
-          senha: "senha123",
+          username: "vendedor1",
+          nome: "João",
+          sobrenome: "Vendedor",
+          password: "senha123",
           email: "vendedor1@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         });
 
       expect(response.status).toBe(201);
-      expect(response.body.nomeUsuario).toBe("vendedor1");
+      expect(response.body.username).toBe("vendedor1");
       expect(response.body.email).toBe("vendedor1@test.com");
     });
 
@@ -132,26 +135,32 @@ describe("Usuários - /api/usuarios", () => {
         .post("/api/usuarios")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeUsuario: "vendedor2",
-          nomeFuncionario: "Maria Vendedora",
-          senha: "senha123",
+          username: "vendedor2",
+          nome: "Maria",
+          sobrenome: "Vendedora",
+          password: "senha123",
           email: "admin@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         });
 
       expect(response.status).toBe(409);
     });
 
-    it("deve rejeitar criação com nomeUsuario duplicado", async () => {
+    it("deve rejeitar criação com username duplicado", async () => {
       const response = await request(app)
         .post("/api/usuarios")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeUsuario: "admin",
-          nomeFuncionario: "Outro Admin",
-          senha: "senha123",
+          username: "admin",
+          nome: "Outro",
+          sobrenome: "Admin",
+          password: "senha123",
           email: "outroadmin@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         });
 
       expect(response.status).toBe(409);
@@ -162,7 +171,7 @@ describe("Usuários - /api/usuarios", () => {
         .post("/api/usuarios")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeUsuario: "incomplete",
+          username: "incomplete",
         });
 
       expect(response.status).toBe(400);
@@ -174,11 +183,14 @@ describe("Usuários - /api/usuarios", () => {
         .post("/api/usuarios")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeUsuario: "testuser",
-          nomeFuncionario: "Test User",
-          senha: "senha123",
+          username: "testuser",
+          nome: "Test",
+          sobrenome: "User",
+          password: "senha123",
           email: "testuser@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         });
 
       expect(response.status).toBe(201);
@@ -190,15 +202,18 @@ describe("Usuários - /api/usuarios", () => {
         .post("/api/usuarios")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeUsuario: "testuser2",
-          nomeFuncionario: "Test User 2",
-          senha: "senha123",
+          username: "testuser2",
+          nome: "Test",
+          sobrenome: "User 2",
+          password: "senha123",
           email: "test2@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         });
 
       expect(response.status).toBe(201);
-      expect(response.body.nomeUsuario).toBe("testuser2");
+      expect(response.body.username).toBe("testuser2");
     });
   });
 
@@ -235,11 +250,13 @@ describe("Usuários - /api/usuarios", () => {
         .put(`/api/usuarios/${seedData.usuario.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeFuncionario: "Admin Atualizado",
+          nome: "Admin",
+          sobrenome: "Atualizado",
         });
 
       expect(response.status).toBe(200);
-      expect(response.body.nomeFuncionario).toBe("Admin Atualizado");
+      expect(response.body.nome).toBe("Admin");
+      expect(response.body.sobrenome).toBe("Atualizado");
     });
 
     it("deve retornar 404 ao atualizar usuário inexistente", async () => {
@@ -247,7 +264,7 @@ describe("Usuários - /api/usuarios", () => {
         .put("/api/usuarios/99999")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nomeFuncionario: "Teste",
+          nome: "Teste",
         });
 
       expect(response.status).toBe(404);
@@ -270,7 +287,7 @@ describe("Usuários - /api/usuarios", () => {
         .put(`/api/usuarios/${seedData.usuario.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send({
-          senha: "novasenha123",
+          password: "novasenha123",
         });
 
       expect(response.status).toBe(200);
@@ -281,11 +298,14 @@ describe("Usuários - /api/usuarios", () => {
     it("deve excluir um usuário", async () => {
       const newUser = await prisma.usuario.create({
         data: {
-          nomeUsuario: "user_to_delete",
-          nomeFuncionario: "User Delete",
-          senha: "senha123",
+          username: "user_to_delete",
+          nome: "User",
+          sobrenome: "Delete",
+          password: "senha123",
           email: "delete@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         },
       });
 
@@ -310,40 +330,43 @@ describe("Usuários - /api/usuarios", () => {
     });
   });
 
-  describe("GET /api/usuarios/nomeUsuario/:nomeUsuario", () => {
+  describe("GET /api/usuarios/username/:username", () => {
     it("deve buscar usuário por nome de usuário", async () => {
       const response = await request(app)
-        .get("/api/usuarios/nomeUsuario/admin")
+        .get("/api/usuarios/username/admin")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.nomeUsuario).toBe("admin");
-      expect(response.body).not.toHaveProperty("senha");
+      expect(response.body.username).toBe("admin");
+      expect(response.body).not.toHaveProperty("password");
     });
 
     it("deve retornar 404 para nome de usuário inexistente", async () => {
       const response = await request(app)
-        .get("/api/usuarios/nomeUsuario/usuarioinexistente")
+        .get("/api/usuarios/username/usuarioinexistente")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(404);
     });
   });
 
-  describe("GET /api/usuarios/nomeFuncionario/:nome", () => {
-    it("deve buscar usuários por nome de funcionário", async () => {
+  describe("GET /api/usuarios/nome/:nome", () => {
+    it("deve buscar usuários por nome", async () => {
       await prisma.usuario.create({
         data: {
-          nomeUsuario: "joao123",
-          nomeFuncionario: "João Silva",
-          senha: "senha123",
+          username: "joao123",
+          nome: "João",
+          sobrenome: "Silva",
+          password: "senha123",
           email: "joao@test.com",
-          grupoUsuarioId: seedData.grupoAdmin.id,
+          generoUsuarioId: seedData.generoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
         },
       });
 
       const response = await request(app)
-        .get("/api/usuarios/nomeFuncionario/João")
+        .get("/api/usuarios/nome/João")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
@@ -353,7 +376,7 @@ describe("Usuários - /api/usuarios", () => {
 
     it("deve retornar lista vazia para nome não encontrado", async () => {
       const response = await request(app)
-        .get("/api/usuarios/nomeFuncionario/NomeInexistente123")
+        .get("/api/usuarios/nome/NomeInexistente123")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
@@ -370,7 +393,7 @@ describe("Usuários - /api/usuarios", () => {
 
       expect(response.status).toBe(200);
       expect(response.body.email).toBe("admin@test.com");
-      expect(response.body).not.toHaveProperty("senha");
+      expect(response.body).not.toHaveProperty("password");
     });
 
     it("deve retornar 404 para email inexistente", async () => {

@@ -12,27 +12,12 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger");
 
 // Importação de todas as rotas da API
-const vehiclesRouter = require("./routes/veiculo");
-const tipoCombustivelRouter = require("./routes/tipoCombustivel");
-const unidadesRouter = require("./routes/unidade");
+const authRouter = require("./routes/auth");
+const unidadeFederativaRouter = require("./routes/unidadeFederativa");
+const generoUsuarioRouter = require("./routes/generoUsuario");
 const usuarioRouter = require("./routes/usuario");
-const grupoUsuarioRouter = require("./routes/grupoUsuario");
-const categoriaAtendimentoRouter = require("./routes/categoriaAtendimento");
-const categoriaVeiculoRouter = require("./routes/categoriaVeiculo");
-const tipoTransmissaoRouter = require("./routes/tipoTransmissao");
-const tipoDirecaoRouter = require("./routes/tipoDirecao");
-const situacaoLicenciamentoRouter = require("./routes/situacaoLicenciamento");
-const situacaoVeiculoRouter = require("./routes/situacaoVeiculo");
-const estadoVeiculoRouter = require("./routes/estadoVeiculo");
-const clienteRouter = require("./routes/cliente");
-const fornecedorRouter = require("./routes/fornecedor");
-const compraVeiculoRouter = require("./routes/compraVeiculo");
-const tipoCompraRouter = require("./routes/tipoCompra");
-const situacaoCompraRouter = require("./routes/situacaoCompra");
-const vendaVeiculoRouter = require("./routes/vendaVeiculo");
-const tipoVendaRouter = require("./routes/tipoVenda");
-const situacaoVendaRouter = require("./routes/situacaoVenda");
-const dashboardRouter = require("./routes/dashboard");
+// const grupoUsuarioRouter = require("./routes/grupoUsuario"); // Tabela não existe no schema
+// const dashboardRouter = require("./routes/dashboard");
 const healthRouter = require("./routes/health");
 
 const app = express();
@@ -63,10 +48,10 @@ app.use(bodyParser.json());
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: SIGA Backend API
+ *                   example: Studium Backend API
  *                 version:
  *                   type: string
- *                   example: 1.2.0
+ *                   example: 1.0.0
  *                 environment:
  *                   type: string
  *                   example: development
@@ -84,19 +69,19 @@ app.use(bodyParser.json());
  *                       example: /api-docs
  *                     documentation:
  *                       type: string
- *                       example: https://github.com/marcosmapl/siga_backend
+ *                       example: https://github.com/marcosmapl/studium_backend
  */
 app.get("/", (req, res) =>
   res.json({
     ok: true,
-    message: "SIGA Backend API",
-    version: "1.2.0",
+    message: "Studium Backend API",
+    version: "1.0.0",
     environment: process.env.NODE_ENV || "development",
     endpoints: {
       health: "/health",
       healthDb: "/health/db",
       api: "/api-docs",
-      documentation: "https://github.com/marcosmapl/siga_backend",
+      documentation: "https://github.com/marcosmapl/studium_backend",
     },
   })
 );
@@ -107,7 +92,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     customCss: ".swagger-ui .topbar { display: none }",
-    customSiteTitle: "SIGA API Documentation",
+    customSiteTitle: "Studium API Documentation",
   })
 );
 
@@ -115,27 +100,12 @@ app.use(
 app.get("/api", (req, res) => res.redirect("/api-docs"));
 
 // Registro de rotas
-app.use("/api/veiculos", vehiclesRouter);
-app.use("/api/tiposCombustivel", tipoCombustivelRouter);
-app.use("/api/categoriasAtendimento", categoriaAtendimentoRouter);
-app.use("/api/categoriasVeiculo", categoriaVeiculoRouter);
-app.use("/api/tiposTransmissao", tipoTransmissaoRouter);
-app.use("/api/tiposDirecao", tipoDirecaoRouter);
-app.use("/api/situacoesLicenciamento", situacaoLicenciamentoRouter);
-app.use("/api/situacoesVeiculo", situacaoVeiculoRouter);
-app.use("/api/estadosVeiculo", estadoVeiculoRouter);
-app.use("/api/unidades", unidadesRouter);
+app.use("/api", authRouter);
+app.use("/api/unidadeFederativa", unidadeFederativaRouter);
+app.use("/api/generoUsuario", generoUsuarioRouter);
 app.use("/api/usuarios", usuarioRouter);
-app.use("/api/gruposUsuario", grupoUsuarioRouter);
-app.use("/api/clientes", clienteRouter);
-app.use("/api/fornecedores", fornecedorRouter);
-app.use("/api/comprasVeiculos", compraVeiculoRouter);
-app.use("/api/tiposCompra", tipoCompraRouter);
-app.use("/api/situacoesCompra", situacaoCompraRouter);
-app.use("/api/vendasVeiculos", vendaVeiculoRouter);
-app.use("/api/tiposVenda", tipoVendaRouter);
-app.use("/api/situacoesVenda", situacaoVendaRouter);
-app.use("/api/dashboard", dashboardRouter);
+// app.use("/api/gruposUsuario", grupoUsuarioRouter); // Tabela não existe no schema
+// app.use("/api/dashboard", dashboardRouter);
 app.use("/health", healthRouter);
 
 // Tratamento de erros

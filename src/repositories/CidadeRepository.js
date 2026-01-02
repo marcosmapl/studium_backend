@@ -10,13 +10,38 @@ class PrismaCidadeRepository extends BaseRepository {
     }
 
     /**
-     * Busca a cidade pelo nome da cidade
-     * @param {string} cidade - nome da cidade
-     * @returns {Promise<object|null>} Cidade encontrado ou null
+     * Busca cidade por nome
+     * @param {string} nomeCidade - Nome da cidade
+     * @returns {Promise<object|null>} Cidade encontrada ou null
      */
-    async findByCidade(cidade) {
-        return await this.findByUniqueField("cidade", cidade.toUpperCase());
+    async findByNome(nomeCidade) {
+        return await this.findByUniqueField("cidade", nomeCidade);
     }
+
+    /**
+     * Busca cidades por nome (busca parcial)
+     * @param {string} nomeCidade - Nome da cidade para buscar
+     * @returns {Promise<Array>} Lista de cidades
+     */
+    async findByNomeParcial(nomeCidade) {
+        return await this.findMany({
+            cidade: {
+                contains: nomeCidade,
+            },
+        });
+    }
+
+    /**
+     * Busca todas as cidades de uma Unidade Federativa
+     * @param {number} unidadeFederativaId - ID da Unidade Federativa
+     * @returns {Promise<Array>} Lista de cidades da UF
+     */
+    async findByUnidadeFederativa(unidadeFederativaId) {
+        return await this.findMany({
+            unidadeFederativaId: unidadeFederativaId,
+        });
+    }
+
 }
 
 module.exports = new PrismaCidadeRepository();

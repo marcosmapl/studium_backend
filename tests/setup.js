@@ -3,6 +3,8 @@
  * Executado antes de todos os testes
  */
 
+const prisma = require("../src/orm/prismaClient");
+
 // Aumenta o timeout para operações de banco de dados
 jest.setTimeout(10000);
 
@@ -16,3 +18,4 @@ global.console = {
   // info: jest.fn(),
   // debug: jest.fn(),
 };
+

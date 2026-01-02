@@ -1,6 +1,5 @@
 const BaseController = require("./BaseController");
 const repository = require("../repositories/UsuarioRepository");
-const { generateToken } = require("../middleware/auth");
 const logger = require("../config/logger");
 const { Prisma } = require("@prisma/client");
 
@@ -9,7 +8,7 @@ class UsuarioController extends BaseController {
     constructor() {
         super(repository, "usuário", {
             entityNamePlural: "usuários",
-            requiredFields: ["nomeUsuario", "nomeFuncionario", "senha", "email", "grupoUsuarioId"]
+            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuarioId", "cidadeId", "situacaoUsuarioId"]
         });
     }
 
@@ -19,21 +18,28 @@ class UsuarioController extends BaseController {
     async create(req, res, next) {
         try {
             const {
-                nomeUsuario,
-                nomeFuncionario,
-                senha,
+                username,
+                nome,
+                sobrenome,
+                password,
                 email,
-                tentativasRestantes,
-                grupoUsuarioId,
+                generoUsuarioId,
+                cidadeId,
+                situacaoUsuarioId,
+                dataNascimento,
+                fotoUrl
             } = req.body;
 
             // Validação de campos obrigatórios
             const requiredFields = [
-                "nomeUsuario",
-                "nomeFuncionario",
-                "senha",
+                "username",
+                "password",
                 "email",
-                "grupoUsuarioId",
+                "nome",
+                "sobrenome",
+                "generoUsuarioId",
+                "cidadeId",
+                "situacaoUsuarioId"
             ];
             const missingFields = requiredFields.filter((field) => !req.body[field]);
 
@@ -61,7 +67,7 @@ class UsuarioController extends BaseController {
             }
 
             // Validação de senha (mínimo 6 caracteres)
-            if (senha.length < 6) {
+            if (password.length < 6) {
                 logger.warn("Senha com menos de 6 caracteres ao criar usuário", {
                     route: req.originalUrl,
                 });
@@ -70,36 +76,25 @@ class UsuarioController extends BaseController {
                 });
             }
 
-            // Coerção de tipos numéricos
-            const grupoUsuarioIdInt = parseInt(grupoUsuarioId);
-            if (isNaN(grupoUsuarioIdInt)) {
-                logger.warn("grupoUsuarioId inválido ao criar usuário", {
-                    route: req.originalUrl,
-                    grupoUsuarioId,
-                });
-                return res.status(400).json({
-                    error: "grupoUsuarioId deve ser um número inteiro",
-                });
-            }
-
-            const tentativasRestantesInt =
-                tentativasRestantes !== undefined ? parseInt(tentativasRestantes) : 5;
-
             const usuario = await this.repository.create({
-                nomeUsuario,
-                nomeFuncionario,
-                senha, // NOTA: Em produção, a senha deveria ser hash usando bcrypt
+                username,
+                nome,
+                sobrenome,
+                password, // NOTA: Em produção, a senha deveria ser hash usando bcrypt
                 email,
-                tentativasRestantes: tentativasRestantesInt,
-                grupoUsuarioId: grupoUsuarioIdInt,
+                generoUsuarioId: parseInt(generoUsuarioId),
+                cidadeId: parseInt(cidadeId),
+                situacaoUsuarioId: parseInt(situacaoUsuarioId),
+                dataNascimento: dataNascimento ? new Date(dataNascimento) : null,
+                fotoUrl: fotoUrl || null
             });
 
             // Remove a senha da resposta
-            const { senha: _, ...usuarioSemSenha } = usuario;
+            const { password: _, ...usuarioSemSenha } = usuario;
 
             logger.info("Usuário criado com sucesso", {
                 usuarioId: usuario.id,
-                nomeUsuario: usuario.nomeUsuario,
+                username: usuario.username,
             });
             return res.status(201).json(usuarioSemSenha);
         } catch (error) {
@@ -110,17 +105,16 @@ class UsuarioController extends BaseController {
                         route: req.originalUrl,
                         field,
                     });
-                    return res.status(400).json({
+                    return res.status(409).json({
                         error: `Já existe um usuário com este ${field}`,
                     });
                 }
                 if (error.code === "P2003") {
-                    logger.warn("Grupo de usuário não encontrado ao criar usuário", {
+                    logger.warn("Relação não encontrada ao criar usuário", {
                         route: req.originalUrl,
-                        grupoUsuarioId: req.body.grupoUsuarioId,
                     });
                     return res.status(400).json({
-                        error: "Grupo de usuário não encontrado",
+                        error: "Gênero, cidade ou situação não encontrada",
                     });
                 }
                 if (error.code === "P2022") {
@@ -143,7 +137,7 @@ class UsuarioController extends BaseController {
             const usuarios = await this.repository.findAll();
 
             // Remove as senhas da resposta
-            const usuariosSemSenha = usuarios.map(({ senha, ...usuario }) => usuario);
+            const usuariosSemSenha = usuarios.map(({ password, ...usuario }) => usuario);
 
             return res.json(usuariosSemSenha);
         } catch (error) {
@@ -156,123 +150,6 @@ class UsuarioController extends BaseController {
                     details: 'Execute "npx prisma migrate dev" para sincronizar o schema',
                 });
             }
-            next(error);
-        }
-    }
-
-    /**
-     * Método de login específico
-     */
-    async login(req, res, next) {
-        try {
-            const { nomeUsuario, senha } = req.body;
-
-            if (!nomeUsuario || !senha) {
-                logger.warn("Tentativa de login sem credenciais completas", {
-                    route: req.originalUrl,
-                    nomeUsuario: !!nomeUsuario,
-                    senha: !!senha,
-                });
-                return res.status(400).json({
-                    error: "Nome de usuário e senha são obrigatórios",
-                });
-            }
-
-            const usuario = await this.repository.findByNomeUsuario(nomeUsuario);
-
-            if (!usuario) {
-                logger.warn("Tentativa de login com usuário inexistente", {
-                    route: req.originalUrl,
-                    nomeUsuario,
-                });
-                return res.status(401).json({ error: "Credenciais inválidas" });
-            }
-
-            // Verificar se a conta está bloqueada
-            if (usuario.tentativasRestantes <= 0) {
-                logger.warn("Tentativa de login em conta bloqueada", {
-                    route: req.originalUrl,
-                    usuarioId: usuario.id,
-                    nomeUsuario: usuario.nomeUsuario,
-                });
-                return res.status(403).json({
-                    error:
-                        "Conta bloqueada por excesso de tentativas. Entre em contato com o administrador.",
-                });
-            }
-
-            // Comparar senha (se estiver usando bcrypt, usar bcrypt.compare)
-            const senhaValida = senha === usuario.senha; // TODO: usar bcrypt.compare em produção
-
-            if (!senhaValida) {
-                // Decrementar tentativas
-                const novasTentativas = usuario.tentativasRestantes - 1;
-                await this.repository.updateLoginAttempts(
-                    usuario.id,
-                    novasTentativas
-                );
-
-                logger.warn("Tentativa de login com senha inválida", {
-                    route: req.originalUrl,
-                    usuarioId: usuario.id,
-                    nomeUsuario: usuario.nomeUsuario,
-                    tentativasRestantes: novasTentativas,
-                });
-
-                if (novasTentativas <= 0) {
-                    logger.warn("Conta bloqueada por excesso de tentativas", {
-                        route: req.originalUrl,
-                        usuarioId: usuario.id,
-                        nomeUsuario: usuario.nomeUsuario,
-                    });
-                    return res.status(403).json({
-                        error:
-                            "Conta bloqueada por excesso de tentativas. Entre em contato com o administrador.",
-                    });
-                }
-
-                return res.status(401).json({
-                    error: "Credenciais inválidas",
-                    tentativasRestantes: novasTentativas,
-                });
-            }
-
-            // Login bem-sucedido - resetar tentativas e atualizar último acesso
-            await this.repository.updateUltimoAcesso(usuario.id);
-
-            // Gerar token JWT
-            const token = generateToken({
-                id: usuario.id,
-                nomeUsuario: usuario.nomeUsuario,
-                grupoUsuarioId: usuario.grupoUsuarioId,
-            });
-
-            // Remove a senha da resposta
-            const { senha: _, ...usuarioSemSenha } = usuario;
-
-            logger.info("Login realizado com sucesso", {
-                usuarioId: usuario.id,
-                nomeUsuario: usuario.nomeUsuario,
-            });
-
-            return res.json({
-                usuario: usuarioSemSenha,
-                token,
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    /**
-     * Método de logout específico
-     */
-    async logout(req, res, next) {
-        try {
-            // Em uma implementação real com blacklist de tokens ou refresh tokens,
-            // você invalidaria o token aqui. Por enquanto, apenas retorna sucesso.
-            return res.json({ message: "Logout realizado com sucesso" });
-        } catch (error) {
             next(error);
         }
     }
@@ -303,7 +180,7 @@ class UsuarioController extends BaseController {
             }
 
             // Remove a senha da resposta
-            const { senha: _, ...usuarioSemSenha } = usuario;
+            const { password: _, ...usuarioSemSenha } = usuario;
 
             return res.json(usuarioSemSenha);
         } catch (error) {
@@ -327,13 +204,16 @@ class UsuarioController extends BaseController {
         try {
             const id = parseInt(req.params.id);
             const {
-                nomeUsuario,
-                nomeFuncionario,
-                senha,
+                username,
+                nome,
+                sobrenome,
+                password,
                 email,
-                tentativasRestantes,
-                grupoUsuarioId,
-                tempoRestanteSessao,
+                generoUsuarioId,
+                cidadeId,
+                situacaoUsuarioId,
+                dataNascimento,
+                fotoUrl
             } = req.body;
 
             if (isNaN(id)) {
@@ -360,7 +240,7 @@ class UsuarioController extends BaseController {
             }
 
             // Validação de senha se fornecida
-            if (senha && senha.length < 6) {
+            if (password && password.length < 6) {
                 logger.warn("Senha com menos de 6 caracteres ao atualizar usuário", {
                     route: req.originalUrl,
                     usuarioId: id,
@@ -371,25 +251,25 @@ class UsuarioController extends BaseController {
             }
 
             const updateData = {};
-            if (nomeUsuario) updateData.nomeUsuario = nomeUsuario;
-            if (nomeFuncionario) updateData.nomeFuncionario = nomeFuncionario;
-            if (senha) updateData.senha = senha; // NOTA: Hash em produção
+            if (username) updateData.username = username;
+            if (nome) updateData.nome = nome;
+            if (sobrenome) updateData.sobrenome = sobrenome;
+            if (password) updateData.password = password; // NOTA: Hash em produção
             if (email) updateData.email = email;
-            if (tentativasRestantes !== undefined)
-                updateData.tentativasRestantes = parseInt(tentativasRestantes);
-            if (grupoUsuarioId !== undefined)
-                updateData.grupoUsuarioId = parseInt(grupoUsuarioId);
-            if (tempoRestanteSessao !== undefined)
-                updateData.tempoRestanteSessao = parseInt(tempoRestanteSessao);
+            if (generoUsuarioId !== undefined) updateData.generoUsuarioId = parseInt(generoUsuarioId);
+            if (cidadeId !== undefined) updateData.cidadeId = parseInt(cidadeId);
+            if (situacaoUsuarioId !== undefined) updateData.situacaoUsuarioId = parseInt(situacaoUsuarioId);
+            if (dataNascimento) updateData.dataNascimento = new Date(dataNascimento);
+            if (fotoUrl !== undefined) updateData.fotoUrl = fotoUrl;
 
             const usuario = await this.repository.update(id, updateData);
 
             // Remove a senha da resposta
-            const { senha: _, ...usuarioSemSenha } = usuario;
+            const { password: _, ...usuarioSemSenha } = usuario;
 
             logger.info("Usuário atualizado com sucesso", {
                 usuarioId: id,
-                nomeUsuario: usuario.nomeUsuario,
+                username: usuario.username,
             });
             return res.json(usuarioSemSenha);
         } catch (error) {
@@ -413,13 +293,12 @@ class UsuarioController extends BaseController {
                     });
                 }
                 if (error.code === "P2003") {
-                    logger.warn("Grupo de usuário não encontrado ao atualizar", {
+                    logger.warn("Relação não encontrada ao atualizar usuário", {
                         usuarioId: req.params.id,
                         route: req.originalUrl,
-                        grupoUsuarioId: req.body.grupoUsuarioId,
                     });
                     return res.status(400).json({
-                        error: "Grupo de usuário não encontrado",
+                        error: "Gênero, cidade ou situação não encontrada",
                     });
                 }
                 if (error.code === "P2022") {
@@ -474,34 +353,34 @@ class UsuarioController extends BaseController {
     /**
      * Busca usuário por nome de usuário
      */
-    async findByNomeUsuario(req, res, next) {
+    async findByUsername(req, res, next) {
         try {
-            const { nomeUsuario } = req.params;
+            const { username } = req.params;
 
             if (
-                !nomeUsuario ||
-                typeof nomeUsuario !== "string" ||
-                nomeUsuario.trim().length === 0
+                !username ||
+                typeof username !== "string" ||
+                username.trim().length === 0
             ) {
                 logger.warn("Nome de usuário inválido fornecido", {
                     route: req.originalUrl,
-                    nomeUsuario,
+                    username,
                 });
                 return res.status(400).json({ error: "Nome de usuário inválido" });
             }
 
-            const usuario = await this.repository.findByNomeUsuario(nomeUsuario);
+            const usuario = await this.repository.findByUsername(username);
 
             if (!usuario) {
                 logger.info("Usuário não encontrado por nome", {
-                    nomeUsuario,
+                    username,
                     route: req.originalUrl,
                 });
                 return res.status(404).json({ error: "Usuário não encontrado" });
             }
 
             // Remove a senha da resposta
-            const { senha: _, ...usuarioSemSenha } = usuario;
+            const { password: _, ...usuarioSemSenha } = usuario;
 
             return res.json(usuarioSemSenha);
         } catch (error) {
@@ -512,7 +391,7 @@ class UsuarioController extends BaseController {
     /**
      * Busca usuários por nome do funcionário
      */
-    async findByNomeFuncionario(req, res, next) {
+    async findByNome(req, res, next) {
         try {
             const { nome } = req.params;
 
@@ -524,10 +403,10 @@ class UsuarioController extends BaseController {
                 return res.status(400).json({ error: "Nome inválido" });
             }
 
-            const usuarios = await this.repository.findByNomeFuncionario(nome);
+            const usuarios = await this.repository.findByNome(nome);
 
             // Remove as senhas da resposta
-            const usuariosSemSenha = usuarios.map(({ senha, ...usuario }) => usuario);
+            const usuariosSemSenha = usuarios.map(({ password, ...usuario }) => usuario);
 
             return res.json(usuariosSemSenha);
         } catch (error) {
@@ -571,7 +450,7 @@ class UsuarioController extends BaseController {
             }
 
             // Remove a senha da resposta
-            const { senha: _, ...usuarioSemSenha } = usuario;
+            const { password: _, ...usuarioSemSenha } = usuario;
 
             return res.json(usuarioSemSenha);
         } catch (error) {
@@ -588,9 +467,7 @@ module.exports = {
     findUsuarioById: controller.findById.bind(controller),
     updateUsuario: controller.update.bind(controller),
     deleteUsuario: controller.delete.bind(controller),
-    login: controller.login.bind(controller),
-    logout: controller.logout.bind(controller),
-    findByNomeUsuario: controller.findByNomeUsuario.bind(controller),
-    findByNomeFuncionario: controller.findByNomeFuncionario.bind(controller),
+    findByUsername: controller.findByUsername.bind(controller),
+    findByNome: controller.findByNome.bind(controller),
     findByEmail: controller.findByEmail.bind(controller)
 };

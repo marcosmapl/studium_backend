@@ -28,6 +28,12 @@ module.exports = {
   // Setup files antes dos testes
   setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
 
+  // Global teardown
+  globalTeardown: "<rootDir>/tests/globalTeardown.js",
+
   // Executar testes em série para evitar conflitos de banco de dados
   maxWorkers: 1,
+
+  // Força saída após testes
+  forceExit: true,
 };

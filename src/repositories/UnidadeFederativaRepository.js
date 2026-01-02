@@ -3,19 +3,28 @@ const BaseRepository = require("./BaseRepository");
 class PrismaUnidadeFederativaRepository extends BaseRepository {
 
     constructor() {
-        super("unidade_federativa", "UnidadeFederativaRepository.js", {
-            defaultOrderBy: "uf",
+        super("unidadeFederativa", "UnidadeFederativaRepository.js", {
+            defaultOrderBy: "nome",
             orderDirection: "asc"
         });
     }
 
     /**
-     * Busca a Unidade Federativa por descrição
-     * @param {string} uf - Unidade Federativa
-     * @returns {Promise<object|null>} Unidade Federativa encontrado ou null
+     * Busca a cidade pelo nome da cidade
+     * @param {string} nome - nome da cidade
+     * @returns {Promise<object|null>} Cidade encontrado ou null
      */
-    async findByUnidadeFederativa(uf) {
-        return await this.findByUniqueField("uf", uf.toUpperCase());
+    async findByNome(nome) {
+        return await this.findByUniqueField("nome", nome.toUpperCase());
+    }
+
+    /**
+     * Busca a cidade pelo nome da cidade
+     * @param {string} sigla - nome da cidade
+     * @returns {Promise<object|null>} Cidade encontrado ou null
+     */
+    async findBySigla(sigla) {
+        return await this.findByUniqueField("sigla", sigla.toUpperCase());
     }
 }
 

@@ -115,3 +115,5 @@ const authMiddleware = {
 };
 
 module.exports = authMiddleware;
+module.exports.generateToken = authMiddleware.generateToken;
+module.exports.verifyToken = authMiddleware.verifyToken;

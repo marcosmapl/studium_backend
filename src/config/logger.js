@@ -31,7 +31,9 @@ const customFormat = winston.format.combine(
     // Adicionar metadados e objetos adicionais se existirem
     const additionalData = { ...rest, ...metadata };
     if (Object.keys(additionalData).length > 0) {
-      logMessage += `\n${JSON.stringify(additionalData, null, 2)}`;
+      // Converter BigInt para Number antes de serializar
+      const replacer = (key, value) => typeof value === 'bigint' ? Number(value) : value;
+      logMessage += `\n${JSON.stringify(additionalData, replacer, 2)}`;
     }
 
     // Adicionar stack trace completo para erros
@@ -47,7 +49,11 @@ const customFormat = winston.format.combine(
 const jsonFormat = winston.format.combine(
   winston.format.timestamp({ format: process.env.LOG_TIMESTAMP_FORMAT || "YYYY-MM-DD HH:mm:ss" }),
   winston.format.errors({ stack: true }),
-  winston.format.json()
+  winston.format.printf((info) => {
+    // Converter BigInt para Number antes de serializar
+    const replacer = (key, value) => typeof value === 'bigint' ? Number(value) : value;
+    return JSON.stringify(info, replacer);
+  })
 );
 
 // Configuração dos transports por nível
