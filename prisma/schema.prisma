@@ -132,12 +132,12 @@ model Disciplina {
 }
 
 model SituacaoTopico {
-    id       Int    @id @default(autoincrement())
-    situacao String @unique
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
 
     topicos Topico[]
 
-    @@index([situacao])
+    @@index([descricao])
     @@map("situacao_topico")
 }
 
@@ -145,7 +145,6 @@ model Topico {
     id              Int      @id @default(autoincrement())
     titulo          String
     ordem           Int
-    descricao       String   @unique
     questoesAcertos Int      @default(0) @map("questoes_acertos")
     questoesErros   Int      @default(0) @map("questoes_erros")
     tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
@@ -180,27 +179,28 @@ model Topico {
 
 model CategoriaSessao {
     id        Int    @id @default(autoincrement())
-    categoria String @unique
+    descricao String @unique
 
     sessoesEstudo SessaoEstudo[]
 
-    @@index([categoria])
+    @@index([descricao])
     @@map("categoria_sessao")
 }
 
 model SituacaoSessao {
-    id       Int    @id @default(autoincrement())
-    situacao String @unique
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
 
     sessoesEstudo SessaoEstudo[]
 
-    @@index([situacao])
+    @@index([descricao])
     @@map("situacao_sessao")
 }
 
 model SessaoEstudo {
     id               Int      @id @default(autoincrement())
-    dataSessao       DateTime @default(now()) @map("data_sessao")
+    dataInicio       DateTime @default(now()) @map("data_inicio")
+    dataTermino      DateTime @default(now()) @map("data_termino")
     questoesAcertos  Int      @default(0) @map("questoes_acertos")
     questoesErros    Int      @default(0) @map("questoes_erros")
     tempoEstudo      Float    @default(0.0) @map("tempo_estudo")
@@ -225,7 +225,8 @@ model SessaoEstudo {
     situacaoSessaoId Int            @map("situacao_id")
     situacaoSessao   SituacaoSessao @relation(fields: [situacaoSessaoId], references: [id])
 
-    @@index([dataSessao])
+    @@index([dataInicio])
+    @@index([dataTermino])
     @@index([topicoFinalizado])
     @@index([planoEstudoId], map: "sessao_estudo__plano_estudo_id_fkey")
     @@index([disciplinaId], map: "sessao_estudo__disciplina_id_fkey")
@@ -237,30 +238,33 @@ model SessaoEstudo {
 
 model CategoriaRevisao {
     id        Int    @id @default(autoincrement())
-    categoria String @unique
+    descricao String @unique
 
     revisoes Revisao[]
 
-    @@index([categoria])
+    @@index([descricao])
     @@map("categoria_revisao")
 }
 
 model SituacaoRevisao {
-    id       Int    @id @default(autoincrement())
-    situacao String @unique
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
 
     revisoes Revisao[]
 
-    @@index([situacao])
+    @@index([descricao])
     @@map("situacao_revisao")
 }
 
 model Revisao {
-    id             Int      @id @default(autoincrement())
-    dataProgramada DateTime @map("data_programada")
-    dataRealizada  DateTime @map("data_realizada")
-    numero         Int
-    desempenho     Int
+    id              Int      @id @default(autoincrement())
+    numero          Int
+    dataProgramada  DateTime @map("data_programada")
+    dataRealizada   DateTime @map("data_realizada")
+    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
+    questoesAcertos Int      @default(0) @map("questoes_acertos")
+    questoesErros   Int      @default(0) @map("questoes_erros")
+    desempenho      Int
 
     categoriaRevisaoId Int              @map("categoria_id")
     categoriaRevisao   CategoriaRevisao @relation(fields: [categoriaRevisaoId], references: [id])

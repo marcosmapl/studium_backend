@@ -82,44 +82,11 @@ CREATE TABLE `usuario` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `situacao_plano` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `descricao` VARCHAR(191) NOT NULL,
-
-    UNIQUE INDEX `situacao_plano_descricao_key`(`descricao`),
-    INDEX `situacao_plano_descricao_idx`(`descricao`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `plano_estudo` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `titulo` VARCHAR(191) NOT NULL,
-    `descricao` VARCHAR(191) NOT NULL,
-    `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
-    `questoes_erros` INTEGER NOT NULL DEFAULT 0,
-    `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
-    `paginas_lidas` INTEGER NOT NULL DEFAULT 0,
-    `progresso` INTEGER NOT NULL DEFAULT 0,
-    `concluido` BOOLEAN NOT NULL DEFAULT false,
-    `observacoes` VARCHAR(191) NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL,
-    `usuario_id` INTEGER NOT NULL,
-    `situacao_id` INTEGER NOT NULL,
-
-    INDEX `plano_estudo_titulo_idx`(`titulo`),
-    INDEX `plano_estudo__usuario_id_fkey`(`usuario_id`),
-    INDEX `plano_estudo__situacao_id_fkey`(`situacao_id`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `disciplina` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `titulo` VARCHAR(191) NOT NULL,
-    `descricao` VARCHAR(191) NOT NULL,
-    `cor` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NULL,
+    `cor` VARCHAR(191) NOT NULL DEFAULT '#FFFFFF',
     `importancia` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     `conhecimento` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     `prioridade` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
@@ -142,10 +109,10 @@ CREATE TABLE `disciplina` (
 -- CreateTable
 CREATE TABLE `situacao_topico` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `situacao` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `situacao_topico_situacao_key`(`situacao`),
-    INDEX `situacao_topico_situacao_idx`(`situacao`),
+    UNIQUE INDEX `situacao_topico_descricao_key`(`descricao`),
+    INDEX `situacao_topico_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -154,7 +121,6 @@ CREATE TABLE `topico` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `titulo` VARCHAR(191) NOT NULL,
     `ordem` INTEGER NOT NULL,
-    `descricao` VARCHAR(191) NOT NULL,
     `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
     `questoes_erros` INTEGER NOT NULL DEFAULT 0,
     `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
@@ -168,7 +134,6 @@ CREATE TABLE `topico` (
     `plano_disciplina_id` INTEGER NOT NULL,
     `situacao_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `topico_descricao_key`(`descricao`),
     INDEX `topico_titulo_idx`(`titulo`),
     INDEX `topico__disciplina_id_fkey`(`plano_disciplina_id`),
     INDEX `topico__situacao_id_fkey`(`situacao_id`),
@@ -178,27 +143,28 @@ CREATE TABLE `topico` (
 -- CreateTable
 CREATE TABLE `categoria_sessao` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `categoria` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `categoria_sessao_categoria_key`(`categoria`),
-    INDEX `categoria_sessao_categoria_idx`(`categoria`),
+    UNIQUE INDEX `categoria_sessao_descricao_key`(`descricao`),
+    INDEX `categoria_sessao_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `situacao_sessao` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `situacao` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `situacao_sessao_situacao_key`(`situacao`),
-    INDEX `situacao_sessao_situacao_idx`(`situacao`),
+    UNIQUE INDEX `situacao_sessao_descricao_key`(`descricao`),
+    INDEX `situacao_sessao_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `sessao_estudo` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `data_sessao` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `data_inicio` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `data_termino` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
     `questoes_erros` INTEGER NOT NULL DEFAULT 0,
     `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
@@ -213,7 +179,8 @@ CREATE TABLE `sessao_estudo` (
     `categoria_id` INTEGER NOT NULL,
     `situacao_id` INTEGER NOT NULL,
 
-    INDEX `sessao_estudo_data_sessao_idx`(`data_sessao`),
+    INDEX `sessao_estudo_data_inicio_idx`(`data_inicio`),
+    INDEX `sessao_estudo_data_termino_idx`(`data_termino`),
     INDEX `sessao_estudo_topico_finalizado_idx`(`topico_finalizado`),
     INDEX `sessao_estudo__plano_estudo_id_fkey`(`plano_estudo_id`),
     INDEX `sessao_estudo__disciplina_id_fkey`(`disciplina_id`),
@@ -226,29 +193,32 @@ CREATE TABLE `sessao_estudo` (
 -- CreateTable
 CREATE TABLE `categoria_revisao` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `categoria` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `categoria_revisao_categoria_key`(`categoria`),
-    INDEX `categoria_revisao_categoria_idx`(`categoria`),
+    UNIQUE INDEX `categoria_revisao_descricao_key`(`descricao`),
+    INDEX `categoria_revisao_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `situacao_revisao` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `situacao` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `situacao_revisao_situacao_key`(`situacao`),
-    INDEX `situacao_revisao_situacao_idx`(`situacao`),
+    UNIQUE INDEX `situacao_revisao_descricao_key`(`descricao`),
+    INDEX `situacao_revisao_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `revisao` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `numero` INTEGER NOT NULL,
     `data_programada` DATETIME(3) NOT NULL,
     `data_realizada` DATETIME(3) NOT NULL,
-    `numero` INTEGER NOT NULL,
+    `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
+    `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
+    `questoes_erros` INTEGER NOT NULL DEFAULT 0,
     `desempenho` INTEGER NOT NULL,
     `categoria_id` INTEGER NOT NULL,
     `situacao_id` INTEGER NOT NULL,
@@ -263,6 +233,39 @@ CREATE TABLE `revisao` (
     INDEX `revisao__plano_estudo_id_fkey`(`plano_estudo_id`),
     INDEX `revisao__disciplina_id_fkey`(`disciplina_id`),
     INDEX `revisao__topico_id_fkey`(`topico_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `situacao_plano` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `descricao` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `situacao_plano_descricao_key`(`descricao`),
+    INDEX `situacao_plano_descricao_idx`(`descricao`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `plano_estudo` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `titulo` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NULL,
+    `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
+    `questoes_erros` INTEGER NOT NULL DEFAULT 0,
+    `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
+    `paginas_lidas` INTEGER NOT NULL DEFAULT 0,
+    `progresso` INTEGER NOT NULL DEFAULT 0,
+    `concluido` BOOLEAN NOT NULL DEFAULT false,
+    `observacoes` VARCHAR(191) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+    `usuario_id` INTEGER NOT NULL,
+    `situacao_id` INTEGER NOT NULL,
+
+    INDEX `plano_estudo_titulo_idx`(`titulo`),
+    INDEX `plano_estudo__usuario_id_fkey`(`usuario_id`),
+    INDEX `plano_estudo__situacao_id_fkey`(`situacao_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -283,12 +286,6 @@ ALTER TABLE `usuario` ADD CONSTRAINT `usuario_unidade_federativa_id_fkey` FOREIG
 
 -- AddForeignKey
 ALTER TABLE `usuario` ADD CONSTRAINT `usuario_grupo_usuario_id_fkey` FOREIGN KEY (`grupo_usuario_id`) REFERENCES `grupo_usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_usuario_id_fkey` FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_plano`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `disciplina` ADD CONSTRAINT `disciplina_plano_id_fkey` FOREIGN KEY (`plano_id`) REFERENCES `plano_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -328,3 +325,9 @@ ALTER TABLE `revisao` ADD CONSTRAINT `revisao_disciplina_id_fkey` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `revisao` ADD CONSTRAINT `revisao_topico_id_fkey` FOREIGN KEY (`topico_id`) REFERENCES `topico`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_usuario_id_fkey` FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_plano`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
