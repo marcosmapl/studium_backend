@@ -20,6 +20,7 @@ const cleanDatabase = async () => {
     await prisma.unidadeFederativa.deleteMany();
     await prisma.generoUsuario.deleteMany();
     await prisma.situacaoUsuario.deleteMany();
+    await prisma.grupoUsuario.deleteMany();
 
     // Reabilitar verificação de chaves estrangeiras
     await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 1;`;
@@ -31,44 +32,59 @@ const cleanDatabase = async () => {
 const seedBasicData = async () => {
     // Criar unidade federativa
     const unidadeFederativa = await prisma.unidadeFederativa.create({
-        data: { nome: "Amazonas", sigla: "AM" },
+        data: { descricao: "EstadoTeste", sigla: "ET" },
     });
 
     // Criar cidade
     const cidade = await prisma.cidade.create({
         data: {
-            cidade: "Manaus",
+            descricao: "Cidade Teste",
             unidadeFederativaId: unidadeFederativa.id,
         },
     });
 
     // Criar gênero de usuário
     const generoUsuario = await prisma.generoUsuario.create({
-        data: { genero: "Masculino" },
+        data: { descricao: "Gênero Teste" },
     });
 
     // Criar situação de usuário
     const situacaoUsuario = await prisma.situacaoUsuario.create({
-        data: { situacao: "Ativo" },
+        data: { descricao: "Ativo" },
     });
 
     // Criar ou buscar grupo de usuário
-    const grupoUsuario = await prisma.grupoUsuario.upsert({
-        where: { grupo: "Administrador" },
-        update: {},
-        create: { grupo: "Administrador" },
+    const grupoUsuario = await prisma.grupoUsuario.create({
+        data: { descricao: "Grupo Teste" },
     });
 
     // Hash da senha
-    const hashedPassword = await bcrypt.hash("admin123", 10);
+    const hashedPassword = await bcrypt.hash("teste123", 10);
+    const hashedPasswordAdmin = await bcrypt.hash("admin123", 10);
 
     // Criar usuário admin para testes
     const usuario = await prisma.usuario.create({
         data: {
             nome: "Admin",
             sobrenome: "Teste",
-            username: "admin",
+            username: "teste",
             password: hashedPassword,
+            email: "teste@studium.com",
+            generoUsuarioId: generoUsuario.id,
+            cidadeId: cidade.id,
+            situacaoUsuarioId: situacaoUsuario.id,
+            unidadeFederativaId: unidadeFederativa.id,
+            grupoUsuarioId: grupoUsuario.id,
+        },
+    });
+
+    // Criar usuário admin adicional para testes
+    const admin = await prisma.usuario.create({
+        data: {
+            nome: "Admin",
+            sobrenome: "User",
+            username: "admin",
+            password: hashedPasswordAdmin,
             email: "admin@test.com",
             generoUsuarioId: generoUsuario.id,
             cidadeId: cidade.id,
@@ -85,6 +101,7 @@ const seedBasicData = async () => {
         situacaoUsuario,
         grupoUsuario,
         usuario,
+        admin,
     };
 };
 
@@ -93,8 +110,8 @@ const seedBasicData = async () => {
  */
 const getAuthToken = async (app) => {
     const response = await request(app).post("/api/login").send({
-        username: "admin",
-        password: "admin123",
+        username: "teste",
+        password: "teste123",
     });
 
     return response.body.token;

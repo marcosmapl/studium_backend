@@ -1,6 +1,6 @@
 /**
- * Testes para rotas de gênero de usuário
- * Endpoints: /api/generoUsuario
+ * Testes para rotas de grupo de usuário
+ * Endpoints: /api/grupoUsuario
  */
 const request = require("supertest");
 const app = require("../src/app");
@@ -12,8 +12,8 @@ const {
     prisma,
 } = require("./testUtils");
 
-describe("Gênero de Usuário - /api/generoUsuario", () => {
-    let generoTeste;
+describe("Grupo de Usuário - /api/grupoUsuario", () => {
+    let grupoTeste;
     let seedData;
     let token;
 
@@ -28,27 +28,27 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
         await prisma.$disconnect();
     });
 
-    describe("POST /api/generoUsuario", () => {
-        it("deve criar um novo gênero de usuário", async () => {
-            const generoData = {
-                descricao: "Novo Gênero Teste",
+    describe("POST /api/grupoUsuario", () => {
+        it("deve criar um novo grupo de usuário", async () => {
+            const grupoData = {
+                descricao: "Novo grupo Teste",
             };
 
             const response = await request(app)
-                .post("/api/generoUsuario")
+                .post("/api/grupoUsuario")
                 .set("Authorization", `Bearer ${token}`)
-                .send(generoData);
+                .send(grupoData);
 
             expect(response.status).toBe(201);
-            expect(response.body.descricao).toBe("Novo Gênero Teste");
+            expect(response.body.descricao).toBe("Novo grupo Teste");
 
-            // Salvar o gênero criado para usar nos demais testes
-            generoTeste = response.body;
+            // Salvar o grupo criado para usar nos demais testes
+            grupoTeste = response.body;
         });
 
         it("deve validar ausência de descricao", async () => {
             const response = await request(app)
-                .post("/api/generoUsuario")
+                .post("/api/grupoUsuario")
                 .set("Authorization", `Bearer ${token}`)
                 .send({
                     // Faltando campos obrigatórios
@@ -58,10 +58,10 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
         });
     });
 
-    describe("GET /api/generoUsuario", () => {
-        it("deve listar todos os gêneros de usuário", async () => {
+    describe("GET /api/grupoUsuario", () => {
+        it("deve listar todos os grupos de usuário", async () => {
             const response = await request(app)
-                .get("/api/generoUsuario")
+                .get("/api/grupoUsuario")
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(200);
@@ -70,50 +70,50 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
         });
     });
 
-    describe("GET /api/generoUsuario/:id", () => {
-        it("deve buscar gênero de usuário por ID", async () => {
+    describe("GET /api/grupoUsuario/:id", () => {
+        it("deve buscar grupo de usuário por ID", async () => {
             const response = await request(app)
-                .get(`/api/generoUsuario/${generoTeste.id}`)
+                .get(`/api/grupoUsuario/${grupoTeste.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(200);
-            expect(response.body.id).toBe(generoTeste.id);
-            expect(response.body.descricao).toBe("Novo Gênero Teste");
+            expect(response.body.id).toBe(grupoTeste.id);
+            expect(response.body.descricao).toBe("Novo grupo Teste");
         });
 
-        it("deve retornar 404 para gênero inexistente", async () => {
+        it("deve retornar 404 para grupo inexistente", async () => {
             const response = await request(app)
-                .get("/api/generoUsuario/99999")
+                .get("/api/grupoUsuario/99999")
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(404);
         });
     });
 
-    describe("GET /api/generoUsuario/descricao/exact/:descricao", () => {
-        it("deve buscar gênero por descrição exata", async () => {
+    describe("GET /api/grupoUsuario/descricao/exact/:descricao", () => {
+        it("deve buscar grupo por descrição exata", async () => {
             const response = await request(app)
-                .get(`/api/generoUsuario/descricao/exact/${encodeURIComponent(generoTeste.descricao)}`)
+                .get(`/api/grupoUsuario/descricao/exact/${encodeURIComponent(grupoTeste.descricao)}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(200);
             expect(response.body).toBeDefined();
-            expect(response.body.descricao).toBe(generoTeste.descricao);
+            expect(response.body.descricao).toBe(grupoTeste.descricao);
         });
 
-        it("deve retornar 404 quando nenhum gênero for encontrado", async () => {
+        it("deve retornar 404 quando nenhum grupo for encontrado", async () => {
             const response = await request(app)
-                .get("/api/generoUsuario/descricao/exact/Inexistente")
+                .get("/api/grupoUsuario/descricao/exact/Inexistente")
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(404);
         });
     });
 
-    describe("GET /api/generoUsuario/descricao/search/:descricao", () => {
-        it("deve buscar gêneros por descrição parcial", async () => {
+    describe("GET /api/grupoUsuario/descricao/search/:descricao", () => {
+        it("deve buscar grupos por descrição parcial", async () => {
             const response = await request(app)
-                .get(`/api/generoUsuario/descricao/search/${encodeURIComponent("Novo")}`)
+                .get(`/api/grupoUsuario/descricao/search/${encodeURIComponent("Novo")}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(200);
@@ -122,34 +122,34 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
             expect(response.body.some(g => g.descricao.includes("Novo"))).toBe(true);
         });
 
-        it("deve retornar 404 quando nenhum gênero for encontrado", async () => {
+        it("deve retornar 404 quando nenhum grupo for encontrado", async () => {
             const response = await request(app)
-                .get("/api/generoUsuario/descricao/search/XYZInexistente")
+                .get("/api/grupoUsuario/descricao/search/XYZInexistente")
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(404);
         });
     });
 
-    describe("PUT /api/generoUsuario/:id", () => {
-        it("deve atualizar um gênero existente", async () => {
+    describe("PUT /api/grupoUsuario/:id", () => {
+        it("deve atualizar um grupo existente", async () => {
             const response = await request(app)
-                .put(`/api/generoUsuario/${generoTeste.id}`)
+                .put(`/api/grupoUsuario/${grupoTeste.id}`)
                 .set("Authorization", `Bearer ${token}`)
                 .send({
-                    descricao: "Gênero Teste Atualizado",
+                    descricao: "grupo Teste Atualizado",
                 });
 
             expect(response.status).toBe(200);
-            expect(response.body.descricao).toBe("Gênero Teste Atualizado");
+            expect(response.body.descricao).toBe("grupo Teste Atualizado");
 
             // Atualizar a referência local
-            generoTeste = response.body;
+            grupoTeste = response.body;
         });
 
-        it("deve retornar 404 ao atualizar gênero inexistente", async () => {
+        it("deve retornar 404 ao atualizar grupo inexistente", async () => {
             const response = await request(app)
-                .put("/api/generoUsuario/99999")
+                .put("/api/grupoUsuario/99999")
                 .set("Authorization", `Bearer ${token}`)
                 .send({ descricao: "Teste" });
 
@@ -157,25 +157,25 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
         });
     });
 
-    describe("DELETE /api/generoUsuario/:id", () => {
-        it("deve retornar 404 ao excluir gênero inexistente", async () => {
+    describe("DELETE /api/grupoUsuario/:id", () => {
+        it("deve retornar 404 ao excluir grupo inexistente", async () => {
             const response = await request(app)
-                .delete("/api/generoUsuario/99999")
+                .delete("/api/grupoUsuario/99999")
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(404);
         });
 
-        it("deve excluir um gênero existente", async () => {
+        it("deve excluir um grupo existente", async () => {
             const response = await request(app)
-                .delete(`/api/generoUsuario/${generoTeste.id}`)
+                .delete(`/api/grupoUsuario/${grupoTeste.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(204);
 
             // Verificar que foi realmente deletado
-            const verificacao = await prisma.generoUsuario.findUnique({
-                where: { id: generoTeste.id },
+            const verificacao = await prisma.grupoUsuario.findUnique({
+                where: { id: grupoTeste.id },
             });
             expect(verificacao).toBeNull();
         });

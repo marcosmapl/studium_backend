@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/CidadeController");
+const controller = require("../controllers/SituacaoUsuarioController");
 const { verifyToken } = require("../middleware/auth");
 
 /**
  * @swagger
- * /api/cidade:
+ * /api/situacaoUsuario:
  *   post:
- *     summary: Cria uma nova cidade
- *     tags: [Cidade]
+ *     summary: Cria uma nova situação de usuário
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -18,20 +18,15 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - cidade
- *               - unidadeFederativaId
+ *               - descricao
  *             properties:
- *               cidade:
+ *               descricao:
  *                 type: string
- *                 description: Nome da cidade
- *                 example: "Brasília"
- *               unidadeFederativaId:
- *                 type: integer
- *                 description: ID da Unidade Federativa
- *                 example: 1
+ *                 description: Descrição da situação
+ *                 example: "Ativo"
  *     responses:
  *       201:
- *         description: Cidade criada com sucesso
+ *         description: Situação de usuário criada com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -40,12 +35,9 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 cidade:
+ *                 descricao:
  *                   type: string
- *                   example: "Brasília"
- *                 unidadeFederativaId:
- *                   type: integer
- *                   example: 1
+ *                   example: "Ativo"
  *       400:
  *         description: Dados inválidos ou campo obrigatório ausente
  *         content:
@@ -55,17 +47,17 @@ const { verifyToken } = require("../middleware/auth");
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       409:
- *         description: Cidade já cadastrada
+ *         description: Situação de usuário já cadastrada
  *       500:
  *         description: Erro interno do servidor
  *   get:
- *     summary: Lista todas as cidades
- *     tags: [Cidade]
+ *     summary: Lista todos as situações de usuário
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de cidades ordenadas por nome
+ *         description: Lista de situações de usuário ordenadas por descrição
  *         content:
  *           application/json:
  *             schema:
@@ -76,12 +68,9 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   cidade:
+ *                   descricao:
  *                     type: string
- *                     example: "Brasília"
- *                   unidadeFederativaId:
- *                     type: integer
- *                     example: 1
+ *                     example: "Ativo"
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
@@ -92,10 +81,10 @@ router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/cidade/descricao/exact/{descricao}:
+ * /api/sitiuacaoUsuario/descricao/exact/{descricao}:
  *   get:
- *     summary: Busca cidade por descrição exata
- *     tags: [Cidade]
+ *     summary: Busca situação de usuário por descrição exata
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -104,11 +93,11 @@ router.get("/", verifyToken, controller.findAll);
  *         required: true
  *         schema:
  *           type: string
- *         description: Descrição exata da cidade
- *         example: "Brasília"
+ *         description: Descrição exata da situação do usuário
+ *         example: "Ativo"
  *     responses:
  *       200:
- *         description: Cidade encontrada
+ *         description: Situação de usuário encontrada
  *         content:
  *           application/json:
  *             schema:
@@ -118,10 +107,8 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: integer
  *                 descricao:
  *                   type: string
- *                 unidadeFederativaId:
- *                   type: integer
  *       404:
- *         description: Nenhuma cidade encontrada
+ *         description: Nenhuma situação de usuário encontrado
  *       401:
  *         description: Não autorizado
  *       500:
@@ -131,10 +118,10 @@ router.get("/descricao/exact/:descricao", verifyToken, controller.findUniqueByDe
 
 /**
  * @swagger
- * /api/cidade/descricao/search/{descricao}:
+ * /api/situacaoUsuario/descricao/search/{descricao}:
  *   get:
- *     summary: Busca cidades por descrição (busca parcial)
- *     tags: [Cidade]
+ *     summary: Busca situações de usuário por descrição (busca parcial)
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -143,11 +130,11 @@ router.get("/descricao/exact/:descricao", verifyToken, controller.findUniqueByDe
  *         required: true
  *         schema:
  *           type: string
- *         description: Descrição da cidade (busca parcial)
- *         example: "Brasí"
+ *         description: Descrição da situação de usuário (busca parcial)
+ *         example: "Ati"
  *     responses:
  *       200:
- *         description: Cidades encontradas
+ *         description: Situações de usuário encontradas
  *         content:
  *           application/json:
  *             schema:
@@ -159,10 +146,8 @@ router.get("/descricao/exact/:descricao", verifyToken, controller.findUniqueByDe
  *                     type: integer
  *                   descricao:
  *                     type: string
- *                   unidadeFederativaId:
- *                     type: integer
  *       404:
- *         description: Nenhuma cidade encontrada
+ *         description: Nenhuma situação de usuário encontrada
  *       401:
  *         description: Não autorizado
  *       500:
@@ -172,55 +157,10 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
 
 /**
  * @swagger
- * /api/cidade/uf/{unidadeFederativaId}:
+ * /api/situacaoUsuario/{id}:
  *   get:
- *     summary: Busca todas as cidades de uma Unidade Federativa
- *     tags: [Cidade]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: unidadeFederativaId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da Unidade Federativa
- *         example: 1
- *     responses:
- *       200:
- *         description: Cidades encontradas
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   descricao:
- *                     type: string
- *                   unidadeFederativaId:
- *                     type: integer
- *       404:
- *         description: Nenhuma cidade encontrada para esta UF
- *       401:
- *         description: Não autorizado
- *       500:
- *         description: Erro interno do servidor
- */
-router.get(
-    "/uf/:unidadeFederativaId",
-    verifyToken,
-    controller.findManyByUnidadeFederativa
-);
-
-/**
- * @swagger
- * /api/cidade/{id}:
- *   get:
- *     summary: Busca uma cidade por ID
- *     tags: [Cidade]
+ *     summary: Busca um Situação de Usuário por ID
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -229,11 +169,11 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID da cidade
+ *         description: ID da situação de usuário
  *         example: 1
  *     responses:
  *       200:
- *         description: Cidade encontrada
+ *         description: Situação de usuário encontrada
  *         content:
  *           application/json:
  *             schema:
@@ -243,17 +183,15 @@ router.get(
  *                   type: integer
  *                 descricao:
  *                   type: string
- *                 unidadeFederativaId:
- *                   type: integer
  *       404:
- *         description: Cidade não encontrada
+ *         description: Situação de usuário não encontrada
  *       401:
  *         description: Não autorizado
  *       500:
  *         description: Erro interno do servidor
  *   put:
- *     summary: Atualiza uma cidade
- *     tags: [Cidade]
+ *     summary: Atualiza uma Situação de Usuário
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -262,7 +200,7 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID da cidade
+ *         description: ID da situação de usuário
  *         example: 1
  *     requestBody:
  *       required: true
@@ -273,15 +211,11 @@ router.get(
  *             properties:
  *               descricao:
  *                 type: string
- *                 description: Nova descrição da cidade
- *                 example: "São Paulo"
- *               unidadeFederativaId:
- *                 type: integer
- *                 description: Novo ID da Unidade Federativa
- *                 example: 2
+ *                 description: Nova descrição da situação de usuário
+ *                 example: "Inativo"
  *     responses:
  *       200:
- *         description: Cidade atualizada com sucesso
+ *         description: Situação de usuário atualizada com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -291,21 +225,19 @@ router.get(
  *                   type: integer
  *                 descricao:
  *                   type: string
- *                 unidadeFederativaId:
- *                   type: integer
  *       400:
  *         description: Dados inválidos
  *       404:
- *         description: Cidade não encontrada
+ *         description: Situação de usuário não encontrada
  *       409:
- *         description: Descrição da cidade já cadastrada
+ *         description: Descrição da situação de usuário já cadastrada
  *       401:
  *         description: Não autorizado
  *       500:
  *         description: Erro interno do servidor
  *   delete:
- *     summary: Exclui uma cidade
- *     tags: [Cidade]
+ *     summary: Exclui um Situação de Usuário
+ *     tags: [Situação de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -314,11 +246,11 @@ router.get(
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID da cidade
+ *         description: ID da situação de usuário
  *         example: 1
  *     responses:
  *       200:
- *         description: Cidade excluída com sucesso
+ *         description: Situação de usuário excluída com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -326,9 +258,9 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Cidade excluída com sucesso"
+ *                   example: "Situação de Usuário excluído com sucesso"
  *       404:
- *         description: Cidade não encontrada
+ *         description: Situação de usuário não encontrada
  *       401:
  *         description: Não autorizado
  *       500:

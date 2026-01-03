@@ -99,10 +99,6 @@ const options = {
                 name: "Unidade Federativa",
                 description: "Gerenciamento de unidades federativas",
             },
-            {
-                name: "Dashboard",
-                description: "Indicadores e métricas do sistema",
-            },
         ],
     },
     apis: [

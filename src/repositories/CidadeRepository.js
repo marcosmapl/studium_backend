@@ -4,7 +4,7 @@ class PrismaCidadeRepository extends BaseRepository {
 
     constructor() {
         super("cidade", "CidadeRepository.js", {
-            defaultOrderBy: "cidade",
+            defaultOrderBy: "descricao",
             orderDirection: "asc",
             includeRelations: {
                 usuarios: true,
@@ -13,23 +13,23 @@ class PrismaCidadeRepository extends BaseRepository {
     }
 
     /**
-     * Busca cidade por nome
-     * @param {string} cidade - Nome da cidade
+     * Busca cidade por descrição
+     * @param {string} descricao - Descrição da cidade
      * @returns {Promise<object|null>} Cidade encontrada ou null
      */
-    async findByCidade(cidade) {
-        return await this.findByUniqueField("cidade", cidade);
+    async findUniqueByDescricao(descricao) {
+        return await this.findByUniqueField("descricao", descricao);
     }
 
     /**
-     * Busca cidades por nome (busca parcial)
-     * @param {string} cidade - Nome da cidade para buscar
+     * Busca cidades por descrição (busca parcial)
+     * @param {string} descricao - Descrição da cidade para buscar
      * @returns {Promise<Array>} Lista de cidades
      */
-    async findByCidadeParcial(cidade) {
+    async findManyByDescricao(descricao) {
         return await this.findMany({
-            cidade: {
-                contains: cidade,
+            descricao: {
+                contains: descricao,
             },
         });
     }
@@ -39,7 +39,7 @@ class PrismaCidadeRepository extends BaseRepository {
      * @param {number} unidadeFederativaId - ID da Unidade Federativa
      * @returns {Promise<Array>} Lista de cidades da UF
      */
-    async findByUnidadeFederativa(unidadeFederativaId) {
+    async findManyByUnidadeFederativa(unidadeFederativaId) {
         return await this.findMany({
             unidadeFederativaId: unidadeFederativaId,
         });

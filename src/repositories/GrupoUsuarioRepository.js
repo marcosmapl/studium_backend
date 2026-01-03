@@ -4,7 +4,7 @@ class PrismaGrupoUsuarioRepository extends BaseRepository {
 
     constructor() {
         super("grupoUsuario", "GrupoUsuarioRepository.js", {
-            defaultOrderBy: "grupo",
+            defaultOrderBy: "descricao",
             orderDirection: "asc",
             includeRelations: {
                 usuarios: true,
@@ -13,23 +13,23 @@ class PrismaGrupoUsuarioRepository extends BaseRepository {
     }
 
     /**
-     * Busca grupo de usuário por nome
-     * @param {string} grupo - Nome do grupo de usuário
+     * Busca grupo de usuário por descrição
+     * @param {string} descricao - Descrição do grupo de usuário
      * @returns {Promise<object|null>} Grupo de usuário encontrado ou null
      */
-    async findByGrupo(grupo) {
-        return await this.findByUniqueField("grupo", grupo);
+    async findUniqueByDescricao(descricao) {
+        return await this.findByUniqueField("descricao", descricao);
     }
 
     /**
-     * Busca grupos de usuário por nome (busca parcial)
-     * @param {string} grupo - Nome do grupo de usuário para buscar
+     * Busca grupos de usuário por descrição (busca parcial)
+     * @param {string} descricao - Descrição do grupo de usuário para buscar
      * @returns {Promise<Array>} Lista de grupos de usuários
      */
-    async findByGrupoParcial(grupo) {
+    async findManyByDescricao(descricao) {
         return await this.findMany({
-            grupo: {
-                contains: grupo,
+            descricao: {
+                contains: descricao,
             },
         });
     }

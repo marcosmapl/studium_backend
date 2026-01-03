@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const generoUsuarioController = require("../controllers/GeneroUsuarioController");
+const controller = require("../controllers/GeneroUsuarioController");
 const { verifyToken } = require("../middleware/auth");
 
 /**
@@ -18,11 +18,11 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - genero
+ *               - descricao
  *             properties:
- *               genero:
+ *               descricao:
  *                 type: string
- *                 description: Nome do gênero
+ *                 description: Descrição do gênero
  *                 example: "Masculino"
  *     responses:
  *       201:
@@ -35,7 +35,7 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 genero:
+ *                 descricao:
  *                   type: string
  *                   example: "Masculino"
  *       400:
@@ -57,7 +57,7 @@ const { verifyToken } = require("../middleware/auth");
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de gêneros ordenados por nome
+ *         description: Lista de gêneros ordenados por descrição
  *         content:
  *           application/json:
  *             schema:
@@ -68,7 +68,7 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   genero:
+ *                   descricao:
  *                     type: string
  *                     example: "Masculino"
  *       401:
@@ -76,25 +76,62 @@ const { verifyToken } = require("../middleware/auth");
  *       500:
  *         description: Erro interno do servidor
  */
-router.post("/", verifyToken, generoUsuarioController.createGeneroUsuario);
-router.get("/", verifyToken, generoUsuarioController.findAllGenerosUsuario);
+router.post("/", verifyToken, controller.create);
+router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/generoUsuario/genero/{genero}:
+ * /api/generoUsuario/descricao/exact/{descricao}:
  *   get:
- *     summary: Busca gêneros por nome (busca parcial)
+ *     summary: Busca gênero por descrição exata
  *     tags: [Gênero de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: genero
+ *         name: descricao
  *         required: true
  *         schema:
  *           type: string
- *         description: Nome do gênero (busca parcial)
+ *         description: Descrição exata do gênero
  *         example: "Masculino"
+ *     responses:
+ *       200:
+ *         description: Gênero encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 descricao:
+ *                   type: string
+ *       404:
+ *         description: Nenhum gênero encontrado
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/descricao/exact/:descricao", verifyToken, controller.findUniqueByDescricao);
+
+/**
+ * @swagger
+ * /api/generoUsuario/descricao/search/{descricao}:
+ *   get:
+ *     summary: Busca gêneros por descrição (busca parcial)
+ *     tags: [Gênero de Usuário]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: descricao
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Descrição do gênero (busca parcial)
+ *         example: "Mas"
  *     responses:
  *       200:
  *         description: Gêneros encontrados
@@ -107,7 +144,7 @@ router.get("/", verifyToken, generoUsuarioController.findAllGenerosUsuario);
  *                 properties:
  *                   id:
  *                     type: integer
- *                   genero:
+ *                   descricao:
  *                     type: string
  *       404:
  *         description: Nenhum gênero encontrado
@@ -116,7 +153,7 @@ router.get("/", verifyToken, generoUsuarioController.findAllGenerosUsuario);
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/genero/:genero", verifyToken, generoUsuarioController.findGeneroUsuarioByGenero);
+router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDescricao);
 
 /**
  * @swagger
@@ -144,7 +181,7 @@ router.get("/genero/:genero", verifyToken, generoUsuarioController.findGeneroUsu
  *               properties:
  *                 id:
  *                   type: integer
- *                 genero:
+ *                 descricao:
  *                   type: string
  *       404:
  *         description: Gênero não encontrado
@@ -172,9 +209,9 @@ router.get("/genero/:genero", verifyToken, generoUsuarioController.findGeneroUsu
  *           schema:
  *             type: object
  *             properties:
- *               genero:
+ *               descricao:
  *                 type: string
- *                 description: Novo nome do gênero
+ *                 description: Nova descrição do gênero
  *                 example: "Feminino"
  *     responses:
  *       200:
@@ -186,14 +223,14 @@ router.get("/genero/:genero", verifyToken, generoUsuarioController.findGeneroUsu
  *               properties:
  *                 id:
  *                   type: integer
- *                 genero:
+ *                 descricao:
  *                   type: string
  *       400:
  *         description: Dados inválidos
  *       404:
  *         description: Gênero não encontrado
  *       409:
- *         description: Nome do gênero já cadastrado
+ *         description: Descrição do gênero já cadastrada
  *       401:
  *         description: Não autorizado
  *       500:
@@ -229,8 +266,8 @@ router.get("/genero/:genero", verifyToken, generoUsuarioController.findGeneroUsu
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/:id", verifyToken, generoUsuarioController.findGeneroUsuarioById);
-router.put("/:id", verifyToken, generoUsuarioController.updateGeneroUsuario);
-router.delete("/:id", verifyToken, generoUsuarioController.deleteGeneroUsuario);
+router.get("/:id", verifyToken, controller.findById);
+router.put("/:id", verifyToken, controller.update);
+router.delete("/:id", verifyToken, controller.delete);
 
 module.exports = router;

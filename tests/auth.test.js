@@ -20,8 +20,8 @@ describe("Autenticação - /api", () => {
   describe("POST /api/login", () => {
     it("deve fazer login com credenciais válidas", async () => {
       const response = await request(app).post("/api/login").send({
-        username: "admin",
-        password: "admin123",
+        username: "teste",
+        password: "teste123",
       });
 
       expect(response.status).toBe(200);

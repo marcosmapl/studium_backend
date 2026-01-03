@@ -13,11 +13,13 @@ const swaggerSpec = require("./config/swagger");
 
 // Importação de todas as rotas da API
 const authRouter = require("./routes/auth");
-const unidadeFederativaRouter = require("./routes/unidadeFederativa");
+const cidadeRouter = require("./routes/cidade");
 const generoUsuarioRouter = require("./routes/generoUsuario");
-const usuarioRouter = require("./routes/usuario");
 const grupoUsuarioRouter = require("./routes/grupoUsuario");
-// const dashboardRouter = require("./routes/dashboard");
+const situacaoUsuarioRouter = require("./routes/situacaoUsuario");
+const unidadeFederativaRouter = require("./routes/unidadeFederativa");
+const usuarioRouter = require("./routes/usuario");
+
 const healthRouter = require("./routes/health");
 
 const app = express();
@@ -51,7 +53,7 @@ app.use(bodyParser.json());
  *                   example: Studium Backend API
  *                 version:
  *                   type: string
- *                   example: 1.0.0
+ *                   example: 1.1.0
  *                 environment:
  *                   type: string
  *                   example: development
@@ -75,7 +77,7 @@ app.get("/", (req, res) =>
   res.json({
     ok: true,
     message: "Studium Backend API",
-    version: "1.0.0",
+    version: "1.1.0",
     environment: process.env.NODE_ENV || "development",
     endpoints: {
       health: "/health",
@@ -101,11 +103,12 @@ app.get("/api", (req, res) => res.redirect("/api-docs"));
 
 // Registro de rotas
 app.use("/api", authRouter);
-app.use("/api/unidadeFederativa", unidadeFederativaRouter);
+app.use("/api/cidade", cidadeRouter);
 app.use("/api/generoUsuario", generoUsuarioRouter);
-app.use("/api/usuarios", usuarioRouter);
-app.use("/api/gruposUsuario", grupoUsuarioRouter);
-// app.use("/api/dashboard", dashboardRouter);
+app.use("/api/grupoUsuario", grupoUsuarioRouter);
+app.use("/api/situacaoUsuario", situacaoUsuarioRouter);
+app.use("/api/usuario", usuarioRouter);
+app.use("/api/unidadeFederativa", unidadeFederativaRouter);
 app.use("/health", healthRouter);
 
 // Tratamento de erros

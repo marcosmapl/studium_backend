@@ -31,11 +31,14 @@ const {
 
 // Importação de todas as rotas da API
 const authRouter = require("./routes/auth");
-const healthRouter = require("./routes/health");
-// const grupoUsuarioRouter = require("./routes/grupoUsuario");
-const unidadeFederativaRouter = require("./routes/unidadeFederativa");
+const cidadeRouter = require("./routes/cidade");
 const generoUsuarioRouter = require("./routes/generoUsuario");
+const grupoUsuarioRouter = require("./routes/grupoUsuario");
+const situacaoUsuarioRouter = require("./routes/situacaoUsuario");
+const unidadeFederativaRouter = require("./routes/unidadeFederativa");
 const usuarioRouter = require("./routes/usuario");
+
+const healthRouter = require("./routes/health");
 
 // Inicialização da aplicação Express
 const app = express();
@@ -79,10 +82,10 @@ app.use(loggerMiddleware);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: SIGA Backend API
+ *                   example: Studium Backend API
  *                 version:
  *                   type: string
- *                   example: 1.2.0
+ *                   example: 1.1.0
  *                 environment:
  *                   type: string
  *                   example: development
@@ -100,19 +103,19 @@ app.use(loggerMiddleware);
  *                       example: /api-docs
  *                     documentation:
  *                       type: string
- *                       example: https://github.com/marcosmapl/siga_backend
+ *                       example: https://github.com/marcosmapl/studium_backend
  */
 app.get("/", (req, res) =>
   res.json({
     ok: true,
-    message: "SIGA Backend API",
-    version: "1.2.0",
+    message: "Studium Backend API",
+    version: "1.1.0",
     environment: process.env.NODE_ENV || "development",
     endpoints: {
       health: "/health",
       healthDb: "/health/db",
       api: "/api-docs",
-      documentation: "https://github.com/marcosmapl/siga_backend",
+      documentation: "https://github.com/marcosmapl/studium_backend",
     },
   })
 );
@@ -123,7 +126,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     customCss: ".swagger-ui .topbar { display: none }",
-    customSiteTitle: "SIGA API Documentation",
+    customSiteTitle: "Studium API Documentation",
   })
 );
 
@@ -134,20 +137,14 @@ app.get("/api", (req, res) => res.redirect("/api-docs"));
  * Registro de Rotas da API
  * Cada módulo da aplicação possui seu próprio conjunto de rotas
  */
-
-// ===== AUTENTICAÇÃO =====
-app.use("/api", authRouter); // Rotas de login, logout e gestão de tentativas
-
-// ===== GESTÃO DE UNIDADES =====
-app.use("/api/unidades", unidadeFederativaRouter); // Filiais/Unidades da empresa
-
-// ===== GESTÃO DE USUÁRIOS E PERMISSÕES =====
-app.use("/api/generoUsuario", generoUsuarioRouter); // Gêneros de usuário
-app.use("/api/usuarios", usuarioRouter); // CRUD de usuários
-// app.use("/api/gruposUsuario", grupoUsuarioRouter); // Grupos de permissões
-
-// ===== MONITORAMENTO E ANALYTICS =====
-app.use("/health", healthRouter); // Health check da aplicação
+app.use("/api", authRouter);
+app.use("/api/cidade", cidadeRouter);
+app.use("/api/generoUsuario", generoUsuarioRouter);
+app.use("/api/grupoUsuario", grupoUsuarioRouter);
+app.use("/api/situacaoUsuario", situacaoUsuarioRouter);
+app.use("/api/usuario", usuarioRouter);
+app.use("/api/unidadeFederativa", unidadeFederativaRouter);
+app.use("/health", healthRouter);
 
 /**
  * Tratamento de Erros e Rotas Não Encontradas

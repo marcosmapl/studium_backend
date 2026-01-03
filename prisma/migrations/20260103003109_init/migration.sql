@@ -1,33 +1,39 @@
 -- CreateTable
 CREATE TABLE `unidade_federativa` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `uf` VARCHAR(191) NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `descricao` VARCHAR(191) NOT NULL,
+    `sigla` VARCHAR(191) NOT NULL,
 
-    INDEX `unidade_federativa_uf_idx`(`uf`),
+    UNIQUE INDEX `unidade_federativa_descricao_key`(`descricao`),
+    UNIQUE INDEX `unidade_federativa_sigla_key`(`sigla`),
+    INDEX `unidade_federativa_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `cidade` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `cidade` VARCHAR(191) NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `descricao` VARCHAR(191) NOT NULL,
+    `unidade_federativa_id` INTEGER NOT NULL,
 
-    INDEX `cidade_cidade_idx`(`cidade`),
+    UNIQUE INDEX `cidade_descricao_key`(`descricao`),
+    INDEX `cidade_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `genero_usuario` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `genero` VARCHAR(191) NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    INDEX `genero_usuario_genero_idx`(`genero`),
+    UNIQUE INDEX `genero_usuario_descricao_key`(`descricao`),
+    INDEX `genero_usuario_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `situacao_usuario` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `situacao` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `situacao_usuario_situacao_key`(`situacao`),
@@ -36,20 +42,32 @@ CREATE TABLE `situacao_usuario` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `grupo_usuario` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `grupo` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `grupo_usuario_grupo_key`(`grupo`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `usuario` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(191) NOT NULL,
     `sobrenome` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `data_nascimento` DATETIME(3) NULL,
+    `ultimo_acesso` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `fotoUrl` VARCHAR(500) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `genero_id` BIGINT NOT NULL,
-    `cidade_id` BIGINT NOT NULL,
-    `uf_id` BIGINT NOT NULL,
-    `situacao_id` BIGINT NOT NULL,
+    `genero_id` INTEGER NOT NULL,
+    `situacao_id` INTEGER NOT NULL,
+    `cidade_id` INTEGER NOT NULL,
+    `unidade_federativa_id` INTEGER NOT NULL,
+    `grupo_usuario_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `usuario_username_key`(`username`),
     UNIQUE INDEX `usuario_email_key`(`email`),
@@ -57,14 +75,14 @@ CREATE TABLE `usuario` (
     INDEX `usuario_email_idx`(`email`),
     INDEX `usuario_genero_id_fkey`(`genero_id`),
     INDEX `usuario_cidade_id_fkey`(`cidade_id`),
-    INDEX `usuario_uf_id_fkey`(`uf_id`),
     INDEX `usuario_situacao_id_fkey`(`situacao_id`),
+    INDEX `usuario_grupo_id_fkey`(`grupo_usuario_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `situacao_plano_estudo` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `situacao` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `situacao_plano_estudo_situacao_key`(`situacao`),
@@ -74,7 +92,7 @@ CREATE TABLE `situacao_plano_estudo` (
 
 -- CreateTable
 CREATE TABLE `plano_estudo` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `titulo` VARCHAR(191) NOT NULL,
     `descricao` VARCHAR(191) NOT NULL,
     `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
@@ -86,8 +104,8 @@ CREATE TABLE `plano_estudo` (
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `usuario_id` BIGINT NOT NULL,
-    `situacao_id` BIGINT NOT NULL,
+    `usuario_id` INTEGER NOT NULL,
+    `situacao_id` INTEGER NOT NULL,
 
     INDEX `plano_estudo_titulo_idx`(`titulo`),
     INDEX `planoestudo_usuario_id_fkey`(`usuario_id`),
@@ -97,7 +115,7 @@ CREATE TABLE `plano_estudo` (
 
 -- CreateTable
 CREATE TABLE `disciplina` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `titulo` VARCHAR(191) NOT NULL,
     `descricao` VARCHAR(191) NOT NULL,
     `cor` VARCHAR(191) NOT NULL,
@@ -113,7 +131,7 @@ CREATE TABLE `disciplina` (
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `plano_id` BIGINT NOT NULL,
+    `plano_id` INTEGER NOT NULL,
 
     INDEX `disciplina_titulo_idx`(`titulo`),
     INDEX `disciplina_plano_id_fkey`(`plano_id`),
@@ -122,7 +140,7 @@ CREATE TABLE `disciplina` (
 
 -- CreateTable
 CREATE TABLE `situacao_topico` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `situacao` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `situacao_topico_situacao_key`(`situacao`),
@@ -132,7 +150,7 @@ CREATE TABLE `situacao_topico` (
 
 -- CreateTable
 CREATE TABLE `topico` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `titulo` VARCHAR(191) NOT NULL,
     `ordem` INTEGER NOT NULL,
     `descricao` VARCHAR(191) NOT NULL,
@@ -146,8 +164,8 @@ CREATE TABLE `topico` (
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `plano_disciplina_id` BIGINT NOT NULL,
-    `situacao_id` BIGINT NOT NULL,
+    `plano_disciplina_id` INTEGER NOT NULL,
+    `situacao_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `topico_descricao_key`(`descricao`),
     INDEX `topico_titulo_idx`(`titulo`),
@@ -158,7 +176,7 @@ CREATE TABLE `topico` (
 
 -- CreateTable
 CREATE TABLE `categoria_sessao` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `categoria` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `categoria_sessao_categoria_key`(`categoria`),
@@ -168,7 +186,7 @@ CREATE TABLE `categoria_sessao` (
 
 -- CreateTable
 CREATE TABLE `situacao_sessao` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `situacao` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `situacao_sessao_situacao_key`(`situacao`),
@@ -178,7 +196,7 @@ CREATE TABLE `situacao_sessao` (
 
 -- CreateTable
 CREATE TABLE `sessao_estudo` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `data_sessao` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
     `questoes_erros` INTEGER NOT NULL DEFAULT 0,
@@ -188,11 +206,11 @@ CREATE TABLE `sessao_estudo` (
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `plano_estudo_id` BIGINT NOT NULL,
-    `disciplina_id` BIGINT NOT NULL,
-    `topico_id` BIGINT NOT NULL,
-    `categoria_id` BIGINT NOT NULL,
-    `situacao_id` BIGINT NOT NULL,
+    `plano_estudo_id` INTEGER NOT NULL,
+    `disciplina_id` INTEGER NOT NULL,
+    `topico_id` INTEGER NOT NULL,
+    `categoria_id` INTEGER NOT NULL,
+    `situacao_id` INTEGER NOT NULL,
 
     INDEX `sessao_estudo_data_sessao_idx`(`data_sessao`),
     INDEX `sessao_estudo_topico_finalizado_idx`(`topico_finalizado`),
@@ -206,7 +224,7 @@ CREATE TABLE `sessao_estudo` (
 
 -- CreateTable
 CREATE TABLE `categoria_revisao` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `categoria` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `categoria_revisao_categoria_key`(`categoria`),
@@ -216,7 +234,7 @@ CREATE TABLE `categoria_revisao` (
 
 -- CreateTable
 CREATE TABLE `situacao_revisao` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `situacao` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `situacao_revisao_situacao_key`(`situacao`),
@@ -226,16 +244,16 @@ CREATE TABLE `situacao_revisao` (
 
 -- CreateTable
 CREATE TABLE `revisao` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `data_programada` DATETIME(3) NOT NULL,
     `data_realizada` DATETIME(3) NOT NULL,
     `numero` INTEGER NOT NULL,
     `desempenho` INTEGER NOT NULL,
-    `categoria_id` BIGINT NOT NULL,
-    `situacao_id` BIGINT NOT NULL,
-    `plano_estudo_id` BIGINT NOT NULL,
-    `disciplina_id` BIGINT NOT NULL,
-    `topico_id` BIGINT NOT NULL,
+    `categoria_id` INTEGER NOT NULL,
+    `situacao_id` INTEGER NOT NULL,
+    `plano_estudo_id` INTEGER NOT NULL,
+    `disciplina_id` INTEGER NOT NULL,
+    `topico_id` INTEGER NOT NULL,
 
     INDEX `revisao_data_programada_idx`(`data_programada`),
     INDEX `revisao_data_realizada_idx`(`data_realizada`),
@@ -248,16 +266,22 @@ CREATE TABLE `revisao` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
+ALTER TABLE `cidade` ADD CONSTRAINT `cidade_unidade_federativa_id_fkey` FOREIGN KEY (`unidade_federativa_id`) REFERENCES `unidade_federativa`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `usuario` ADD CONSTRAINT `usuario_genero_id_fkey` FOREIGN KEY (`genero_id`) REFERENCES `genero_usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `usuario` ADD CONSTRAINT `usuario_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `usuario` ADD CONSTRAINT `usuario_cidade_id_fkey` FOREIGN KEY (`cidade_id`) REFERENCES `cidade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `usuario` ADD CONSTRAINT `usuario_uf_id_fkey` FOREIGN KEY (`uf_id`) REFERENCES `unidade_federativa`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `usuario` ADD CONSTRAINT `usuario_unidade_federativa_id_fkey` FOREIGN KEY (`unidade_federativa_id`) REFERENCES `unidade_federativa`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `usuario` ADD CONSTRAINT `usuario_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `usuario` ADD CONSTRAINT `usuario_grupo_usuario_id_fkey` FOREIGN KEY (`grupo_usuario_id`) REFERENCES `grupo_usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_usuario_id_fkey` FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

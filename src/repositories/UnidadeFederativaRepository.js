@@ -4,7 +4,7 @@ class PrismaUnidadeFederativaRepository extends BaseRepository {
 
     constructor() {
         super("unidadeFederativa", "UnidadeFederativaRepository.js", {
-            defaultOrderBy: "nome",
+            defaultOrderBy: "descricao",
             orderDirection: "asc",
             includeRelations: {
                 usuarios: true,
@@ -14,12 +14,25 @@ class PrismaUnidadeFederativaRepository extends BaseRepository {
     }
 
     /**
-     * Busca a unidade federativa pelo nome
-     * @param {string} nome - Nome da unidade federativa
+     * Busca a unidade federativa pela descrição
+     * @param {string} descricao - Descrição da unidade federativa
      * @returns {Promise<object|null>} Unidade Federativa encontrada ou null
      */
-    async findByNome(nome) {
-        return await this.findByUniqueField("nome", nome.toUpperCase());
+    async findOneByDescricao(descricao) {
+        return await this.findByUniqueField("descricao", descricao.toUpperCase());
+    }
+
+    /**
+     * Busca a unidade federativa pela descrição (busca parcial)
+     * @param {string} descricao - Descrição da unidade federativa
+     * @returns {Promise<Array>} Lista de Unidades Federativas
+     */
+    async findAllByDescricao(descricao) {
+        return await this.findMany({
+            descricao: {
+                contains: descricao,
+            },
+        });
     }
 
     /**

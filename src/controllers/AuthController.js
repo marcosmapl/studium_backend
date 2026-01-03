@@ -54,12 +54,12 @@ class AuthController {
             }
 
             // Verificar se o usuário está ativo
-            if (usuario.situacaoUsuario.situacao !== "Ativo") {
+            if (usuario.situacaoUsuario.descricao !== "Ativo") {
                 logger.warn("Tentativa de login com usuário não ativo", {
                     route: req.originalUrl,
                     usuarioId: usuario.id,
                     username: usuario.username,
-                    situacao: usuario.situacaoUsuario.situacao,
+                    situacao: usuario.situacaoUsuario.descricao,
                 });
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     error: "Usuário não ativo",

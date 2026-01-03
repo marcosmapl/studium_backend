@@ -10,99 +10,99 @@ async function main() {
     const ufs = await prisma.unidadeFederativa.createMany({
         data: [
             {
-                nome: "Acre",
+                descricao: "Acre",
                 sigla: "AC",
             },
             {
-                nome: "Alagoas",
+                descricao: "Alagoas",
                 sigla: "AL",
             },
             {
-                nome: "Amazonas",
+                descricao: "Amazonas",
                 sigla: "AM",
             },
             {
-                nome: "Bahia",
+                descricao: "Bahia",
                 sigla: "BA",
             },
             {
-                nome: "Ceará",
+                descricao: "Ceará",
                 sigla: "CE",
             },
             {
-                nome: "Distrito Federal",
+                descricao: "Distrito Federal",
                 sigla: "DF",
             },
             {
-                nome: "Espirito Santo",
+                descricao: "Espirito Santo",
                 sigla: "ES",
             },
             {
-                nome: "Goiás",
+                descricao: "Goiás",
                 sigla: "GO",
             },
             {
-                nome: "Maranhão",
+                descricao: "Maranhão",
                 sigla: "MA",
             },
             {
-                nome: "Mato Grosso",
+                descricao: "Mato Grosso",
                 sigla: "MT",
             },
             {
-                nome: "Mato Grosso do Sul",
+                descricao: "Mato Grosso do Sul",
                 sigla: "MS",
             },
             {
-                nome: "Minas Gerais",
+                descricao: "Minas Gerais",
                 sigla: "MG",
             },
             {
-                nome: "Pará",
+                descricao: "Pará",
                 sigla: "PA",
             },
             {
-                nome: "Pernambuco",
+                descricao: "Pernambuco",
                 sigla: "PE",
             },
             {
-                nome: "Piauí",
+                descricao: "Piauí",
                 sigla: "PI",
             },
             {
-                nome: "Rio de Janeiro",
+                descricao: "Rio de Janeiro",
                 sigla: "RJ",
             },
             {
-                nome: "Rio Grande do Norte",
+                descricao: "Rio Grande do Norte",
                 sigla: "RN",
             },
             {
-                nome: "Rio Grande do Sul",
+                descricao: "Rio Grande do Sul",
                 sigla: "RS",
             },
             {
-                nome: "Rondônia",
+                descricao: "Rondônia",
                 sigla: "RO",
             },
             {
-                nome: "Roraima",
+                descricao: "Roraima",
                 sigla: "RR",
             },
             {
-                nome: "Santa Catarina",
+                descricao: "Santa Catarina",
                 sigla: "SC",
             },
             {
-                nome: "São Paulo",
+                descricao: "São Paulo",
                 sigla: "SP",
             },
             {
-                nome: "Sergipe",
+                descricao: "Sergipe",
                 sigla: "SE",
             },
             {
-                nome: "Tocantins",
+                descricao: "Tocantins",
                 sigla: "TO",
             },
         ],
@@ -118,7 +118,7 @@ async function main() {
     await prisma.cidade.createMany({
         data: [
             {
-                cidade: "Manaus",
+                descricao: "Manaus",
                 unidadeFederativaId: ufAM.id,
             },
         ],
@@ -127,7 +127,7 @@ async function main() {
     logger.info(`Created 01 Cidade`);
 
     const cidadeManaus = await prisma.cidade.findUnique({
-        where: { cidade: "Manaus" },
+        where: { descricao: "Manaus" },
     });
 
     // Seed GeneroUsuario
@@ -193,8 +193,8 @@ async function main() {
     await prisma.usuario.createMany({
         data: [
             {
-                nome: "Studium",
-                sobrenome: "Admin",
+                descricao: "Studium",
+                sobredescricao: "Admin",
                 username: "studium_admin",
                 password: "123456",
                 email: "admin@studium.com",
@@ -222,3 +222,4 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+

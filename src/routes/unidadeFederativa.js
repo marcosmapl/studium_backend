@@ -18,10 +18,10 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - nome
+ *               - descricao
  *               - sigla
  *             properties:
- *               nome:
+ *               descricao:
  *                 type: string
  *                 description: Descrição da unidade federativa
  *                 example: "Distrito Federal"
@@ -40,7 +40,7 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 nome:
+ *                 descricao:
  *                   type: string
  *                   example: "Distrito Federal"
  *                 sigla:
@@ -76,7 +76,7 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   nome:
+ *                   descricao:
  *                     type: string
  *                     example: "Distrito Federal"
  *                   sigla:
@@ -100,19 +100,19 @@ router.get(
 
 /**
  * @swagger
- * /api/unidadeFederativa/nome/{nome}:
+ * /api/unidadeFederativa/descricao/exact/{descricao}:
  *   get:
- *     summary: Busca uma unidade federativa por nome
+ *     summary: Busca uma unidade federativa por descrição exata
  *     tags: [Unidade Federativa]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: nome
+ *         name: descricao
  *         required: true
  *         schema:
  *           type: string
- *         description: Nome da Unidade Federativa
+ *         description: Descrição exata da Unidade Federativa
  *         example: "Distrito Federal"
  *     responses:
  *       200:
@@ -124,7 +124,7 @@ router.get(
  *               properties:
  *                 id:
  *                   type: integer
- *                 nome:
+ *                 descricao:
  *                   type: string
  *                 sigla:
  *                   type: string
@@ -136,9 +136,54 @@ router.get(
  *         description: Erro interno do servidor
  */
 router.get(
-  "/nome/:nome",
+  "/descricao/exact/:descricao",
   verifyToken,
-  unidadeFederativaController.findUnidadeFederativaByNome
+  unidadeFederativaController.findUnidadeFederativaByDescricao
+);
+
+/**
+ * @swagger
+ * /api/unidadeFederativa/descricao/search/{descricao}:
+ *   get:
+ *     summary: Busca unidades federativas por descrição (busca parcial)
+ *     tags: [Unidade Federativa]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: descricao
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Descrição da Unidade Federativa (busca parcial)
+ *         example: "Federal"
+ *     responses:
+ *       200:
+ *         description: Unidades Federativas encontradas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   descricao:
+ *                     type: string
+ *                   sigla:
+ *                     type: string
+ *       404:
+ *         description: Nenhuma Unidade Federativa encontrada
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get(
+  "/descricao/search/:descricao",
+  verifyToken,
+  unidadeFederativaController.findUnidadesFederativasByDescricao
 );
 
 /**
@@ -167,7 +212,7 @@ router.get(
  *               properties:
  *                 id:
  *                   type: integer
- *                 nome:
+ *                 descricao:
  *                   type: string
  *                 sigla:
  *                   type: string
@@ -211,7 +256,7 @@ router.get(
  *               properties:
  *                 id:
  *                   type: integer
- *                 nome:
+ *                 descricao:
  *                   type: string
  *                 sigla:
  *                   type: string
@@ -241,7 +286,7 @@ router.get(
  *           schema:
  *             type: object
  *             properties:
- *               nome:
+ *               descricao:
  *                 type: string
  *                 description: Novo nome da Unidade Federativa
  *                 example: "São Paulo"
@@ -259,7 +304,7 @@ router.get(
  *               properties:
  *                 id:
  *                   type: integer
- *                 nome:
+ *                 descricao:
  *                   type: string
  *                 sigla:
  *                   type: string

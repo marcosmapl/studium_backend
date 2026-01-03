@@ -8,52 +8,52 @@ datasource db {
 }
 
 model UnidadeFederativa {
-    id    Int    @id @default(autoincrement())
-    nome  String @unique
-    sigla String @unique
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
+    sigla     String @unique
 
     usuarios Usuario[]
     cidades  Cidade[]
 
-    @@index([nome])
+    @@index([descricao])
     @@map("unidade_federativa")
 }
 
 model Cidade {
-    id     Int    @id @default(autoincrement())
-    cidade String @unique
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
 
     unidadeFederativaId Int               @map("unidade_federativa_id")
     unidadeFederativa   UnidadeFederativa @relation(fields: [unidadeFederativaId], references: [id])
 
     usuarios Usuario[]
 
+    @@index([descricao])
     @@map("cidade")
 }
 
 model GeneroUsuario {
-    id     Int    @id @default(autoincrement())
-    genero String @unique
+    id        Int       @id @default(autoincrement())
+    descricao String    @unique
+    usuarios  Usuario[]
 
-    usuarios Usuario[]
-
+    @@index([descricao])
     @@map("genero_usuario")
 }
 
 model SituacaoUsuario {
-    id       Int    @id @default(autoincrement())
-    situacao String @unique
+    id        Int    @id @default(autoincrement())
+    descricao String @unique @map("situacao")
 
     usuarios Usuario[]
 
-    @@index([situacao])
+    @@index([descricao])
     @@map("situacao_usuario")
 }
 
 model GrupoUsuario {
-    id    Int    @id @default(autoincrement())
-    grupo String @unique
-
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
     usuarios Usuario[]
 
     @@map("grupo_usuario")

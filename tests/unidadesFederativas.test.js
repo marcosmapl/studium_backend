@@ -14,11 +14,11 @@ const {
 
 describe("Unidade Federativa - /api/unidadeFederativa", () => {
   let token;
-  let seedData;
+  let ufTeste;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await cleanDatabase();
-    seedData = await seedBasicData();
+    await seedBasicData(); // Criar usuário admin para autenticação
     token = await getAuthToken(app);
   });
 
@@ -40,8 +40,8 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
   describe("POST /api/unidadeFederativa", () => {
     it("deve criar uma nova unidade federativa", async () => {
       const unidadeData = {
-        nome: "Nova Unidade",
-        sigla: "NU",
+        descricao: "Teste Unidade Federativa",
+        sigla: "TU",
       };
 
       const response = await request(app)
@@ -50,11 +50,13 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .send(unidadeData);
 
       expect(response.status).toBe(201);
-      expect(response.body.nome).toBe("Nova Unidade");
-      expect(response.body.sigla).toBe("NU");
+      expect(response.body.descricao).toBe("Teste Unidade Federativa");
+      expect(response.body.sigla).toBe("TU");
+      
+      ufTeste = response.body; // Salvar para reutilizar nos outros testes
     });
 
-    it("deve validar ausência de nome", async () => {
+    it("deve validar ausência de descricao", async () => {
       const response = await request(app)
         .post("/api/unidadeFederativa")
         .set("Authorization", `Bearer ${token}`)
@@ -71,7 +73,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
           .post("/api/unidadeFederativa")
           .set("Authorization", `Bearer ${token}`)
           .send({
-            nome: "Nova Unidade",
+            descricao: "Nova Unidade",
             // Faltando campos obrigatórios
           });
   
@@ -82,11 +84,12 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
   describe("GET /api/unidadeFederativa/:id", () => {
     it("deve buscar unidade federativa por ID", async () => {
       const response = await request(app)
-        .get(`/api/unidadeFederativa/${seedData.unidadeFederativa.id}`)
+        .get(`/api/unidadeFederativa/${ufTeste.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.id).toBe(seedData.unidadeFederativa.id);
+      expect(response.body.id).toBe(ufTeste.id);
+      expect(response.body.descricao).toBe(ufTeste.descricao);
     });
 
     it("deve retornar 404 para unidade federativa inexistente", async () => {
@@ -100,31 +103,27 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
 
   describe("PUT /api/unidades/:id", () => {
     it("deve atualizar uma unidade existente", async () => {
-      const unidade = await prisma.unidadeFederativa.create({
-        data: {
-          nome: "Unidade Update",
-          sigla: "UU",
-        },
-      });
-
       const response = await request(app)
-        .put(`/api/unidadeFederativa/${unidade.id}`)
+        .put(`/api/unidadeFederativa/${ufTeste.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send({
-          nome: "Unidade Atualizada",
+          descricao: "Unidade Atualizada",
           sigla: "UA",
         });
 
       expect(response.status).toBe(200);
-      expect(response.body.nome).toBe("Unidade Atualizada");
+      expect(response.body.descricao).toBe("Unidade Atualizada");
       expect(response.body.sigla).toBe("UA");
+      
+      // Atualizar ufTeste com novos dados
+      ufTeste = response.body;
     });
 
     it("deve retornar 404 ao atualizar unidade inexistente", async () => {
       const response = await request(app)
         .put("/api/unidadeFederativa/99999")
         .set("Authorization", `Bearer ${token}`)
-        .send({ nome: "Teste", sigla: "TS" });
+        .send({ descricao: "Teste", sigla: "TS" });
 
       expect(response.status).toBe(404);
     });
@@ -132,22 +131,15 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
 
   describe("DELETE /api/unidades/:id", () => {
     it("deve excluir uma unidade existente", async () => {
-      const unidade = await prisma.unidadeFederativa.create({
-        data: {
-          nome: "Unidade Delete",
-          sigla: "UD",
-        },
-      });
-
       const response = await request(app)
-        .delete(`/api/unidadeFederativa/${unidade.id}`)
+        .delete(`/api/unidadeFederativa/${ufTeste.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(204);
 
       // Verificar que foi realmente deletada
       const verificacao = await prisma.unidadeFederativa.findUnique({
-        where: { id: unidade.id },
+        where: { id: ufTeste.id },
       });
       expect(verificacao).toBeNull();
     });
@@ -155,6 +147,112 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
     it("deve retornar 404 ao excluir unidade inexistente", async () => {
       const response = await request(app)
         .delete("/api/unidadeFederativa/99999")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe("GET /api/unidadeFederativa/descricao/exact/:descricao", () => {
+    it("deve buscar unidade federativa por descrição exata", async () => {
+      // Criar uma UF para teste
+      const uf = await prisma.unidadeFederativa.create({
+        data: {
+          descricao: "Busca Exata Test",
+          sigla: "BE",
+        },
+      });
+
+      const response = await request(app)
+        .get("/api/unidadeFederativa/descricao/exact/Busca Exata Test")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.descricao).toBe("Busca Exata Test");
+      expect(response.body.sigla).toBe("BE");
+
+      // Limpar
+      await prisma.unidadeFederativa.delete({ where: { id: uf.id } });
+    });
+
+    it("deve retornar 404 para descrição inexistente", async () => {
+      const response = await request(app)
+        .get("/api/unidadeFederativa/descricao/exact/Inexistente")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe("GET /api/unidadeFederativa/descricao/search/:descricao", () => {
+    it("deve buscar unidades federativas por descrição parcial", async () => {
+      // Criar UFs para teste
+      const uf1 = await prisma.unidadeFederativa.create({
+        data: {
+          descricao: "Teste Parcial 1",
+          sigla: "T1",
+        },
+      });
+      const uf2 = await prisma.unidadeFederativa.create({
+        data: {
+          descricao: "Teste Parcial 2",
+          sigla: "T2",
+        },
+      });
+
+      const response = await request(app)
+        .get("/api/unidadeFederativa/descricao/search/Parcial")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThanOrEqual(2);
+      
+      const descricoes = response.body.map(uf => uf.descricao);
+      expect(descricoes).toContain("Teste Parcial 1");
+      expect(descricoes).toContain("Teste Parcial 2");
+
+      // Limpar
+      await prisma.unidadeFederativa.delete({ where: { id: uf1.id } });
+      await prisma.unidadeFederativa.delete({ where: { id: uf2.id } });
+    });
+
+    it("deve retornar array vazio para descrição sem correspondência", async () => {
+      const response = await request(app)
+        .get("/api/unidadeFederativa/descricao/search/XyZaBc123")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBe(0);
+    });
+  });
+
+  describe("GET /api/unidadeFederativa/sigla/:sigla", () => {
+    it("deve buscar unidade federativa por sigla", async () => {
+      // Criar uma UF para teste
+      const uf = await prisma.unidadeFederativa.create({
+        data: {
+          descricao: "Busca Sigla Test",
+          sigla: "BS",
+        },
+      });
+
+      const response = await request(app)
+        .get("/api/unidadeFederativa/sigla/BS")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.descricao).toBe("Busca Sigla Test");
+      expect(response.body.sigla).toBe("BS");
+
+      // Limpar
+      await prisma.unidadeFederativa.delete({ where: { id: uf.id } });
+    });
+
+    it("deve retornar 404 para sigla inexistente", async () => {
+      const response = await request(app)
+        .get("/api/unidadeFederativa/sigla/XX")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(404);

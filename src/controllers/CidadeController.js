@@ -8,40 +8,78 @@ class CidadeController extends BaseController {
     constructor() {
         super(repository, "cidade", {
             entityNamePlural: "cidades",
-            requiredFields: ["cidade", "unidadeFederativaId"]
+            requiredFields: ["descricao", "unidadeFederativaId"]
         });
     }
 
     /**
-     * Busca cidades por nome (busca parcial)
+     * Busca cidade por descrição exata
      */
-    async findByCidade(req, res, next) {
+    async findUniqueByDescricao(req, res, next) {
         try {
-            const { nome: cidade } = req.params;
-            const cidadeDecodificado = decodeURIComponent(cidade);
+            const { descricao } = req.params;
+            const descricaoDecodificado = decodeURIComponent(descricao);
 
-            logger.info("Buscando cidade por nome da cidade", {
-                nome: cidadeDecodificado,
+            logger.info(`Buscando ${this.entityName} por descrição exata`, {
+                nome: descricaoDecodificado,
                 route: req.originalUrl,
             });
 
-            const cidades = await this.repository.findByCidade(
-                cidadeDecodificado
+            const cidade = await this.repository.findUniqueByDescricao(
+                descricaoDecodificado
             );
 
             if (!cidade) {
-                logger.info("Nenhuma cidade encontrada com o nome", {
-                    nome: cidadeDecodificado,
+                logger.info(`Nenhuma ${this.entityName} encontrada com essa descrição`, {
+                    descricao: descricaoDecodificado,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada com esse nome`
+                    error: `Nenhuma ${this.entityName} encontrada com essa descrição`
                 });
             }
 
             return res.json(cidade);
         } catch (error) {
-            logger.error("Erro ao buscar cidade por nome", {
+            logger.error(`Erro ao buscar ${this.entityName} por descrição`, {
+                error: error.message,
+                stack: error.stack,
+            });
+
+            next(error);
+        }
+    }
+
+    /**
+     * Busca cidades por descrição (busca parcial)
+     */
+    async findManyByDescricao(req, res, next) {
+        try {
+            const { descricao } = req.params;
+            const descricaoDecodificado = decodeURIComponent(descricao);
+
+            logger.info(`Buscando ${this.entityNamePlural} por descrição parcial`, {
+                descricao: descricaoDecodificado,
+                route: req.originalUrl,
+            });
+
+            const cidades = await this.repository.findManyByDescricao(
+                descricaoDecodificado
+            );
+
+            if (!cidades || cidades.length === 0) {
+                logger.info(`Não foram encontradas ${this.entityName} essa descrição parcial`, {
+                    descricao: descricaoDecodificado,
+                    route: req.originalUrl,
+                });
+                return res.status(HttpStatus.NOT_FOUND).json({
+                    error: `Não foram encontradas ${this.entityName} essa descrição parcial`
+                });
+            }
+
+            return res.json(cidades);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por descrição parcial`, {
                 error: error.message,
                 stack: error.stack,
             });
@@ -53,33 +91,33 @@ class CidadeController extends BaseController {
     /**
      * Busca cidades de uma Unidade Federativa
      */
-    async findByUnidadeFederativa(req, res, next) {
+    async findManyByUnidadeFederativa(req, res, next) {
         try {
             const { unidadeFederativaId } = req.params;
 
-            logger.info("Buscando cidades por Unidade Federativa", {
+            logger.info(`Buscando ${this.entityNamePlural} por Unidade Federativa`, {
                 unidadeFederativaId,
                 route: req.originalUrl,
             });
 
-            const cidades = await this.repository.findByUnidadeFederativa(
+            const cidades = await this.repository.findManyByUnidadeFederativa(
                 Number(unidadeFederativaId)
             );
 
             if (!cidades || cidades.length === 0) {
-                logger.info("Nenhuma cidade encontrada para a Unidade Federativa", {
+                logger.info(`Não foram encontradas ${this.entityName} para essa Unidade Federativa`, {
                     unidadeFederativaId,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para essa Unidade Federativa`
+                    error: `Não foram encontradas ${this.entityName} para essa Unidade Federativaa`
                 });
             }
 
             return res.json(cidades);
 
         } catch (error) {
-            logger.error("Erro ao buscar cidades por Unidade Federativa", {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por Unidade Federativa`, {
                 error: error.message,
                 stack: error.stack,
             });
@@ -92,11 +130,12 @@ class CidadeController extends BaseController {
 const controller = new CidadeController();
 
 module.exports = {
-    createCidade: controller.create.bind(controller),
-    findAllCidades: controller.findAll.bind(controller),
-    findCidadeById: controller.findById.bind(controller),
-    findCidadeByCidade: controller.findByCidade.bind(controller),
-    findCidadesByUnidadeFederativa: controller.findByUnidadeFederativa.bind(controller),
-    updateCidade: controller.update.bind(controller),
-    deleteCidade: controller.delete.bind(controller)
+    create: controller.create.bind(controller),
+    findAll: controller.findAll.bind(controller),
+    findById: controller.findById.bind(controller),
+    findUniqueByDescricao: controller.findUniqueByDescricao.bind(controller),
+    findManyByDescricao: controller.findManyByDescricao.bind(controller),
+    findManyByUnidadeFederativa: controller.findManyByUnidadeFederativa.bind(controller),
+    update: controller.update.bind(controller),
+    delete: controller.delete.bind(controller)
 };

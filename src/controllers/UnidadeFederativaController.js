@@ -8,40 +8,76 @@ class UnidadeFederativaController extends BaseController {
     constructor() {
         super(repository, "unidade federativa", {
             entityNamePlural: "unidades federativas",
-            requiredFields: ["nome", "sigla"]
+            requiredFields: ["descricao", "sigla"]
         });
     }
 
     /**
-     * Busca unidades federativas por nome
+     * Busca unidade federativa por descrição exata
      */
-    async findByNome(req, res, next) {
+    async findOneByDescricao(req, res, next) {
         try {
-            const { nome } = req.params;
-            const nomeDecodificado = decodeURIComponent(nome);
+            const { descricao } = req.params;
+            const descricaoDecodificada = decodeURIComponent(descricao);
 
-            logger.info("Buscando unidade federativa por nome", {
-                nome: nomeDecodificado,
+            logger.info(`Buscando ${this.entityName} por descrição exata`, {
+                descricao: descricaoDecodificada,
                 route: req.originalUrl,
             });
 
-            const unidadesFederativas = await this.repository.findByNome(
-                nomeDecodificado
+            const unidadeFederativa = await this.repository.findOneByDescricao(
+                descricaoDecodificada
             );
 
-            if (!unidadesFederativas || unidadesFederativas.length === 0) {
-                logger.info("Nenhuma unidade federativa encontrada com o nome", {
-                    nome: nomeDecodificado,
+            if (!unidadeFederativa) {
+                logger.info(`Nenhuma ${this.entityName} encontrada com essa descrição`, {
+                    descricao: descricaoDecodificada,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada com esse nome`
+                    error: `Nenhuma ${this.entityName} encontrada com essa descrição`
                 });
+            }
+
+            return res.json(unidadeFederativa);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.entityName} por descrição`, {
+                error: error.message,
+                stack: error.stack,
+            });
+
+            next(error);
+        }
+    }
+
+    /**
+     * Busca unidades federativas por descrição (busca parcial)
+     */
+    async findAllByDescricao(req, res, next) {
+        try {
+            const { descricao } = req.params;
+            const descricaoDecodificada = decodeURIComponent(descricao);
+
+            logger.info(`Buscando ${this.entityNamePlural} por descrição parcial`, {
+                descricao: descricaoDecodificada,
+                route: req.originalUrl,
+            });
+
+            const unidadesFederativas = await this.repository.findAllByDescricao(
+                descricaoDecodificada
+            );
+
+            if (!unidadesFederativas || unidadesFederativas.length === 0) {
+                logger.info(`Não foram encontradas ${this.entityNamePlural} com esse padrão`, {
+                    descricao: descricaoDecodificada,
+                    route: req.originalUrl,
+                });
+                return res.status(HttpStatus.OK).json([]);
             }
 
             return res.json(unidadesFederativas);
         } catch (error) {
-            logger.error("Erro ao buscar unidade federativa por nome", {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por descrição parcial`, {
                 error: error.message,
                 stack: error.stack,
             });
@@ -58,7 +94,7 @@ class UnidadeFederativaController extends BaseController {
             const { sigla } = req.params;
             const siglaDecodificada = decodeURIComponent(sigla);
 
-            logger.info("Buscando unidade federativa por sigla", {
+            logger.info(`Buscando ${this.entityName} por sigla`, {
                 sigla: siglaDecodificada,
                 route: req.originalUrl,
             });
@@ -68,7 +104,7 @@ class UnidadeFederativaController extends BaseController {
             );
 
             if (!unidadesFederativas || unidadesFederativas.length === 0) {
-                logger.info("Nenhuma unidade federativa encontrada com a sigla", {
+                logger.info(`Nenhuma ${this.entityName} encontrada com essa sigla`, {
                     sigla: siglaDecodificada,
                     route: req.originalUrl,
                 });
@@ -80,7 +116,7 @@ class UnidadeFederativaController extends BaseController {
             return res.json(unidadesFederativas);
 
         } catch (error) {
-            logger.error("Erro ao buscar unidade federativa por sigla", {
+            logger.error(`Erro ao buscar ${this.entityName} por sigla`, {
                 error: error.message,
                 stack: error.stack,
             });
@@ -96,7 +132,8 @@ module.exports = {
     createUnidadeFederativa: controller.create.bind(controller),
     findAllUnidadesFederativas: controller.findAll.bind(controller),
     findUnidadeFederativaById: controller.findById.bind(controller),
-    findUnidadeFederativaByNome: controller.findByNome.bind(controller),
+    findUnidadeFederativaByDescricao: controller.findOneByDescricao.bind(controller),
+    findUnidadesFederativasByDescricao: controller.findAllByDescricao.bind(controller),
     findUnidadeFederativaBySigla: controller.findBySigla.bind(controller),
     updateUnidadeFederativa: controller.update.bind(controller),
     deleteUnidadeFederativa: controller.delete.bind(controller)

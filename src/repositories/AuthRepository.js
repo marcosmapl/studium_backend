@@ -13,13 +13,13 @@ class AuthRepository {
                 generoUsuario: {
                     select: {
                         id: true,
-                        genero: true,
+                        descricao: true,
                     },
                 },
                 situacaoUsuario: {
                     select: {
                         id: true,
-                        situacao: true,
+                        descricao: true,
                     },
                 },
             },

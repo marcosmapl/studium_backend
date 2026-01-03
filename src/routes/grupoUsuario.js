@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const grupoUsuarioController = require("../controllers/GrupoUsuarioController");
+const controller = require("../controllers/GrupoUsuarioController");
 const { verifyToken } = require("../middleware/auth");
 
 
@@ -19,9 +19,9 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - grupo
+ *               - descricao
  *             properties:
- *               grupo:
+ *               descricao:
  *                 type: string
  *                 description: Descrição do grupo de usuário
  *                 example: "ADMINISTRADOR"
@@ -36,7 +36,7 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 grupo:
+ *                 descricao:
  *                   type: string
  *                   example: "ADMINISTRADOR"
  *       400:
@@ -69,33 +69,33 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   grupo:
+ *                   descricao:
  *                     type: string
- *                     example: "ADMINISTRADOR"
+ *                     example: "Administradores"
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
-router.post("/", verifyToken, grupoUsuarioController.createGrupoUsuario);
-router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
+router.post("/", verifyToken, controller.create);
+router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/gruposUsuario/grupo/{grupo}:
+ * /api/gruposUsuario/descricao/{descricao}:
  *   get:
- *     summary: Busca grupo de usuário por nome (busca exata)
+ *     summary: Busca grupo de usuário por descrição (busca exata)
  *     tags: [Grupo de Usuário]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: grupo
+ *         name: descricao
  *         required: true
  *         schema:
  *           type: string
- *         description: Nome do grupo (busca exata)
- *         example: "Admin"
+ *         description: Descrição do grupo (busca exata)
+ *         example: "Administradores"
  *     responses:
  *       200:
  *         description: Grupo de usuário encontrado
@@ -107,9 +107,9 @@ router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 grupo:
+ *                 descricao:
  *                   type: string
- *                   example: "ADMINISTRADOR"
+ *                   example: "Administradores"
  *       404:
  *         description: Nenhum grupo de usuário encontrado
  *       401:
@@ -117,7 +117,47 @@ router.get("/", verifyToken, grupoUsuarioController.findAllGrupoUsuario);
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/grupo/:grupo", verifyToken, grupoUsuarioController.findGrupoUsuarioByGrupo);
+router.get("/descricao/:descricao", verifyToken, controller.findUniqueByDescricao);
+
+/**
+ * @swagger
+ * /api/grupoUsuario/descricao/search/{descricao}:
+ *   get:
+ *     summary: Busca grupos de usuário por descrição (busca parcial)
+ *     tags: [Grupo de Usuário]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: descricao
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Descrição do grupo (busca parcial)
+ *         example: "Mas"
+ *     responses:
+ *       200:
+ *         description: Grupos encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   descricao:
+ *                     type: string
+ *       404:
+ *         description: Nenhum grupo encontrado
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/descricao/exact/:descricao", verifyToken, controller.findUniqueByDescricao);
+router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDescricao);
 
 /**
  * @swagger
@@ -145,7 +185,7 @@ router.get("/grupo/:grupo", verifyToken, grupoUsuarioController.findGrupoUsuario
  *               properties:
  *                 id:
  *                   type: integer
- *                 grupo:
+ *                 descricao:
  *                   type: string
  *       404:
  *         description: Grupo de usuário não encontrado
@@ -175,10 +215,10 @@ router.get("/grupo/:grupo", verifyToken, grupoUsuarioController.findGrupoUsuario
  *             properties:
  *               id:
  *                 type: integer
- *               grupo:
+ *               descricao:
  *                 type: string
- *                 description: Novo nome de grupo
- *                 example: "GERENTE"
+ *                 description: Nova descrição de grupo
+ *                 example: "Gerentes"
  *     responses:
  *       200:
  *         description: Grupo de usuário atualizado com sucesso
@@ -189,7 +229,7 @@ router.get("/grupo/:grupo", verifyToken, grupoUsuarioController.findGrupoUsuario
  *               properties:
  *                 id:
  *                   type: integer
- *                 grupo:
+ *                 descricao:
  *                   type: string
  *       400:
  *         description: Dados inválidos
@@ -232,8 +272,8 @@ router.get("/grupo/:grupo", verifyToken, grupoUsuarioController.findGrupoUsuario
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/:id", verifyToken, grupoUsuarioController.findGrupoUsuarioById);
-router.put("/:id", verifyToken, grupoUsuarioController.updateGrupoUsuario);
-router.delete("/:id", verifyToken, grupoUsuarioController.deleteGrupoUsuario);
+router.get("/:id", verifyToken, controller.findById);
+router.put("/:id", verifyToken, controller.update);
+router.delete("/:id", verifyToken, controller.delete);
 
 module.exports = router;

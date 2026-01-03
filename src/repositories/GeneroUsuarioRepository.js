@@ -4,7 +4,7 @@ class PrismaGeneroUsuarioRepository extends BaseRepository {
 
     constructor() {
         super("generoUsuario", "GeneroUsuarioRepository.js", {
-            defaultOrderBy: "genero",
+            defaultOrderBy: "descricao",
             orderDirection: "asc",
             includeRelations: {
                 usuarios: true,
@@ -13,23 +13,23 @@ class PrismaGeneroUsuarioRepository extends BaseRepository {
     }
 
     /**
-     * Busca gênero por nome
-     * @param {string} genero - Nome do gênero
+     * Busca gênero por descrição
+     * @param {string} descricao - Descrição do gênero
      * @returns {Promise<object|null>} Gênero encontrado ou null
      */
-    async findByGenero(genero) {
-        return await this.findByUniqueField("genero", genero);
+    async findUniqueByDescricao(descricao) {
+        return await this.findByUniqueField("descricao", descricao);
     }
 
     /**
-     * Busca gêneros por nome (busca parcial)
-     * @param {string} genero - Nome do gênero para buscar
+     * Busca gêneros por descrição (busca parcial)
+     * @param {string} descricao - Descrição do gênero para buscar
      * @returns {Promise<Array>} Lista de gêneros
      */
-    async findByGeneroParcial(genero) {
+    async findManyByDescricao(descricao) {
         return await this.findMany({
-            genero: {
-                contains: genero,
+            descricao: {
+                contains: descricao,
             },
         });
     }
