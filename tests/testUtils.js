@@ -60,7 +60,6 @@ const seedBasicData = async () => {
 
     // Hash da senha
     const hashedPassword = await bcrypt.hash("teste123", 10);
-    const hashedPasswordAdmin = await bcrypt.hash("admin123", 10);
 
     // Criar usuário admin para testes
     const usuario = await prisma.usuario.create({
@@ -78,22 +77,6 @@ const seedBasicData = async () => {
         },
     });
 
-    // Criar usuário admin adicional para testes
-    const admin = await prisma.usuario.create({
-        data: {
-            nome: "Admin",
-            sobrenome: "User",
-            username: "admin",
-            password: hashedPasswordAdmin,
-            email: "admin@test.com",
-            generoUsuarioId: generoUsuario.id,
-            cidadeId: cidade.id,
-            situacaoUsuarioId: situacaoUsuario.id,
-            unidadeFederativaId: unidadeFederativa.id,
-            grupoUsuarioId: grupoUsuario.id,
-        },
-    });
-
     return {
         unidadeFederativa,
         cidade,
@@ -101,7 +84,6 @@ const seedBasicData = async () => {
         situacaoUsuario,
         grupoUsuario,
         usuario,
-        admin,
     };
 };
 
