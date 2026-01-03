@@ -21,6 +21,7 @@ const situacaoPlanoRouter = require("./routes/situacaoPlanoRouter");
 const unidadeFederativaRouter = require("./routes/unidadeFederativaRouter");
 const usuarioRouter = require("./routes/usuarioRouter");
 const planoEstudoRouter = require("./routes/planoEstudoRouter");
+const disciplinaRouter = require("./routes/disciplinaRouter");
 
 const healthRouter = require("./routes/healthRouter");
 
@@ -113,6 +114,7 @@ app.use("/api/situacaoPlano", situacaoPlanoRouter);
 app.use("/api/usuario", usuarioRouter);
 app.use("/api/unidadeFederativa", unidadeFederativaRouter);
 app.use("/api/planoEstudo", planoEstudoRouter);
+app.use("/api/disciplina", disciplinaRouter);
 app.use("/health", healthRouter);
 
 // Tratamento de erros

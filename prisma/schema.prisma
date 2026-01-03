@@ -102,8 +102,8 @@ model Usuario {
 model Disciplina {
     id              Int      @id @default(autoincrement())
     titulo          String
-    descricao       String
-    cor             String
+    descricao       String?
+    cor             String   @default("#FFFFFF")
     importancia     Decimal  @default(0.00) @map("importancia") @db.Decimal(10, 2)
     conhecimento    Decimal  @default(0.00) @map("conhecimento") @db.Decimal(10, 2)
     prioridade      Decimal  @default(0.00) @map("prioridade") @db.Decimal(10, 2)

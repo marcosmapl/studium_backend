@@ -15,6 +15,7 @@ const cleanDatabase = async () => {
     await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
 
     // Limpar tabelas na ordem correta para respeitar foreign keys
+    await prisma.disciplina.deleteMany();
     await prisma.planoEstudo.deleteMany();
     await prisma.usuario.deleteMany();
     await prisma.cidade.deleteMany();
