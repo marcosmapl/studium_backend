@@ -43,6 +43,7 @@ const planoEstudoRouter = require("./routes/planoEstudoRouter");
 const disciplinaRouter = require("./routes/disciplinaRouter");
 const topicoRouter = require("./routes/topicoRouter");
 const categoriaSessaoRouter = require("./routes/categoriaSessaoRouter");
+const situacaoSessaoRouter = require("./routes/situacaoSessaoRouter");
 
 const healthRouter = require("./routes/healthRouter");
 
@@ -156,6 +157,7 @@ app.use("/api/planoEstudo", planoEstudoRouter);
 app.use("/api/disciplina", disciplinaRouter);
 app.use("/api/topico", topicoRouter);
 app.use("/api/categoriaSessao", categoriaSessaoRouter);
+app.use("/api/situacaoSessao", situacaoSessaoRouter);
 app.use("/health", healthRouter);
 
 /**
