@@ -20,6 +20,7 @@ const cleanDatabase = async () => {
     await prisma.unidadeFederativa.deleteMany();
     await prisma.generoUsuario.deleteMany();
     await prisma.situacaoUsuario.deleteMany();
+    await prisma.situacaoPlano.deleteMany();
     await prisma.grupoUsuario.deleteMany();
 
     // Reabilitar verificação de chaves estrangeiras
@@ -77,12 +78,19 @@ const seedBasicData = async () => {
         },
     });
 
+    
+    // Criar situação de usuário
+    const situacaoPlano = await prisma.situacaoPlano.create({
+        data: { descricao: "Ativo" },
+    });
+
     return {
         unidadeFederativa,
         cidade,
         generoUsuario,
-        situacaoUsuario,
         grupoUsuario,
+        situacaoUsuario,
+        situacaoPlano,
         usuario,
     };
 };

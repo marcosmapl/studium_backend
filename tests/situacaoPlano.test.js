@@ -1,6 +1,6 @@
 /**
- * Testes para rotas de situação de usuário
- * Endpoints: /api/situacaoUsuario
+ * Testes para rotas de situação de plano de estudo
+ * Endpoints: /api/situacaoPlano
  */
 const request = require("supertest");
 const app = require("../src/app");
@@ -13,7 +13,7 @@ const {
   prisma,
 } = require("./testUtils");
 
-describe("Situação de Usuário - /api/situacaoUsuario", () => {
+describe("Situação de Plano de Estudo - /api/situacaoPlano", () => {
   let token;
   let situacaoTeste;
 
@@ -26,14 +26,14 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
     token = await getAuthToken(app);
   });
 
-  describe("POST /api/situacaoUsuario", () => {
-    it("deve criar uma nova situação de usuário", async () => {
+  describe("POST /api/situacaoPlano", () => {
+    it("deve criar uma nova situação de plano de estudo", async () => {
       const situacaoData = {
         descricao: "Nova Situação Teste",
       };
 
       const response = await request(app)
-        .post("/api/situacaoUsuario")
+        .post("/api/situacaoPlano")
         .set("Authorization", `Bearer ${token}`)
         .send(situacaoData);
 
@@ -46,7 +46,7 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
 
     it("deve validar ausência de descricao", async () => {
       const response = await request(app)
-        .post("/api/situacaoUsuario")
+        .post("/api/situacaoPlano")
         .set("Authorization", `Bearer ${token}`)
         .send({
           // Faltando campos obrigatórios
@@ -56,10 +56,10 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
     });
   });
 
-  describe("GET /api/situacaoUsuario", () => {
-    it("deve listar todas as situações de usuário", async () => {
+  describe("GET /api/situacaoPlano", () => {
+    it("deve listar todas as situações de plano de estudo", async () => {
       const response = await request(app)
-        .get("/api/situacaoUsuario")
+        .get("/api/situacaoPlano")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.OK);
@@ -68,10 +68,10 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
     });
   });
 
-  describe("GET /api/situacaoUsuario/:id", () => {
-    it("deve buscar situação de usuário por ID", async () => {
+  describe("GET /api/situacaoPlano/:id", () => {
+    it("deve buscar situação de plano de estudo por ID", async () => {
       const response = await request(app)
-        .get(`/api/situacaoUsuario/${situacaoTeste.id}`)
+        .get(`/api/situacaoPlano/${situacaoTeste.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.OK);
@@ -81,17 +81,17 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
 
     it("deve retornar 404 para situação inexistente", async () => {
       const response = await request(app)
-        .get("/api/situacaoUsuario/99999")
+        .get("/api/situacaoPlano/99999")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
-  describe("GET /api/situacaoUsuario/descricao/exact/:descricao", () => {
-    it("deve buscar situação por descrição exata", async () => {
+  describe("GET /api/situacaoPlano/descricao/exact/:descricao", () => {
+    it("deve buscar situação de plano de estudo por descrição exata", async () => {
       const response = await request(app)
-        .get(`/api/situacaoUsuario/descricao/exact/${encodeURIComponent(situacaoTeste.descricao)}`)
+        .get(`/api/situacaoPlano/descricao/exact/${encodeURIComponent(situacaoTeste.descricao)}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.OK);
@@ -99,19 +99,19 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
       expect(response.body.descricao).toBe(situacaoTeste.descricao);
     });
 
-    it("deve retornar 404 quando nenhuma situação for encontrada", async () => {
+    it("deve retornar 404 quando nenhuma situação de plano de estudo for encontrada", async () => {
       const response = await request(app)
-        .get("/api/situacaoUsuario/descricao/exact/Inexistente")
+        .get("/api/situacaoPlano/descricao/exact/Inexistente")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
-  describe("GET /api/situacaoUsuario/descricao/search/:descricao", () => {
-    it("deve buscar situações por descrição parcial", async () => {
+  describe("GET /api/situacaoPlano/descricao/search/:descricao", () => {
+    it("deve buscar situações de plano de estudo por descrição parcial", async () => {
       const response = await request(app)
-        .get(`/api/situacaoUsuario/descricao/search/${encodeURIComponent("Nova")}`)
+        .get(`/api/situacaoPlano/descricao/search/${encodeURIComponent("Nova")}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.OK);
@@ -120,19 +120,19 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
       expect(response.body.some(g => g.descricao.includes("Nova"))).toBe(true);
     });
 
-    it("deve retornar 404 quando nenhuma situação for encontrada", async () => {
+    it("deve retornar 404 quando nenhuma situação de plano de estudo for encontrada", async () => {
       const response = await request(app)
-        .get("/api/situacaoUsuario/descricao/search/XYZInexistente")
+        .get("/api/situacaoPlano/descricao/search/XYZInexistente")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
-  describe("PUT /api/situacaoUsuario/:id", () => {
-    it("deve atualizar uma situaçaõ existente", async () => {
+  describe("PUT /api/situacaoPlano/:id", () => {
+    it("deve atualizar uma situação de plano de estudo existente", async () => {
       const response = await request(app)
-        .put(`/api/situacaoUsuario/${situacaoTeste.id}`)
+        .put(`/api/situacaoPlano/${situacaoTeste.id}`)
         .set("Authorization", `Bearer ${token}`)
         .send({
           descricao: "Situação Teste Atualizada",
@@ -145,9 +145,9 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
       situacaoTeste = response.body;
     });
 
-    it("deve retornar 404 ao atualizar situação inexistente", async () => {
+    it("deve retornar 404 ao atualizar situação de plano de estudo inexistente", async () => {
       const response = await request(app)
-        .put("/api/situacaoUsuario/99999")
+        .put("/api/situacaoPlano/99999")
         .set("Authorization", `Bearer ${token}`)
         .send({ descricao: "Teste" });
 
@@ -155,24 +155,24 @@ describe("Situação de Usuário - /api/situacaoUsuario", () => {
     });
   });
 
-  describe("DELETE /api/situacaoUsuario/:id", () => {
-    it("deve retornar 404 ao excluir situação inexistente", async () => {
+  describe("DELETE /api/situacaoPlano/:id", () => {
+    it("deve retornar 404 ao excluir situação de plano de estudo inexistente", async () => {
       const response = await request(app)
-        .delete("/api/situacaoUsuario/99999")
+        .delete("/api/situacaoPlano/99999")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
 
-    it("deve excluir uma situação existente", async () => {
+    it("deve excluir uma situação de plano de estudo existente", async () => {
       const response = await request(app)
-        .delete(`/api/situacaoUsuario/${situacaoTeste.id}`)
+        .delete(`/api/situacaoPlano/${situacaoTeste.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
       // Verificar que foi realmente deletado
-      const verificacao = await prisma.situacaoUsuario.findUnique({
+      const verificacao = await prisma.situacaoPlano.findUnique({
         where: { id: situacaoTeste.id },
       });
       expect(verificacao).toBeNull();

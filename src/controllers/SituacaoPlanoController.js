@@ -1,13 +1,13 @@
 const BaseController = require("./BaseController");
-const repository = require("../repositories/SituacaoUsuarioRepository");
+const repository = require("../repositories/SituacaoPlanoRepository");
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
 
-class SituacaoUsuarioController extends BaseController {
+class SituacaoPlanoController extends BaseController {
 
     constructor() {
-        super(repository, "situação de usuário", {
-            entityNamePlural: "situações de usuário",
+        super(repository, "situação de plano de estudo", {
+            entityNamePlural: "situações de plano de estudo",
             requiredFields: ["descricao"]
         });
     }
@@ -89,7 +89,7 @@ class SituacaoUsuarioController extends BaseController {
     }
 }
 
-const controller = new SituacaoUsuarioController();
+const controller = new SituacaoPlanoController();
 
 module.exports = {
     create: controller.create.bind(controller),

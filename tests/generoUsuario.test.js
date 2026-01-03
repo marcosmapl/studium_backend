@@ -5,6 +5,7 @@
 const request = require("supertest");
 const app = require("../src/app");
 const bcrypt = require("bcryptjs");
+const HttpStatus = require("../src/utils/httpStatus");
 const {
     cleanDatabase,
     getAuthToken,
@@ -39,7 +40,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .set("Authorization", `Bearer ${token}`)
                 .send(generoData);
 
-            expect(response.status).toBe(201);
+            expect(response.status).toBe(HttpStatus.CREATED);
             expect(response.body.descricao).toBe("Novo Gênero Teste");
 
             // Salvar o gênero criado para usar nos demais testes
@@ -54,7 +55,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                     // Faltando campos obrigatórios
                 });
 
-            expect(response.status).toBe(400);
+            expect(response.status).toBe(HttpStatus.BAD_REQUEST);
         });
     });
 
@@ -64,7 +65,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get("/api/generoUsuario")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(Array.isArray(response.body)).toBe(true);
             expect(response.body.length).toBeGreaterThan(0);
         });
@@ -76,7 +77,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get(`/api/generoUsuario/${generoTeste.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(response.body.id).toBe(generoTeste.id);
             expect(response.body.descricao).toBe("Novo Gênero Teste");
         });
@@ -86,7 +87,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get("/api/generoUsuario/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -96,7 +97,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get(`/api/generoUsuario/descricao/exact/${encodeURIComponent(generoTeste.descricao)}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(response.body).toBeDefined();
             expect(response.body.descricao).toBe(generoTeste.descricao);
         });
@@ -106,7 +107,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get("/api/generoUsuario/descricao/exact/Inexistente")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -116,7 +117,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get(`/api/generoUsuario/descricao/search/${encodeURIComponent("Novo")}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(Array.isArray(response.body)).toBe(true);
             expect(response.body.length).toBeGreaterThan(0);
             expect(response.body.some(g => g.descricao.includes("Novo"))).toBe(true);
@@ -127,7 +128,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .get("/api/generoUsuario/descricao/search/XYZInexistente")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -140,7 +141,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                     descricao: "Gênero Teste Atualizado",
                 });
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(response.body.descricao).toBe("Gênero Teste Atualizado");
 
             // Atualizar a referência local
@@ -153,7 +154,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .set("Authorization", `Bearer ${token}`)
                 .send({ descricao: "Teste" });
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -163,7 +164,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .delete("/api/generoUsuario/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
 
         it("deve excluir um gênero existente", async () => {
@@ -171,7 +172,7 @@ describe("Gênero de Usuário - /api/generoUsuario", () => {
                 .delete(`/api/generoUsuario/${generoTeste.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(204);
+            expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
             // Verificar que foi realmente deletado
             const verificacao = await prisma.generoUsuario.findUnique({

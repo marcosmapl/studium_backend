@@ -5,6 +5,7 @@
 
 const request = require("supertest");
 const app = require("../src/app");
+const HttpStatus = require("../src/utils/httpStatus");
 const {
   cleanDatabase,
   seedBasicData,
@@ -32,7 +33,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(Array.isArray(response.body)).toBe(true);
     });
   });
@@ -49,7 +50,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .set("Authorization", `Bearer ${token}`)
         .send(unidadeData);
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body.descricao).toBe("Teste Unidade Federativa");
       expect(response.body.sigla).toBe("TU");
       
@@ -65,7 +66,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
           // Faltando campos obrigatórios
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     it("deve validar ausência de sigla", async () => {
@@ -77,7 +78,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
             // Faltando campos obrigatórios
           });
   
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
   });
 
@@ -87,7 +88,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get(`/api/unidadeFederativa/${ufTeste.id}`)
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.id).toBe(ufTeste.id);
       expect(response.body.descricao).toBe(ufTeste.descricao);
     });
@@ -97,7 +98,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/99999")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -111,7 +112,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
           sigla: "UA",
         });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.descricao).toBe("Unidade Atualizada");
       expect(response.body.sigla).toBe("UA");
       
@@ -125,7 +126,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .set("Authorization", `Bearer ${token}`)
         .send({ descricao: "Teste", sigla: "TS" });
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -135,7 +136,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .delete(`/api/unidadeFederativa/${ufTeste.id}`)
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
       // Verificar que foi realmente deletada
       const verificacao = await prisma.unidadeFederativa.findUnique({
@@ -149,7 +150,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .delete("/api/unidadeFederativa/99999")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -167,7 +168,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/descricao/exact/Busca Exata Test")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.descricao).toBe("Busca Exata Test");
       expect(response.body.sigla).toBe("BE");
 
@@ -180,7 +181,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/descricao/exact/Inexistente")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -204,7 +205,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/descricao/search/Parcial")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThanOrEqual(2);
       
@@ -222,7 +223,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/descricao/search/XyZaBc123")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBe(0);
     });
@@ -242,7 +243,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/sigla/BS")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.descricao).toBe("Busca Sigla Test");
       expect(response.body.sigla).toBe("BS");
 
@@ -255,7 +256,7 @@ describe("Unidade Federativa - /api/unidadeFederativa", () => {
         .get("/api/unidadeFederativa/sigla/XX")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 });

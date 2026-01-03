@@ -5,6 +5,7 @@
 const request = require("supertest");
 const app = require("../src/app");
 const bcrypt = require("bcryptjs");
+const HttpStatus = require("../src/utils/httpStatus");
 const {
     cleanDatabase,
     getAuthToken,
@@ -37,7 +38,7 @@ describe("Cidade - /api/cidade", () => {
                 .set("Authorization", `Bearer ${token}`)
                 .send(cidadeData);
 
-            expect(response.status).toBe(201);
+            expect(response.status).toBe(HttpStatus.CREATED);
             expect(response.body.descricao).toBe("Nova Cidade Teste");
             expect(response.body.unidadeFederativaId).toBe(unidadeFederativa.id);
 
@@ -53,7 +54,7 @@ describe("Cidade - /api/cidade", () => {
                     // Faltando campos obrigatórios
                 });
 
-            expect(response.status).toBe(400);
+            expect(response.status).toBe(HttpStatus.BAD_REQUEST);
         });
     });
 
@@ -63,7 +64,7 @@ describe("Cidade - /api/cidade", () => {
                 .get("/api/cidade")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(Array.isArray(response.body)).toBe(true);
             expect(response.body.length).toBeGreaterThan(0);
         });
@@ -75,7 +76,7 @@ describe("Cidade - /api/cidade", () => {
                 .get(`/api/cidade/${cidadeTeste.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(response.body.id).toBe(cidadeTeste.id);
             expect(response.body.descricao).toBe("Nova Cidade Teste");
         });
@@ -85,7 +86,7 @@ describe("Cidade - /api/cidade", () => {
                 .get("/api/cidade/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -97,7 +98,7 @@ describe("Cidade - /api/cidade", () => {
                 )
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(response.body).toBeDefined();
             expect(response.body.descricao).toBe(cidadeTeste.descricao);
         });
@@ -107,7 +108,7 @@ describe("Cidade - /api/cidade", () => {
                 .get("/api/cidade/descricao/exact/CidadeInexistente")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -117,7 +118,7 @@ describe("Cidade - /api/cidade", () => {
                 .get(`/api/cidade/descricao/search/${encodeURIComponent("Nova")}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(Array.isArray(response.body)).toBe(true);
             expect(response.body.length).toBeGreaterThan(0);
             expect(response.body.some((c) => c.descricao.includes("Nova"))).toBe(true);
@@ -128,7 +129,7 @@ describe("Cidade - /api/cidade", () => {
                 .get("/api/cidade/descricao/search/XYZInexistente")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -138,7 +139,7 @@ describe("Cidade - /api/cidade", () => {
                 .get(`/api/cidade/uf/${unidadeFederativa.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(Array.isArray(response.body)).toBe(true);
             expect(response.body.length).toBeGreaterThan(0);
             expect(
@@ -153,7 +154,7 @@ describe("Cidade - /api/cidade", () => {
                 .get("/api/cidade/uf/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -167,7 +168,7 @@ describe("Cidade - /api/cidade", () => {
                     unidadeFederativaId: unidadeFederativa.id,
                 });
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(HttpStatus.OK);
             expect(response.body.descricao).toBe("Cidade Teste Atualizada");
 
             // Atualizar a referência local
@@ -183,7 +184,7 @@ describe("Cidade - /api/cidade", () => {
                     unidadeFederativaId: unidadeFederativa.id,
                 });
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
     });
 
@@ -193,7 +194,7 @@ describe("Cidade - /api/cidade", () => {
                 .delete("/api/cidade/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
 
         it("deve excluir uma cidade existente", async () => {
@@ -201,7 +202,7 @@ describe("Cidade - /api/cidade", () => {
                 .delete(`/api/cidade/${cidadeTeste.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(204);
+            expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
             // Verificar que foi realmente deletado
             const verificacao = await prisma.cidade.findUnique({

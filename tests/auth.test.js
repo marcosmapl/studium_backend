@@ -6,6 +6,7 @@
 const request = require("supertest");
 const app = require("../src/app");
 const { cleanDatabase, seedBasicData, prisma } = require("./testUtils");
+const HttpStatus = require("../src/utils/httpStatus");
 
 describe("Autenticação - /api", () => {
   beforeEach(async () => {
@@ -24,18 +25,18 @@ describe("Autenticação - /api", () => {
         password: "teste123",
       });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body).toHaveProperty("token");
       expect(response.body.token).toBeTruthy();
     });
 
     it("deve rejeitar login com senha incorreta", async () => {
       const response = await request(app).post("/api/login").send({
-        username: "admin",
+        username: "teste",
         password: "senhaerrada",
       });
 
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
       expect(response.body).toHaveProperty("error");
     });
 
@@ -45,14 +46,14 @@ describe("Autenticação - /api", () => {
         password: "qualquersenha",
       });
 
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
       expect(response.body).toHaveProperty("error");
     });
 
     it("deve validar campos obrigatórios", async () => {
       const response = await request(app).post("/api/login").send({});
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       expect(response.body).toHaveProperty("error");
     });
   });
@@ -63,8 +64,8 @@ describe("Autenticação - /api", () => {
       const loginResponse = await request(app)
         .post("/api/login")
         .send({
-          username: "admin",
-          password: "admin123",
+          username: "teste",
+          password: "teste123",
         });
 
       const token = loginResponse.body.token;
@@ -74,14 +75,14 @@ describe("Autenticação - /api", () => {
         .post("/api/logout")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body).toHaveProperty("message");
     });
 
     it("deve rejeitar logout sem token", async () => {
       const response = await request(app).post("/api/logout");
 
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
   });
 });

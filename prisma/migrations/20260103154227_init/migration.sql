@@ -17,7 +17,7 @@ CREATE TABLE `cidade` (
     `unidade_federativa_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `cidade_descricao_key`(`descricao`),
-    INDEX `cidade_descricao_idx`(`descricao`),
+    INDEX `cidade__unidade_federativa_id_fkey`(`unidade_federativa_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -44,9 +44,9 @@ CREATE TABLE `situacao_usuario` (
 -- CreateTable
 CREATE TABLE `grupo_usuario` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `grupo` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `grupo_usuario_grupo_key`(`grupo`),
+    UNIQUE INDEX `grupo_usuario_descricao_key`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -73,20 +73,21 @@ CREATE TABLE `usuario` (
     UNIQUE INDEX `usuario_email_key`(`email`),
     INDEX `usuario_username_idx`(`username`),
     INDEX `usuario_email_idx`(`email`),
-    INDEX `usuario_genero_id_fkey`(`genero_id`),
-    INDEX `usuario_cidade_id_fkey`(`cidade_id`),
-    INDEX `usuario_situacao_id_fkey`(`situacao_id`),
-    INDEX `usuario_grupo_id_fkey`(`grupo_usuario_id`),
+    INDEX `usuario__genero_id_fkey`(`genero_id`),
+    INDEX `usuario__grupo_id_fkey`(`grupo_usuario_id`),
+    INDEX `usuario__cidade_id_fkey`(`cidade_id`),
+    INDEX `usuario__unidade_federativa_id_fkey`(`unidade_federativa_id`),
+    INDEX `usuario__situacao_id_fkey`(`situacao_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `situacao_plano_estudo` (
+CREATE TABLE `situacao_plano` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `situacao` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `situacao_plano_estudo_situacao_key`(`situacao`),
-    INDEX `situacao_plano_estudo_situacao_idx`(`situacao`),
+    UNIQUE INDEX `situacao_plano_descricao_key`(`descricao`),
+    INDEX `situacao_plano_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -108,8 +109,8 @@ CREATE TABLE `plano_estudo` (
     `situacao_id` INTEGER NOT NULL,
 
     INDEX `plano_estudo_titulo_idx`(`titulo`),
-    INDEX `planoestudo_usuario_id_fkey`(`usuario_id`),
-    INDEX `planoestudo_situacao_id_fkey`(`situacao_id`),
+    INDEX `plano_estudo__usuario_id_fkey`(`usuario_id`),
+    INDEX `plano_estudo__situacao_id_fkey`(`situacao_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -134,7 +135,7 @@ CREATE TABLE `disciplina` (
     `plano_id` INTEGER NOT NULL,
 
     INDEX `disciplina_titulo_idx`(`titulo`),
-    INDEX `disciplina_plano_id_fkey`(`plano_id`),
+    INDEX `disciplina__plano_id_fkey`(`plano_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -169,8 +170,8 @@ CREATE TABLE `topico` (
 
     UNIQUE INDEX `topico_descricao_key`(`descricao`),
     INDEX `topico_titulo_idx`(`titulo`),
-    INDEX `topico_disciplina_id_fkey`(`plano_disciplina_id`),
-    INDEX `topico_situacao_id_fkey`(`situacao_id`),
+    INDEX `topico__disciplina_id_fkey`(`plano_disciplina_id`),
+    INDEX `topico__situacao_id_fkey`(`situacao_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -287,7 +288,7 @@ ALTER TABLE `usuario` ADD CONSTRAINT `usuario_grupo_usuario_id_fkey` FOREIGN KEY
 ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_usuario_id_fkey` FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_plano_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_plano`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `disciplina` ADD CONSTRAINT `disciplina_plano_id_fkey` FOREIGN KEY (`plano_id`) REFERENCES `plano_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

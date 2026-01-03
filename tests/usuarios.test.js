@@ -5,6 +5,7 @@
 
 const request = require("supertest");
 const app = require("../src/app");
+const HttpStatus = require("../src/utils/httpStatus");
 const {
   cleanDatabase,
   seedBasicData,
@@ -32,7 +33,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThan(0);
     });
@@ -41,7 +42,7 @@ describe("Usuários - /api/usuario", () => {
       const response = await request(app)
         .get("/api/usuario");
 
-      expect(response.status).toBe(401);
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
   });
 
@@ -63,7 +64,7 @@ describe("Usuários - /api/usuario", () => {
           grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body.username).toBe("vendedor1");
       expect(response.body.email).toBe("vendedor1@test.com");
     });
@@ -85,7 +86,7 @@ describe("Usuários - /api/usuario", () => {
           grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
-      expect(response.status).toBe(409);
+      expect(response.status).toBe(HttpStatus.CONFLICT);
     });
 
     it("deve rejeitar criação com username duplicado", async () => {
@@ -105,7 +106,7 @@ describe("Usuários - /api/usuario", () => {
           grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
-      expect(response.status).toBe(409);
+      expect(response.status).toBe(HttpStatus.CONFLICT);
     });
 
     it("deve validar campos obrigatórios", async () => {
@@ -116,7 +117,7 @@ describe("Usuários - /api/usuario", () => {
           username: "incomplete",
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       expect(response.body).toHaveProperty("missingFields");
     });
 
@@ -137,7 +138,7 @@ describe("Usuários - /api/usuario", () => {
           grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body.email).toBe("testuser@test.com");
     });
 
@@ -158,7 +159,7 @@ describe("Usuários - /api/usuario", () => {
           grupoUsuarioId: seedData.grupoUsuario.id,
         });
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body.username).toBe("testuser2");
     });
   });
@@ -169,7 +170,7 @@ describe("Usuários - /api/usuario", () => {
         .get(`/api/usuario/${seedData.usuario.id}`)
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.id).toBe(seedData.usuario.id);
     });
 
@@ -178,7 +179,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/99999")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
 
     it("deve validar ID inválido", async () => {
@@ -186,7 +187,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/abc")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
   });
 
@@ -200,7 +201,7 @@ describe("Usuários - /api/usuario", () => {
           sobrenome: "Atualizado",
         });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.nome).toBe("Admin");
       expect(response.body.sobrenome).toBe("Atualizado");
     });
@@ -213,7 +214,7 @@ describe("Usuários - /api/usuario", () => {
           nome: "Teste",
         });
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
 
     it("deve atualizar email do usuário", async () => {
@@ -224,7 +225,7 @@ describe("Usuários - /api/usuario", () => {
           email: "novoemail@test.com",
         });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.email).toBe("novoemail@test.com");
     });
 
@@ -236,7 +237,7 @@ describe("Usuários - /api/usuario", () => {
           password: "novasenha123",
         });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
     });
   });
 
@@ -261,7 +262,7 @@ describe("Usuários - /api/usuario", () => {
         .delete(`/api/usuario/${newUser.id}`)
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(204);
+      expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
       const verificacao = await prisma.usuario.findUnique({
         where: { id: newUser.id },
@@ -274,7 +275,7 @@ describe("Usuários - /api/usuario", () => {
         .delete("/api/usuario/99999")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -284,7 +285,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/username/teste")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.username).toBe("teste");
       expect(response.body).not.toHaveProperty("password");
     });
@@ -294,7 +295,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/username/usuarioinexistente")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -319,7 +320,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/nome/João")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThan(0);
     });
@@ -329,7 +330,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/nome/NomeInexistente123")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBe(0);
     });
@@ -341,7 +342,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/email/teste@studium.com")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.email).toBe("teste@studium.com");
       expect(response.body).not.toHaveProperty("password");
     });
@@ -351,7 +352,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/email/inexistente@test.com")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
 
     it("deve validar formato de email", async () => {
@@ -359,7 +360,7 @@ describe("Usuários - /api/usuario", () => {
         .get("/api/usuario/email/emailinvalido")
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
   });
 });

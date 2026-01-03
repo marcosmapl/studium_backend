@@ -28,7 +28,7 @@ model Cidade {
 
     usuarios Usuario[]
 
-    @@index([descricao])
+    @@index([unidadeFederativaId], map: "cidade__unidade_federativa_id_fkey")
     @@map("cidade")
 }
 
@@ -91,21 +91,22 @@ model Usuario {
 
     @@index([username])
     @@index([email])
-    @@index([generoUsuarioId], map: "usuario_genero_id_fkey")
-    @@index([cidadeId], map: "usuario_cidade_id_fkey")
-    @@index([situacaoUsuarioId], map: "usuario_situacao_id_fkey")
-    @@index([grupoUsuarioId], map: "usuario_grupo_id_fkey")
+    @@index([generoUsuarioId], map: "usuario__genero_id_fkey")
+    @@index([grupoUsuarioId], map: "usuario__grupo_id_fkey")
+    @@index([cidadeId], map: "usuario__cidade_id_fkey")
+    @@index([unidadeFederativaId], map: "usuario__unidade_federativa_id_fkey")
+    @@index([situacaoUsuarioId], map: "usuario__situacao_id_fkey")
     @@map("usuario")
 }
 
-model SituacaoPlanoEstudo {
+model SituacaoPlano {
     id       Int    @id @default(autoincrement())
-    situacao String @unique
+    descricao String @unique
 
     planosEstudo PlanoEstudo[]
 
-    @@index([situacao])
-    @@map("situacao_plano_estudo")
+    @@index([descricao])
+    @@map("situacao_plano")
 }
 
 model PlanoEstudo {
@@ -126,7 +127,7 @@ model PlanoEstudo {
     usuario   Usuario @relation(fields: [usuarioId], references: [id])
 
     situacaoId Int                 @map("situacao_id")
-    situacao   SituacaoPlanoEstudo @relation(fields: [situacaoId], references: [id])
+    situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id])
 
     disciplinas Disciplina[]
 
@@ -135,8 +136,8 @@ model PlanoEstudo {
     revisoes Revisao[]
 
     @@index([titulo])
-    @@index([usuarioId], map: "planoestudo_usuario_id_fkey")
-    @@index([situacaoId], map: "planoestudo_situacao_id_fkey")
+    @@index([usuarioId], map: "plano_estudo__usuario_id_fkey")
+    @@index([situacaoId], map: "plano_estudo__situacao_id_fkey")
     @@map("plano_estudo")
 }
 
@@ -168,7 +169,7 @@ model Disciplina {
     revisoes Revisao[]
 
     @@index([titulo])
-    @@index([planoId], map: "disciplina_plano_id_fkey")
+    @@index([planoId], map: "disciplina__plano_id_fkey")
     @@map("disciplina")
 }
 
@@ -209,8 +210,8 @@ model Topico {
     revisoes Revisao[]
 
     @@index([titulo])
-    @@index([disciplinaId], map: "topico_disciplina_id_fkey")
-    @@index([situacaoId], map: "topico_situacao_id_fkey")
+    @@index([disciplinaId], map: "topico__disciplina_id_fkey")
+    @@index([situacaoId], map: "topico__situacao_id_fkey")
     @@map("topico")
 }
 
