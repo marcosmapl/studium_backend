@@ -52,9 +52,9 @@ model SituacaoUsuario {
 }
 
 model GrupoUsuario {
-    id        Int    @id @default(autoincrement())
-    descricao String @unique
-    usuarios Usuario[]
+    id        Int       @id @default(autoincrement())
+    descricao String    @unique
+    usuarios  Usuario[]
 
     @@map("grupo_usuario")
 }
@@ -97,48 +97,6 @@ model Usuario {
     @@index([unidadeFederativaId], map: "usuario__unidade_federativa_id_fkey")
     @@index([situacaoUsuarioId], map: "usuario__situacao_id_fkey")
     @@map("usuario")
-}
-
-model SituacaoPlano {
-    id       Int    @id @default(autoincrement())
-    descricao String @unique
-
-    planosEstudo PlanoEstudo[]
-
-    @@index([descricao])
-    @@map("situacao_plano")
-}
-
-model PlanoEstudo {
-    id              Int      @id @default(autoincrement())
-    titulo          String
-    descricao       String
-    questoesAcertos Int      @default(0) @map("questoes_acertos")
-    questoesErros   Int      @default(0) @map("questoes_erros")
-    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
-    paginasLidas    Int      @default(0) @map("paginas_lidas")
-    progresso       Int      @default(0) @map("progresso")
-    concluido       Boolean  @default(false)
-    observacoes     String?
-    createdAt       DateTime @default(now()) @map("created_at")
-    updatedAt       DateTime @updatedAt @map("updated_at")
-
-    usuarioId Int     @map("usuario_id")
-    usuario   Usuario @relation(fields: [usuarioId], references: [id])
-
-    situacaoId Int                 @map("situacao_id")
-    situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id])
-
-    disciplinas Disciplina[]
-
-    sessoesEstudo SessaoEstudo[]
-
-    revisoes Revisao[]
-
-    @@index([titulo])
-    @@index([usuarioId], map: "plano_estudo__usuario_id_fkey")
-    @@index([situacaoId], map: "plano_estudo__situacao_id_fkey")
-    @@map("plano_estudo")
 }
 
 model Disciplina {
@@ -327,4 +285,46 @@ model Revisao {
     @@index([disciplinaId], map: "revisao__disciplina_id_fkey")
     @@index([topicoId], map: "revisao__topico_id_fkey")
     @@map("revisao")
+}
+
+model SituacaoPlano {
+    id        Int    @id @default(autoincrement())
+    descricao String @unique
+
+    planosEstudo PlanoEstudo[]
+
+    @@index([descricao])
+    @@map("situacao_plano")
+}
+
+model PlanoEstudo {
+    id              Int      @id @default(autoincrement())
+    titulo          String
+    descricao       String?
+    questoesAcertos Int      @default(0) @map("questoes_acertos")
+    questoesErros   Int      @default(0) @map("questoes_erros")
+    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
+    paginasLidas    Int      @default(0) @map("paginas_lidas")
+    progresso       Int      @default(0) @map("progresso")
+    concluido       Boolean  @default(false)
+    observacoes     String?
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
+
+    usuarioId Int     @map("usuario_id")
+    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+    situacaoId Int           @map("situacao_id")
+    situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id])
+
+    disciplinas Disciplina[]
+
+    sessoesEstudo SessaoEstudo[]
+
+    revisoes Revisao[]
+
+    @@index([titulo])
+    @@index([usuarioId], map: "plano_estudo__usuario_id_fkey")
+    @@index([situacaoId], map: "plano_estudo__situacao_id_fkey")
+    @@map("plano_estudo")
 }

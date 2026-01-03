@@ -15,6 +15,7 @@ const cleanDatabase = async () => {
     await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
 
     // Limpar tabelas na ordem correta para respeitar foreign keys
+    await prisma.planoEstudo.deleteMany();
     await prisma.usuario.deleteMany();
     await prisma.cidade.deleteMany();
     await prisma.unidadeFederativa.deleteMany();
@@ -84,13 +85,30 @@ const seedBasicData = async () => {
         data: { descricao: "Ativo" },
     });
 
+    // Criar usuário admin para testes
+    const planoEstudo = await prisma.planoEstudo.create({
+        data: {
+            titulo: "Plano Teste",
+            descricao: "Plano de estudos para testes",
+            questoesAcertos: 0,
+            questoesErros: 0,
+            tempoEstudo: 0.0,
+            paginasLidas: 0,
+            progresso: 0,
+            concluido: false,
+            usuarioId: usuario.id,
+            situacaoId: situacaoPlano.id,
+        },
+    });
+
     return {
-        unidadeFederativa,
         cidade,
         generoUsuario,
         grupoUsuario,
+        planoEstudo,
         situacaoUsuario,
         situacaoPlano,
+        unidadeFederativa,
         usuario,
     };
 };

@@ -30,16 +30,17 @@ const {
 } = require("./middleware/loggerMiddleware");
 
 // Importação de todas as rotas da API
-const authRouter = require("./routes/auth");
-const cidadeRouter = require("./routes/cidade");
-const generoUsuarioRouter = require("./routes/generoUsuario");
-const grupoUsuarioRouter = require("./routes/grupoUsuario");
-const situacaoUsuarioRouter = require("./routes/situacaoUsuario");
-const situacaoPlanoRouter = require("./routes/situacaoPlanoo");
-const unidadeFederativaRouter = require("./routes/unidadeFederativa");
-const usuarioRouter = require("./routes/usuario");
+const authRouter = require("./routes/authRouter");
+const cidadeRouter = require("./routes/cidadeRouter");
+const generoUsuarioRouter = require("./routes/generoUsuarioRouter");
+const grupoUsuarioRouter = require("./routes/grupoUsuarioRouter");
+const situacaoUsuarioRouter = require("./routes/situacaoUsuarioRouter");
+const situacaoPlanoRouter = require("./routes/situacaoPlanoRouter");
+const unidadeFederativaRouter = require("./routes/unidadeFederativaRouter");
+const usuarioRouter = require("./routes/usuarioRouter");
+const planoEstudoRouter = require("./routes/planoEstudoRouter");
 
-const healthRouter = require("./routes/health");
+const healthRouter = require("./routes/healthRouter");
 
 // Inicialização da aplicação Express
 const app = express();
@@ -146,6 +147,7 @@ app.use("/api/situacaoUsuario", situacaoUsuarioRouter);
 app.use("/api/situacaoPlano", situacaoPlanoRouter);
 app.use("/api/usuario", usuarioRouter);
 app.use("/api/unidadeFederativa", unidadeFederativaRouter);
+app.use("/api/planoEstudo", planoEstudoRouter);
 app.use("/health", healthRouter);
 
 /**
