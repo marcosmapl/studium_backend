@@ -374,8 +374,6 @@ model DiaEstudo {
 model AlocacaoHorario {
     id            Int     @id @default(autoincrement())
     horasAlocadas Float   @map("horas_alocadas")
-    horaInicio    String? @map("hora_inicio") // Formato "HH:mm"
-    horaFim       String? @map("hora_fim") // Formato "HH:mm"
     ordem         Int // Ordem da disciplina no dia
     observacoes   String?
 
