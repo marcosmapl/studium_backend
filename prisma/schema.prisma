@@ -104,9 +104,6 @@ model Disciplina {
     titulo          String
     descricao       String?
     cor             String   @default("#FFFFFF")
-    importancia     Decimal  @default(0.00) @map("importancia") @db.Decimal(10, 2)
-    conhecimento    Decimal  @default(0.00) @map("conhecimento") @db.Decimal(10, 2)
-    prioridade      Decimal  @default(0.00) @map("prioridade") @db.Decimal(10, 2)
     questoesAcertos Int      @default(0) @map("questoes_acertos")
     questoesErros   Int      @default(0) @map("questoes_erros")
     tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
@@ -124,7 +121,8 @@ model Disciplina {
 
     sessoesEstudo SessaoEstudo[]
 
-    revisoes Revisao[]
+    revisoes                Revisao[]
+    disciplinaPlanejamentos DisciplinaPlanejamento[]
 
     @@index([titulo])
     @@index([planoId], map: "disciplina__plano_id_fkey")
@@ -257,14 +255,14 @@ model SituacaoRevisao {
 }
 
 model Revisao {
-    id              Int      @id @default(autoincrement())
+    id              Int       @id @default(autoincrement())
     numero          Int
-    dataProgramada  DateTime @map("data_programada")
-    dataRealizada   DateTime @map("data_realizada")
-    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
-    questoesAcertos Int      @default(0) @map("questoes_acertos")
-    questoesErros   Int      @default(0) @map("questoes_erros")
-    desempenho      Int
+    dataProgramada  DateTime  @map("data_programada")
+    dataRealizada   DateTime? @map("data_realizada")
+    tempoEstudo     Float     @default(0.0) @map("tempo_estudo")
+    questoesAcertos Int       @default(0) @map("questoes_acertos")
+    questoesErros   Int       @default(0) @map("questoes_erros")
+    desempenho      Int       @default(0)
 
     categoriaRevisaoId Int              @map("categoria_id")
     categoriaRevisao   CategoriaRevisao @relation(fields: [categoriaRevisaoId], references: [id])
@@ -325,10 +323,89 @@ model PlanoEstudo {
 
     sessoesEstudo SessaoEstudo[]
 
-    revisoes Revisao[]
+    revisoes      Revisao[]
+    planejamentos Planejamento[]
 
     @@index([titulo])
     @@index([usuarioId], map: "plano_estudo__usuario_id_fkey")
     @@index([situacaoId], map: "plano_estudo__situacao_id_fkey")
     @@map("plano_estudo")
+}
+
+model DisciplinaPlanejamento {
+    id              Int     @id @default(autoincrement())
+    importancia     Decimal @db.Decimal(10, 2) // Peso da disciplina (0-10)
+    conhecimento    Decimal @db.Decimal(10, 2) // Nível conhecimento (0-10)
+    prioridade      Decimal @db.Decimal(10, 2) // Calculada: importancia / conhecimento
+    horasSemanais   Float   @map("horas_semanais") // Horas alocadas
+    percentualCarga Float   @map("percentual_carga") // % da carga total
+    observacoes     String?
+
+    planejamentoId Int          @map("planejamento_id")
+    planejamento   Planejamento @relation(fields: [planejamentoId], references: [id])
+
+    disciplinaId Int        @map("disciplina_id")
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+
+    alocacoes AlocacaoHorario[]
+
+    @@index([planejamentoId])
+    @@index([disciplinaId])
+    @@index([prioridade])
+    @@map("disciplina_cronograma")
+}
+
+model DiaEstudo {
+    id              Int   @id @default(autoincrement())
+    diaSemana       Int   @map("dia_semana") // 0=Domingo, 1=Segunda, ..., 6=Sábado
+    horasPlanejadas Float @map("horas_planejadas")
+    horasAlocadas   Float @default(0.0) @map("horas_alocadas")
+
+    planejamentoId Int          @map("cronograma_id")
+    planejamento   Planejamento @relation(fields: [planejamentoId], references: [id])
+
+    alocacoes AlocacaoHorario[]
+
+    @@index([planejamentoId])
+    @@index([diaSemana])
+    @@map("dia_estudo")
+}
+
+model AlocacaoHorario {
+    id            Int     @id @default(autoincrement())
+    horasAlocadas Float   @map("horas_alocadas")
+    horaInicio    String? @map("hora_inicio") // Formato "HH:mm"
+    horaFim       String? @map("hora_fim") // Formato "HH:mm"
+    ordem         Int // Ordem da disciplina no dia
+    observacoes   String?
+
+    diaEstudoId Int       @map("dia_estudo_id")
+    diaEstudo   DiaEstudo @relation(fields: [diaEstudoId], references: [id])
+
+    disciplinaCronogramaId Int                    @map("disciplina_cronograma_id")
+    disciplinaCronograma   DisciplinaPlanejamento @relation(fields: [disciplinaCronogramaId], references: [id])
+
+    @@index([diaEstudoId])
+    @@index([disciplinaCronogramaId])
+    @@map("alocacao_horario")
+}
+
+model Planejamento {
+    id               Int       @id @default(autoincrement())
+    dataInicio       DateTime  @map("data_inicio")
+    dataFim          DateTime? @map("data_fim")
+    ativo            Boolean   @default(true)
+    totalHorasSemana Float     @default(0.0) @map("total_horas_semana")
+    quantidadeDias   Int       @default(1) @map("quantidade_dias")
+    createdAt        DateTime  @default(now()) @map("created_at")
+    updatedAt        DateTime  @updatedAt @map("updated_at")
+
+    planoEstudoId Int         @map("plano_estudo_id")
+    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id])
+
+    diasEstudo              DiaEstudo[]
+    disciplinasPlanejamento DisciplinaPlanejamento[]
+
+    @@index([planoEstudoId])
+    @@map("cronograma_semanal")
 }
