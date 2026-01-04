@@ -28,6 +28,8 @@ const cleanDatabase = async () => {
     await prisma.situacaoTopico.deleteMany();
     await prisma.categoriaSessao.deleteMany();
     await prisma.situacaoSessao.deleteMany();
+    await prisma.categoriaRevisao.deleteMany();
+    await prisma.situacaoRevisao.deleteMany();
     await prisma.grupoUsuario.deleteMany();
 
     // Reabilitar verificação de chaves estrangeiras
