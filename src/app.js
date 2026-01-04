@@ -30,6 +30,7 @@ const sessaoEstudoRouter = require("./routes/sessaoEstudoRouter");
 const categoriaRevisaoRouter = require("./routes/categoriaRevisaoRouter");
 const situacaoRevisaoRouter = require("./routes/situacaoRevisaoRouter");
 const revisaoRouter = require("./routes/revisaoRouter");
+const disciplinaPlanejamentoRouter = require("./routes/disciplinaPlanejamentoRouter");
 
 const healthRouter = require("./routes/healthRouter");
 
@@ -131,6 +132,7 @@ app.use("/api/sessaoEstudo", sessaoEstudoRouter);
 app.use("/api/categoriaRevisao", categoriaRevisaoRouter);
 app.use("/api/situacaoRevisao", situacaoRevisaoRouter);
 app.use("/api/revisao", revisaoRouter);
+app.use("/api/disciplinaPlanejamento", disciplinaPlanejamentoRouter);
 app.use("/health", healthRouter);
 
 // Tratamento de erros
