@@ -77,9 +77,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 paginasLidas:
  *                   type: integer
  *                   example: 0
- *                 progresso:
- *                   type: integer
- *                   example: 0
  *                 concluido:
  *                   type: boolean
  *                   example: false
@@ -141,9 +138,6 @@ const { verifyToken } = require("../middleware/auth");
  *                   paginasLidas:
  *                     type: integer
  *                     example: 350
- *                   progresso:
- *                     type: integer
- *                     example: 45
  *                   concluido:
  *                     type: boolean
  *                     example: false
@@ -219,8 +213,6 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: number
  *                 paginasLidas:
  *                   type: integer
- *                 progresso:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
  *       404:
@@ -267,8 +259,6 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                   usuarioId:
  *                     type: integer
  *                   situacaoId:
- *                     type: integer
- *                   progresso:
  *                     type: integer
  *                   concluido:
  *                     type: boolean
@@ -322,8 +312,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                 tempoEstudo:
  *                   type: number
  *                 paginasLidas:
- *                   type: integer
- *                 progresso:
  *                   type: integer
  *                 concluido:
  *                   type: boolean
@@ -385,9 +373,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *               paginasLidas:
  *                 type: integer
  *                 example: 500
- *               progresso:
- *                 type: integer
- *                 example: 60
  *               concluido:
  *                 type: boolean
  *                 example: false
@@ -409,8 +394,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                 descricao:
  *                   type: string
  *                 situacaoId:
- *                   type: integer
- *                 progresso:
  *                   type: integer
  *                 concluido:
  *                   type: boolean

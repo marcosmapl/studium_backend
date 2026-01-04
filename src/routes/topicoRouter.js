@@ -39,22 +39,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: integer
  *                 description: ID da situação do tópico
  *                 example: 1
- *               questoesAcertos:
- *                 type: integer
- *                 description: Número de questões acertadas
- *                 example: 0
- *               questoesErros:
- *                 type: integer
- *                 description: Número de questões erradas
- *                 example: 0
- *               tempoEstudo:
- *                 type: number
- *                 description: Tempo de estudo em horas
- *                 example: 0.0
- *               paginasLidas:
- *                 type: integer
- *                 description: Número de páginas lidas
- *                 example: 0
  *               concluido:
  *                 type: boolean
  *                 description: Se o tópico foi concluído
@@ -94,18 +78,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 situacaoId:
  *                   type: integer
  *                   example: 1
- *                 questoesAcertos:
- *                   type: integer
- *                   example: 0
- *                 questoesErros:
- *                   type: integer
- *                   example: 0
- *                 tempoEstudo:
- *                   type: number
- *                   example: 0.0
- *                 paginasLidas:
- *                   type: integer
- *                   example: 0
  *                 concluido:
  *                   type: boolean
  *                   example: false
@@ -411,14 +383,6 @@ router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId
  *                   type: integer
  *                 situacaoId:
  *                   type: integer
- *                 questoesAcertos:
- *                   type: integer
- *                 questoesErros:
- *                   type: integer
- *                 tempoEstudo:
- *                   type: number
- *                 paginasLidas:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
  *                 estabilidade:
@@ -467,22 +431,6 @@ router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId
  *                 type: integer
  *                 description: Novo ID da situação
  *                 example: 2
- *               questoesAcertos:
- *                 type: integer
- *                 description: Número de questões acertadas
- *                 example: 10
- *               questoesErros:
- *                 type: integer
- *                 description: Número de questões erradas
- *                 example: 5
- *               tempoEstudo:
- *                 type: number
- *                 description: Tempo de estudo em horas
- *                 example: 3.5
- *               paginasLidas:
- *                 type: integer
- *                 description: Número de páginas lidas
- *                 example: 50
  *               concluido:
  *                 type: boolean
  *                 description: Se o tópico foi concluído

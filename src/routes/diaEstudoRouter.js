@@ -32,10 +32,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: number
  *                 description: Horas planejadas para estudo no dia
  *                 example: 4.0
- *               horasAlocadas:
- *                 type: number
- *                 description: Horas já alocadas (calculado)
- *                 example: 0.0
  *               planejamentoId:
  *                 type: integer
  *                 description: ID do planejamento
@@ -200,10 +196,6 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *                 type: number
  *                 description: Horas planejadas para estudo no dia
  *                 example: 5.0
- *               horasAlocadas:
- *                 type: number
- *                 description: Horas já alocadas
- *                 example: 3.5
  *               planejamentoId:
  *                 type: integer
  *                 description: ID do planejamento

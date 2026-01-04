@@ -51,9 +51,7 @@ describe("Alocação Horário API", () => {
       data: {
         importancia: 8.0,
         conhecimento: 5.0,
-        prioridade: 1.6,
         horasSemanais: 10.0,
-        percentualCarga: 25.0,
         planejamentoId: planejamento.id,
         disciplinaId: disciplina.id,
       },
@@ -86,6 +84,46 @@ describe("Alocação Horário API", () => {
       expect(response.body.disciplinaCronogramaId).toBe(disciplinaPlanejamento.id);
     });
 
+    it("deve rejeitar criação de alocação de horário duplicada para mesma combinação", async () => {
+      const response = await request(app)
+        .post("/api/alocacaoHorario")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          horasAlocadas: 3.0,
+          ordem: 2,
+          diaEstudoId: diaEstudo.id,
+          disciplinaCronogramaId: disciplinaPlanejamento.id,
+        });
+
+      expect(response.status).toBe(HttpStatus.CONFLICT);
+      expect(response.body.error).toMatch(/já existe/i);
+    });
+
+    it("deve permitir criar alocação de horário com mesma disciplina em dia diferente", async () => {
+      // Criar um segundo dia de estudo
+      const segundoDiaEstudo = await prisma.diaEstudo.create({
+        data: {
+          diaSemana: 2, // Terça-feira
+          horasPlanejadas: 6.0,
+          planejamentoId: planejamento.id,
+        },
+      });
+
+      const response = await request(app)
+        .post("/api/alocacaoHorario")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          horasAlocadas: 2.0,
+          ordem: 1,
+          diaEstudoId: segundoDiaEstudo.id,
+          disciplinaCronogramaId: disciplinaPlanejamento.id,
+        });
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body.diaEstudoId).toBe(segundoDiaEstudo.id);
+      expect(response.body.disciplinaCronogramaId).toBe(disciplinaPlanejamento.id);
+    });
+
     it("não deve criar uma alocação de horário sem campos obrigatórios", async () => {
       const response = await request(app)
         .post("/api/alocacaoHorario")
@@ -112,11 +150,20 @@ describe("Alocação Horário API", () => {
 
   describe("GET /api/alocacaoHorario/:id", () => {
     it("deve retornar uma alocação de horário pelo ID", async () => {
+      const diaEstudo2 = await prisma.diaEstudo.create({
+        data: {
+          diaSemana: 6, // Sábado
+          horasPlanejadas: 6.0,
+          ativo: true,
+          planejamentoId: planejamento.id,
+        },
+      });
+
       const alocacao = await prisma.alocacaoHorario.create({
         data: {
           horasAlocadas: 3.0,
           ordem: 2,
-          diaEstudoId: diaEstudo.id,
+          diaEstudoId: diaEstudo2.id,
           disciplinaCronogramaId: disciplinaPlanejamento.id,
         },
       });
@@ -152,16 +199,16 @@ describe("Alocação Horário API", () => {
     });
 
     it("deve retornar 404 para dia de estudo sem alocações", async () => {
-      const diaEstudo2 = await prisma.diaEstudo.create({
+      const diaEstudo5 = await prisma.diaEstudo.create({
         data: {
-          diaSemana: 2, // Terça-feira
+          diaSemana: 5, // Sexta-feira
           horasPlanejadas: 8.0,
           planejamentoId: planejamento.id,
         },
       });
 
       const response = await request(app)
-        .get(`/api/alocacaoHorario/diaEstudo/${diaEstudo2.id}`)
+        .get(`/api/alocacaoHorario/diaEstudo/${diaEstudo5.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);
@@ -193,9 +240,7 @@ describe("Alocação Horário API", () => {
         data: {
           importancia: 7.0,
           conhecimento: 6.0,
-          prioridade: 1.17,
           horasSemanais: 8.0,
-          percentualCarga: 20.0,
           planejamentoId: planejamento.id,
           disciplinaId: disciplina2.id,
         },
@@ -211,11 +256,20 @@ describe("Alocação Horário API", () => {
 
   describe("PUT /api/alocacaoHorario/:id", () => {
     it("deve atualizar uma alocação de horário", async () => {
+      const diaEstudo3 = await prisma.diaEstudo.create({
+        data: {
+          diaSemana: 3,
+          horasPlanejadas: 7.0,
+          ativo: true,
+          planejamentoId: planejamento.id,
+        },
+      });
+
       const alocacao = await prisma.alocacaoHorario.create({
         data: {
           horasAlocadas: 2.0,
           ordem: 3,
-          diaEstudoId: diaEstudo.id,
+          diaEstudoId: diaEstudo3.id,
           disciplinaCronogramaId: disciplinaPlanejamento.id,
         },
       });
@@ -249,11 +303,20 @@ describe("Alocação Horário API", () => {
 
   describe("DELETE /api/alocacaoHorario/:id", () => {
     it("deve excluir uma alocação de horário", async () => {
+      const diaEstudo4 = await prisma.diaEstudo.create({
+        data: {
+          diaSemana: 4,
+          horasPlanejadas: 5.0,
+          ativo: true,
+          planejamentoId: planejamento.id,
+        },
+      });
+
       const alocacao = await prisma.alocacaoHorario.create({
         data: {
           horasAlocadas: 1.5,
           ordem: 4,
-          diaEstudoId: diaEstudo.id,
+          diaEstudoId: diaEstudo4.id,
           disciplinaCronogramaId: disciplinaPlanejamento.id,
         },
       });

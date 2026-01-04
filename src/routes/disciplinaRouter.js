@@ -98,9 +98,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 paginasLidas:
  *                   type: integer
  *                   example: 0
- *                 progresso:
- *                   type: integer
- *                   example: 0
  *                 concluido:
  *                   type: boolean
  *                   example: false
@@ -159,9 +156,6 @@ const { verifyToken } = require("../middleware/auth");
  *                   prioridade:
  *                     type: number
  *                     example: 7.5
- *                   progresso:
- *                     type: integer
- *                     example: 45
  *                   concluido:
  *                     type: boolean
  *                     example: false
@@ -226,8 +220,6 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: number
  *                 prioridade:
  *                   type: number
- *                 progresso:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
  *       404:
@@ -274,8 +266,6 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                   cor:
  *                     type: string
  *                   planoId:
- *                     type: integer
- *                   progresso:
  *                     type: integer
  *                   concluido:
  *                     type: boolean
@@ -330,8 +320,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                     type: number
  *                   prioridade:
  *                     type: number
- *                   progresso:
- *                     type: integer
  *                   concluido:
  *                     type: boolean
  *       404:
@@ -390,8 +378,6 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                 tempoEstudo:
  *                   type: number
  *                 paginasLidas:
- *                   type: integer
- *                 progresso:
  *                   type: integer
  *                 concluido:
  *                   type: boolean
@@ -462,9 +448,6 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *               paginasLidas:
  *                 type: integer
  *                 example: 280
- *               progresso:
- *                 type: integer
- *                 example: 65
  *               concluido:
  *                 type: boolean
  *                 example: false
@@ -487,8 +470,6 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                   type: string
  *                 cor:
  *                   type: string
- *                 progresso:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
  *       400:

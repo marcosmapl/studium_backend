@@ -12,7 +12,6 @@ model UnidadeFederativa {
     descricao String @unique
     sigla     String @unique
 
-    usuarios Usuario[]
     cidades  Cidade[]
 
     @@index([descricao])
@@ -21,13 +20,14 @@ model UnidadeFederativa {
 
 model Cidade {
     id        Int    @id @default(autoincrement())
-    descricao String @unique
+    descricao String
 
     unidadeFederativaId Int               @map("unidade_federativa_id")
     unidadeFederativa   UnidadeFederativa @relation(fields: [unidadeFederativaId], references: [id])
 
     usuarios Usuario[]
 
+    @@unique([descricao, unidadeFederativaId])
     @@index([unidadeFederativaId], map: "cidade__unidade_federativa_id_fkey")
     @@map("cidade")
 }
@@ -43,7 +43,7 @@ model GeneroUsuario {
 
 model SituacaoUsuario {
     id        Int    @id @default(autoincrement())
-    descricao String @unique @map("situacao")
+    descricao String @unique
 
     usuarios Usuario[]
 
@@ -81,9 +81,6 @@ model Usuario {
     cidade   Cidade @relation(fields: [cidadeId], references: [id])
     cidadeId Int    @map("cidade_id")
 
-    unidadeFederativa   UnidadeFederativa @relation(fields: [unidadeFederativaId], references: [id])
-    unidadeFederativaId Int               @map("unidade_federativa_id")
-
     grupoUsuario   GrupoUsuario @relation(fields: [grupoUsuarioId], references: [id])
     grupoUsuarioId Int          @map("grupo_usuario_id")
 
@@ -94,7 +91,6 @@ model Usuario {
     @@index([generoUsuarioId], map: "usuario__genero_id_fkey")
     @@index([grupoUsuarioId], map: "usuario__grupo_id_fkey")
     @@index([cidadeId], map: "usuario__cidade_id_fkey")
-    @@index([unidadeFederativaId], map: "usuario__unidade_federativa_id_fkey")
     @@index([situacaoUsuarioId], map: "usuario__situacao_id_fkey")
     @@map("usuario")
 }
@@ -108,7 +104,6 @@ model Disciplina {
     questoesErros   Int      @default(0) @map("questoes_erros")
     tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
     paginasLidas    Int      @default(0) @map("paginas_lidas")
-    progresso       Int      @default(0) @map("progresso")
     concluido       Boolean  @default(false)
     observacoes     String?
     createdAt       DateTime @default(now()) @map("created_at")
@@ -124,6 +119,7 @@ model Disciplina {
     revisoes                Revisao[]
     disciplinaPlanejamentos DisciplinaPlanejamento[]
 
+    @@unique([titulo, planoId])
     @@index([titulo])
     @@index([planoId], map: "disciplina__plano_id_fkey")
     @@map("disciplina")
@@ -143,10 +139,6 @@ model Topico {
     id              Int      @id @default(autoincrement())
     titulo          String
     ordem           Int
-    questoesAcertos Int      @default(0) @map("questoes_acertos")
-    questoesErros   Int      @default(0) @map("questoes_erros")
-    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
-    paginasLidas    Int      @default(0) @map("paginas_lidas")
     concluido       Boolean  @default(false)
     estabilidade    Float    @default(1.0)
     dificuldade     Float    @default(5.0)
@@ -154,7 +146,7 @@ model Topico {
     createdAt       DateTime @default(now()) @map("created_at")
     updatedAt       DateTime @updatedAt @map("updated_at")
 
-    disciplinaId Int        @map("plano_disciplina_id")
+    disciplinaId Int        @map("disciplina_id")
     disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
 
     situacaoId Int            @map("situacao_id")
@@ -164,6 +156,7 @@ model Topico {
 
     revisoes Revisao[]
 
+    @@unique([titulo, disciplinaId])
     @@index([titulo])
     @@index([disciplinaId], map: "topico__disciplina_id_fkey")
     @@index([situacaoId], map: "topico__situacao_id_fkey")
@@ -307,7 +300,6 @@ model PlanoEstudo {
     questoesErros   Int      @default(0) @map("questoes_erros")
     tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
     paginasLidas    Int      @default(0) @map("paginas_lidas")
-    progresso       Int      @default(0) @map("progresso")
     concluido       Boolean  @default(false)
     observacoes     String?
     createdAt       DateTime @default(now()) @map("created_at")
@@ -320,12 +312,11 @@ model PlanoEstudo {
     situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id])
 
     disciplinas Disciplina[]
-
     sessoesEstudo SessaoEstudo[]
-
     revisoes      Revisao[]
     planejamentos Planejamento[]
 
+    @@unique([titulo, usuarioId])
     @@index([titulo])
     @@index([usuarioId], map: "plano_estudo__usuario_id_fkey")
     @@index([situacaoId], map: "plano_estudo__situacao_id_fkey")
@@ -333,13 +324,13 @@ model PlanoEstudo {
 }
 
 model DisciplinaPlanejamento {
-    id              Int     @id @default(autoincrement())
-    importancia     Decimal @db.Decimal(10, 2) // Peso da disciplina (0-10)
-    conhecimento    Decimal @db.Decimal(10, 2) // Nível conhecimento (0-10)
-    prioridade      Decimal @db.Decimal(10, 2) // Calculada: importancia / conhecimento
-    horasSemanais   Float   @map("horas_semanais") // Horas alocadas
-    percentualCarga Float   @map("percentual_carga") // % da carga total
-    observacoes     String?
+    id            Int      @id @default(autoincrement())
+    importancia   Decimal  @db.Decimal(10, 2) // Peso da disciplina (0-10)
+    conhecimento  Decimal  @db.Decimal(10, 2) // Nível conhecimento (0-10)
+    horasSemanais Float    @map("horas_semanais") // Horas alocadas
+    observacoes   String?
+    createdAt     DateTime @default(now()) @map("created_at")
+    updatedAt     DateTime @updatedAt @map("updated_at")
 
     planejamentoId Int          @map("planejamento_id")
     planejamento   Planejamento @relation(fields: [planejamentoId], references: [id])
@@ -349,33 +340,38 @@ model DisciplinaPlanejamento {
 
     alocacoes AlocacaoHorario[]
 
+    @@unique([planejamentoId, disciplinaId])
     @@index([planejamentoId])
     @@index([disciplinaId])
-    @@index([prioridade])
-    @@map("disciplina_cronograma")
+    @@map("disciplina_planejamento")
 }
 
 model DiaEstudo {
-    id              Int   @id @default(autoincrement())
-    diaSemana       Int   @map("dia_semana") // 0=Domingo, 1=Segunda, ..., 6=Sábado
-    horasPlanejadas Float @map("horas_planejadas")
-    horasAlocadas   Float @default(0.0) @map("horas_alocadas")
+    id              Int      @id @default(autoincrement())
+    diaSemana       Int      @map("dia_semana") @db.TinyInt // 0=Domingo, 1=Segunda, ..., 6=Sábado
+    horasPlanejadas Float    @map("horas_planejadas")
+    ativo           Boolean  @default(false)
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
 
-    planejamentoId Int          @map("cronograma_id")
+    planejamentoId Int          @map("planejamento_id")
     planejamento   Planejamento @relation(fields: [planejamentoId], references: [id])
 
     alocacoes AlocacaoHorario[]
 
+    @@unique([diaSemana, planejamentoId])
     @@index([planejamentoId])
     @@index([diaSemana])
     @@map("dia_estudo")
 }
 
 model AlocacaoHorario {
-    id            Int     @id @default(autoincrement())
-    horasAlocadas Float   @map("horas_alocadas")
+    id            Int      @id @default(autoincrement())
+    horasAlocadas Float    @map("horas_alocadas")
     ordem         Int // Ordem da disciplina no dia
     observacoes   String?
+    createdAt     DateTime @default(now()) @map("created_at")
+    updatedAt     DateTime @updatedAt @map("updated_at")
 
     diaEstudoId Int       @map("dia_estudo_id")
     diaEstudo   DiaEstudo @relation(fields: [diaEstudoId], references: [id])
@@ -383,8 +379,10 @@ model AlocacaoHorario {
     disciplinaCronogramaId Int                    @map("disciplina_cronograma_id")
     disciplinaCronograma   DisciplinaPlanejamento @relation(fields: [disciplinaCronogramaId], references: [id])
 
+    @@unique([diaEstudoId, disciplinaCronogramaId])
     @@index([diaEstudoId])
     @@index([disciplinaCronogramaId])
+    @@index([diaEstudoId, ordem])
     @@map("alocacao_horario")
 }
 
@@ -405,5 +403,5 @@ model Planejamento {
     disciplinasPlanejamento DisciplinaPlanejamento[]
 
     @@index([planoEstudoId])
-    @@map("cronograma_semanal")
+    @@map("planejamento")
 }

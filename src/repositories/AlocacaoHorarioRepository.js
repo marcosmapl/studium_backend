@@ -1,18 +1,21 @@
 const BaseRepository = require("./BaseRepository");
 
-class AlocacaoHorarioRepository extends BaseRepository {
+class PrismaAlocacaoHorarioRepository extends BaseRepository {
+
   constructor() {
-    super("alocacaoHorario");
-    this.include = {
-      diaEstudo: true,
-      disciplinaCronograma: {
-        include: {
-          disciplina: true,
-          planejamento: true,
+    super("alocacaoHorario", "AlocacaoHorarioRepository.js", {
+      defaultOrderBy: "ordem",
+      orderDirection: "asc",
+      includeRelations: {
+        diaEstudo: true,
+        disciplinaCronograma: {
+          include: {
+            disciplina: true,
+            planejamento: true,
+          },
         },
       },
-    };
-    this.defaultOrderBy = "ordem";
+    });
   }
 
   /**
@@ -21,11 +24,9 @@ class AlocacaoHorarioRepository extends BaseRepository {
    * @returns {Promise<Array>} Lista de alocações de horário
    */
   async findManyByDiaEstudoId(diaEstudoId) {
-    return await this.findMany(
-      { diaEstudoId: parseInt(diaEstudoId) },
-      this.include,
-      this.defaultOrderBy
-    );
+    return await this.findMany({
+      diaEstudoId: parseInt(diaEstudoId),
+    });
   }
 
   /**
@@ -34,12 +35,10 @@ class AlocacaoHorarioRepository extends BaseRepository {
    * @returns {Promise<Array>} Lista de alocações de horário
    */
   async findManyByDisciplinaCronogramaId(disciplinaCronogramaId) {
-    return await this.findMany(
-      { disciplinaCronogramaId: parseInt(disciplinaCronogramaId) },
-      this.include,
-      this.defaultOrderBy
-    );
+    return await this.findMany({
+      disciplinaCronogramaId: parseInt(disciplinaCronogramaId),
+    });
   }
 }
 
-module.exports = AlocacaoHorarioRepository;
+module.exports = PrismaAlocacaoHorarioRepository;

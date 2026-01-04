@@ -56,9 +56,7 @@ describe("Disciplina Planejamento - /api/disciplinaPlanejamento", () => {
       const disciplinaPlanejamentoData = {
         importancia: 8.5,
         conhecimento: 5.0,
-        prioridade: 1.7,
         horasSemanais: 10.0,
-        percentualCarga: 25.0,
         observacoes: "Revisar conceitos básicos",
         planejamentoId: planejamentoTeste.id,
         disciplinaId: disciplinaTeste.id,
@@ -73,9 +71,56 @@ describe("Disciplina Planejamento - /api/disciplinaPlanejamento", () => {
       expect(response.body).toHaveProperty("id");
       expect(parseFloat(response.body.importancia)).toBe(8.5);
       expect(parseFloat(response.body.conhecimento)).toBe(5.0);
-      expect(parseFloat(response.body.prioridade)).toBe(1.7);
 
       disciplinaPlanejamentoTeste = response.body;
+    });
+
+    it("deve rejeitar criação de disciplina de planejamento duplicada para mesma combinação", async () => {
+      const disciplinaPlanejamentoData = {
+        importancia: 7.0,
+        conhecimento: 4.0,
+        horasSemanais: 8.0,
+        planejamentoId: planejamentoTeste.id,
+        disciplinaId: disciplinaTeste.id,
+      };
+
+      const response = await request(app)
+        .post("/api/disciplinaPlanejamento")
+        .set("Authorization", `Bearer ${token}`)
+        .send(disciplinaPlanejamentoData);
+
+      expect(response.status).toBe(HttpStatus.CONFLICT);
+      expect(response.body.error).toMatch(/já existe/i);
+    });
+
+    it("deve permitir criar disciplina de planejamento com mesma disciplina em planejamento diferente", async () => {
+      // Criar um segundo planejamento
+      const segundoPlanejamento = await prisma.planejamento.create({
+        data: {
+          dataInicio: new Date("2026-02-01T00:00:00.000Z"),
+          ativo: true,
+          totalHorasSemana: 30.0,
+          quantidadeDias: 5,
+          planoEstudoId: planejamentoTeste.planoEstudoId,
+        },
+      });
+
+      const disciplinaPlanejamentoData = {
+        importancia: 7.5,
+        conhecimento: 6.0,
+        horasSemanais: 8.0,
+        planejamentoId: segundoPlanejamento.id,
+        disciplinaId: disciplinaTeste.id,
+      };
+
+      const response = await request(app)
+        .post("/api/disciplinaPlanejamento")
+        .set("Authorization", `Bearer ${token}`)
+        .send(disciplinaPlanejamentoData);
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body.planejamentoId).toBe(segundoPlanejamento.id);
+      expect(response.body.disciplinaId).toBe(disciplinaTeste.id);
     });
 
     it("deve retornar erro ao tentar criar disciplina de planejamento sem campos obrigatórios", async () => {
@@ -169,9 +214,7 @@ describe("Disciplina Planejamento - /api/disciplinaPlanejamento", () => {
       const updateData = {
         importancia: 9.0,
         conhecimento: 6.0,
-        prioridade: 1.5,
         horasSemanais: 12.0,
-        percentualCarga: 30.0,
       };
 
       const response = await request(app)
@@ -209,9 +252,7 @@ describe("Disciplina Planejamento - /api/disciplinaPlanejamento", () => {
         data: {
           importancia: 7.0,
           conhecimento: 4.0,
-          prioridade: 1.75,
           horasSemanais: 8.0,
-          percentualCarga: 20.0,
           planejamentoId: planejamentoTeste.id,
           disciplinaId: novaDisciplina.id,
         },

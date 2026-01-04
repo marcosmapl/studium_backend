@@ -47,7 +47,6 @@ describe("Dia Estudo - /api/diaEstudo", () => {
       const diaEstudoData = {
         diaSemana: 1, // Segunda-feira
         horasPlanejadas: 4.0,
-        horasAlocadas: 0.0,
         planejamentoId: planejamentoTeste.id,
       };
 
@@ -62,6 +61,50 @@ describe("Dia Estudo - /api/diaEstudo", () => {
       expect(response.body.horasPlanejadas).toBe(4.0);
 
       diaEstudoTeste = response.body;
+    });
+
+    it("deve rejeitar criação de dia de estudo duplicado para mesmo dia e planejamento", async () => {
+      const diaEstudoData = {
+        diaSemana: 1, // Segunda-feira - já existe
+        horasPlanejadas: 3.0,
+        planejamentoId: planejamentoTeste.id,
+      };
+
+      const response = await request(app)
+        .post("/api/diaEstudo")
+        .set("Authorization", `Bearer ${token}`)
+        .send(diaEstudoData);
+
+      expect(response.status).toBe(HttpStatus.CONFLICT);
+      expect(response.body.error).toMatch(/já existe/i);
+    });
+
+    it("deve permitir criar dia de estudo com mesmo dia da semana em planejamento diferente", async () => {
+      // Criar um segundo planejamento
+      const segundoPlanejamento = await prisma.planejamento.create({
+        data: {
+          dataInicio: new Date("2026-02-01T00:00:00.000Z"),
+          ativo: true,
+          totalHorasSemana: 30.0,
+          quantidadeDias: 5,
+          planoEstudoId: planejamentoTeste.planoEstudoId,
+        },
+      });
+
+      const diaEstudoData = {
+        diaSemana: 1, // Segunda-feira - mesmo dia, planejamento diferente
+        horasPlanejadas: 5.0,
+        planejamentoId: segundoPlanejamento.id,
+      };
+
+      const response = await request(app)
+        .post("/api/diaEstudo")
+        .set("Authorization", `Bearer ${token}`)
+        .send(diaEstudoData);
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body.diaSemana).toBe(1);
+      expect(response.body.planejamentoId).toBe(segundoPlanejamento.id);
     });
 
     it("deve retornar erro ao tentar criar dia de estudo sem campos obrigatórios", async () => {
@@ -155,7 +198,6 @@ describe("Dia Estudo - /api/diaEstudo", () => {
       const updateData = {
         diaSemana: 2,
         horasPlanejadas: 5.0,
-        horasAlocadas: 3.5,
       };
 
       const response = await request(app)
@@ -166,7 +208,6 @@ describe("Dia Estudo - /api/diaEstudo", () => {
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.diaSemana).toBe(2);
       expect(response.body.horasPlanejadas).toBe(5.0);
-      expect(response.body.horasAlocadas).toBe(3.5);
     });
 
     it("deve retornar erro ao atualizar dia de estudo inexistente", async () => {
@@ -186,7 +227,6 @@ describe("Dia Estudo - /api/diaEstudo", () => {
         data: {
           diaSemana: 3,
           horasPlanejadas: 3.0,
-          horasAlocadas: 0.0,
           planejamentoId: planejamentoTeste.id,
         },
       });

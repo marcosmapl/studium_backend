@@ -16,8 +16,8 @@ CREATE TABLE `cidade` (
     `descricao` VARCHAR(191) NOT NULL,
     `unidade_federativa_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `cidade_descricao_key`(`descricao`),
     INDEX `cidade__unidade_federativa_id_fkey`(`unidade_federativa_id`),
+    UNIQUE INDEX `cidade_descricao_unidade_federativa_id_key`(`descricao`, `unidade_federativa_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -34,10 +34,10 @@ CREATE TABLE `genero_usuario` (
 -- CreateTable
 CREATE TABLE `situacao_usuario` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `situacao` VARCHAR(191) NOT NULL,
+    `descricao` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `situacao_usuario_situacao_key`(`situacao`),
-    INDEX `situacao_usuario_situacao_idx`(`situacao`),
+    UNIQUE INDEX `situacao_usuario_descricao_key`(`descricao`),
+    INDEX `situacao_usuario_descricao_idx`(`descricao`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -66,7 +66,6 @@ CREATE TABLE `usuario` (
     `genero_id` INTEGER NOT NULL,
     `situacao_id` INTEGER NOT NULL,
     `cidade_id` INTEGER NOT NULL,
-    `unidade_federativa_id` INTEGER NOT NULL,
     `grupo_usuario_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `usuario_username_key`(`username`),
@@ -76,7 +75,6 @@ CREATE TABLE `usuario` (
     INDEX `usuario__genero_id_fkey`(`genero_id`),
     INDEX `usuario__grupo_id_fkey`(`grupo_usuario_id`),
     INDEX `usuario__cidade_id_fkey`(`cidade_id`),
-    INDEX `usuario__unidade_federativa_id_fkey`(`unidade_federativa_id`),
     INDEX `usuario__situacao_id_fkey`(`situacao_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -91,7 +89,6 @@ CREATE TABLE `disciplina` (
     `questoes_erros` INTEGER NOT NULL DEFAULT 0,
     `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
     `paginas_lidas` INTEGER NOT NULL DEFAULT 0,
-    `progresso` INTEGER NOT NULL DEFAULT 0,
     `concluido` BOOLEAN NOT NULL DEFAULT false,
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -100,6 +97,7 @@ CREATE TABLE `disciplina` (
 
     INDEX `disciplina_titulo_idx`(`titulo`),
     INDEX `disciplina__plano_id_fkey`(`plano_id`),
+    UNIQUE INDEX `disciplina_titulo_plano_id_key`(`titulo`, `plano_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -118,22 +116,19 @@ CREATE TABLE `topico` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `titulo` VARCHAR(191) NOT NULL,
     `ordem` INTEGER NOT NULL,
-    `questoes_acertos` INTEGER NOT NULL DEFAULT 0,
-    `questoes_erros` INTEGER NOT NULL DEFAULT 0,
-    `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
-    `paginas_lidas` INTEGER NOT NULL DEFAULT 0,
     `concluido` BOOLEAN NOT NULL DEFAULT false,
     `estabilidade` DOUBLE NOT NULL DEFAULT 1.0,
     `dificuldade` DOUBLE NOT NULL DEFAULT 5.0,
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
-    `plano_disciplina_id` INTEGER NOT NULL,
+    `disciplina_id` INTEGER NOT NULL,
     `situacao_id` INTEGER NOT NULL,
 
     INDEX `topico_titulo_idx`(`titulo`),
-    INDEX `topico__disciplina_id_fkey`(`plano_disciplina_id`),
+    INDEX `topico__disciplina_id_fkey`(`disciplina_id`),
     INDEX `topico__situacao_id_fkey`(`situacao_id`),
+    UNIQUE INDEX `topico_titulo_disciplina_id_key`(`titulo`, `disciplina_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -252,7 +247,6 @@ CREATE TABLE `plano_estudo` (
     `questoes_erros` INTEGER NOT NULL DEFAULT 0,
     `tempo_estudo` DOUBLE NOT NULL DEFAULT 0.0,
     `paginas_lidas` INTEGER NOT NULL DEFAULT 0,
-    `progresso` INTEGER NOT NULL DEFAULT 0,
     `concluido` BOOLEAN NOT NULL DEFAULT false,
     `observacoes` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -263,37 +257,41 @@ CREATE TABLE `plano_estudo` (
     INDEX `plano_estudo_titulo_idx`(`titulo`),
     INDEX `plano_estudo__usuario_id_fkey`(`usuario_id`),
     INDEX `plano_estudo__situacao_id_fkey`(`situacao_id`),
+    UNIQUE INDEX `plano_estudo_titulo_usuario_id_key`(`titulo`, `usuario_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `disciplina_cronograma` (
+CREATE TABLE `disciplina_planejamento` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `importancia` DECIMAL(10, 2) NOT NULL,
     `conhecimento` DECIMAL(10, 2) NOT NULL,
-    `prioridade` DECIMAL(10, 2) NOT NULL,
     `horas_semanais` DOUBLE NOT NULL,
-    `percentual_carga` DOUBLE NOT NULL,
     `observacoes` VARCHAR(191) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
     `planejamento_id` INTEGER NOT NULL,
     `disciplina_id` INTEGER NOT NULL,
 
-    INDEX `disciplina_cronograma_planejamento_id_idx`(`planejamento_id`),
-    INDEX `disciplina_cronograma_disciplina_id_idx`(`disciplina_id`),
-    INDEX `disciplina_cronograma_prioridade_idx`(`prioridade`),
+    INDEX `disciplina_planejamento_planejamento_id_idx`(`planejamento_id`),
+    INDEX `disciplina_planejamento_disciplina_id_idx`(`disciplina_id`),
+    UNIQUE INDEX `disciplina_planejamento_planejamento_id_disciplina_id_key`(`planejamento_id`, `disciplina_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `dia_estudo` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `dia_semana` INTEGER NOT NULL,
+    `dia_semana` TINYINT NOT NULL,
     `horas_planejadas` DOUBLE NOT NULL,
-    `horas_alocadas` DOUBLE NOT NULL DEFAULT 0.0,
-    `cronograma_id` INTEGER NOT NULL,
+    `ativo` BOOLEAN NOT NULL DEFAULT false,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+    `planejamento_id` INTEGER NOT NULL,
 
-    INDEX `dia_estudo_cronograma_id_idx`(`cronograma_id`),
+    INDEX `dia_estudo_planejamento_id_idx`(`planejamento_id`),
     INDEX `dia_estudo_dia_semana_idx`(`dia_semana`),
+    UNIQUE INDEX `dia_estudo_dia_semana_planejamento_id_key`(`dia_semana`, `planejamento_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -303,16 +301,20 @@ CREATE TABLE `alocacao_horario` (
     `horas_alocadas` DOUBLE NOT NULL,
     `ordem` INTEGER NOT NULL,
     `observacoes` VARCHAR(191) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
     `dia_estudo_id` INTEGER NOT NULL,
     `disciplina_cronograma_id` INTEGER NOT NULL,
 
     INDEX `alocacao_horario_dia_estudo_id_idx`(`dia_estudo_id`),
     INDEX `alocacao_horario_disciplina_cronograma_id_idx`(`disciplina_cronograma_id`),
+    INDEX `alocacao_horario_dia_estudo_id_ordem_idx`(`dia_estudo_id`, `ordem`),
+    UNIQUE INDEX `alocacao_horario_dia_estudo_id_disciplina_cronograma_id_key`(`dia_estudo_id`, `disciplina_cronograma_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `cronograma_semanal` (
+CREATE TABLE `planejamento` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `data_inicio` DATETIME(3) NOT NULL,
     `data_fim` DATETIME(3) NULL,
@@ -323,7 +325,7 @@ CREATE TABLE `cronograma_semanal` (
     `updated_at` DATETIME(3) NOT NULL,
     `plano_estudo_id` INTEGER NOT NULL,
 
-    INDEX `cronograma_semanal_plano_estudo_id_idx`(`plano_estudo_id`),
+    INDEX `planejamento_plano_estudo_id_idx`(`plano_estudo_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -340,16 +342,13 @@ ALTER TABLE `usuario` ADD CONSTRAINT `usuario_situacao_id_fkey` FOREIGN KEY (`si
 ALTER TABLE `usuario` ADD CONSTRAINT `usuario_cidade_id_fkey` FOREIGN KEY (`cidade_id`) REFERENCES `cidade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `usuario` ADD CONSTRAINT `usuario_unidade_federativa_id_fkey` FOREIGN KEY (`unidade_federativa_id`) REFERENCES `unidade_federativa`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `usuario` ADD CONSTRAINT `usuario_grupo_usuario_id_fkey` FOREIGN KEY (`grupo_usuario_id`) REFERENCES `grupo_usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `disciplina` ADD CONSTRAINT `disciplina_plano_id_fkey` FOREIGN KEY (`plano_id`) REFERENCES `plano_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `topico` ADD CONSTRAINT `topico_plano_disciplina_id_fkey` FOREIGN KEY (`plano_disciplina_id`) REFERENCES `disciplina`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `topico` ADD CONSTRAINT `topico_disciplina_id_fkey` FOREIGN KEY (`disciplina_id`) REFERENCES `disciplina`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `topico` ADD CONSTRAINT `topico_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_topico`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -391,19 +390,19 @@ ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_usuario_id_fkey` FOREIGN
 ALTER TABLE `plano_estudo` ADD CONSTRAINT `plano_estudo_situacao_id_fkey` FOREIGN KEY (`situacao_id`) REFERENCES `situacao_plano`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `disciplina_cronograma` ADD CONSTRAINT `disciplina_cronograma_planejamento_id_fkey` FOREIGN KEY (`planejamento_id`) REFERENCES `cronograma_semanal`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `disciplina_planejamento` ADD CONSTRAINT `disciplina_planejamento_planejamento_id_fkey` FOREIGN KEY (`planejamento_id`) REFERENCES `planejamento`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `disciplina_cronograma` ADD CONSTRAINT `disciplina_cronograma_disciplina_id_fkey` FOREIGN KEY (`disciplina_id`) REFERENCES `disciplina`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `disciplina_planejamento` ADD CONSTRAINT `disciplina_planejamento_disciplina_id_fkey` FOREIGN KEY (`disciplina_id`) REFERENCES `disciplina`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `dia_estudo` ADD CONSTRAINT `dia_estudo_cronograma_id_fkey` FOREIGN KEY (`cronograma_id`) REFERENCES `cronograma_semanal`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `dia_estudo` ADD CONSTRAINT `dia_estudo_planejamento_id_fkey` FOREIGN KEY (`planejamento_id`) REFERENCES `planejamento`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `alocacao_horario` ADD CONSTRAINT `alocacao_horario_dia_estudo_id_fkey` FOREIGN KEY (`dia_estudo_id`) REFERENCES `dia_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `alocacao_horario` ADD CONSTRAINT `alocacao_horario_disciplina_cronograma_id_fkey` FOREIGN KEY (`disciplina_cronograma_id`) REFERENCES `disciplina_cronograma`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `alocacao_horario` ADD CONSTRAINT `alocacao_horario_disciplina_cronograma_id_fkey` FOREIGN KEY (`disciplina_cronograma_id`) REFERENCES `disciplina_planejamento`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `cronograma_semanal` ADD CONSTRAINT `cronograma_semanal_plano_estudo_id_fkey` FOREIGN KEY (`plano_estudo_id`) REFERENCES `plano_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `planejamento` ADD CONSTRAINT `planejamento_plano_estudo_id_fkey` FOREIGN KEY (`plano_estudo_id`) REFERENCES `plano_estudo`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -92,9 +92,9 @@ router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/cidade/descricao/exact/{descricao}:
+ * /api/cidade/descricao/{descricao}/uf/{unidadeFederativaId}:
  *   get:
- *     summary: Busca cidade por descrição exata
+ *     summary: Busca cidade por descrição exata e Unidade Federativa
  *     tags: [Cidade]
  *     security:
  *       - bearerAuth: []
@@ -106,6 +106,13 @@ router.get("/", verifyToken, controller.findAll);
  *           type: string
  *         description: Descrição exata da cidade
  *         example: "Brasília"
+ *       - in: path
+ *         name: unidadeFederativaId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da Unidade Federativa
+ *         example: 1
  *     responses:
  *       200:
  *         description: Cidade encontrada
@@ -121,13 +128,13 @@ router.get("/", verifyToken, controller.findAll);
  *                 unidadeFederativaId:
  *                   type: integer
  *       404:
- *         description: Nenhuma cidade encontrada
+ *         description: Nenhuma cidade encontrada com essa descrição e UF
  *       401:
  *         description: Não autorizado
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/descricao/exact/:descricao", verifyToken, controller.findUniqueByDescricao);
+router.get("/descricao/:descricao/uf/:unidadeFederativaId", verifyToken, controller.findByDescricaoAndUF);
 
 /**
  * @swagger

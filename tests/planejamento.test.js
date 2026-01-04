@@ -118,7 +118,6 @@ describe("Planejamento API", () => {
           generoUsuarioId: (await prisma.generoUsuario.findFirst()).id,
           cidadeId: (await prisma.cidade.findFirst()).id,
           situacaoUsuarioId: (await prisma.situacaoUsuario.findFirst()).id,
-          unidadeFederativaId: (await prisma.unidadeFederativa.findFirst()).id,
           grupoUsuarioId: (await prisma.grupoUsuario.findFirst()).id,
         },
       });

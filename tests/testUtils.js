@@ -87,7 +87,6 @@ const seedBasicData = async () => {
             generoUsuarioId: generoUsuario.id,
             cidadeId: cidade.id,
             situacaoUsuarioId: situacaoUsuario.id,
-            unidadeFederativaId: unidadeFederativa.id,
             grupoUsuarioId: grupoUsuario.id,
         },
     });
@@ -107,7 +106,6 @@ const seedBasicData = async () => {
             questoesErros: 0,
             tempoEstudo: 0.0,
             paginasLidas: 0,
-            progresso: 0,
             concluido: false,
             usuarioId: usuario.id,
             situacaoId: situacaoPlano.id,

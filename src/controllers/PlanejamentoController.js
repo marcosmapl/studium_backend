@@ -8,8 +8,70 @@ class PlanejamentoController extends BaseController {
     constructor() {
         super(new PlanejamentoRepository(), "planejamento", {
             entityNamePlural: "planejamentos",
-            requiredFields: ["dataInicio", "ativo", "totalHorasSemana", "quantidadeDias", "planoEstudoId"]
+            requiredFields: ["dataInicio", "totalHorasSemana", "quantidadeDias", "planoEstudoId"]
         });
+    }
+
+    /**
+     * Cria um novo planejamento com validações
+     */
+    async create(req, res) {
+        try {
+            const { totalHorasSemana, quantidadeDias } = req.body;
+
+            // Validações de valores
+            if (totalHorasSemana !== undefined && totalHorasSemana <= 0) {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: "totalHorasSemana deve ser maior que 0",
+                });
+            }
+
+            if (quantidadeDias !== undefined && (quantidadeDias < 1 || quantidadeDias > 7)) {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: "quantidadeDias deve estar entre 1 e 7",
+                });
+            }
+
+            // Chama o método create da classe base
+            return await super.create(req, res);
+        } catch (error) {
+            logger.error(`Erro ao criar ${this.entityName}`, {
+                error: error.message,
+                stack: error.stack,
+            });
+            throw error;
+        }
+    }
+
+    /**
+     * Atualiza um planejamento com validações
+     */
+    async update(req, res) {
+        try {
+            const { totalHorasSemana, quantidadeDias } = req.body;
+
+            // Validações de valores
+            if (totalHorasSemana !== undefined && totalHorasSemana <= 0) {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: "totalHorasSemana deve ser maior que 0",
+                });
+            }
+
+            if (quantidadeDias !== undefined && (quantidadeDias < 1 || quantidadeDias > 7)) {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: "quantidadeDias deve estar entre 1 e 7",
+                });
+            }
+
+            // Chama o método update da classe base
+            return await super.update(req, res);
+        } catch (error) {
+            logger.error(`Erro ao atualizar ${this.entityName}`, {
+                error: error.message,
+                stack: error.stack,
+            });
+            throw error;
+        }
     }
 
     /**

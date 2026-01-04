@@ -20,9 +20,7 @@ const { verifyToken } = require("../middleware/auth");
  *             required:
  *               - importancia
  *               - conhecimento
- *               - prioridade
  *               - horasSemanais
- *               - percentualCarga
  *               - planejamentoId
  *               - disciplinaId
  *             properties:
@@ -34,18 +32,10 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: number
  *                 description: Nível de conhecimento atual (0-10)
  *                 example: 5.0
- *               prioridade:
- *                 type: number
- *                 description: Prioridade calculada (importancia / conhecimento)
- *                 example: 1.7
  *               horasSemanais:
  *                 type: number
  *                 description: Horas semanais alocadas
  *                 example: 10.0
- *               percentualCarga:
- *                 type: number
- *                 description: Percentual da carga total
- *                 example: 25.0
  *               observacoes:
  *                 type: string
  *                 description: Observações adicionais
@@ -214,18 +204,10 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *                 type: number
  *                 description: Nível de conhecimento atual (0-10)
  *                 example: 6.0
- *               prioridade:
- *                 type: number
- *                 description: Prioridade calculada (importancia / conhecimento)
- *                 example: 1.5
  *               horasSemanais:
  *                 type: number
  *                 description: Horas semanais alocadas
  *                 example: 12.0
- *               percentualCarga:
- *                 type: number
- *                 description: Percentual da carga total
- *                 example: 30.0
  *               observacoes:
  *                 type: string
  *                 description: Observações adicionais

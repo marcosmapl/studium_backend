@@ -9,7 +9,7 @@ class UsuarioController extends BaseController {
     constructor() {
         super(repository, "usuário", {
             entityNamePlural: "usuários",
-            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuarioId", "cidadeId", "situacaoUsuarioId", "unidadeFederativaId", "grupoUsuarioId"]
+            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuarioId", "cidadeId", "situacaoUsuarioId", "grupoUsuarioId"]
         });
     }
 
@@ -27,7 +27,6 @@ class UsuarioController extends BaseController {
                 generoUsuarioId,
                 situacaoUsuarioId,
                 cidadeId,
-                unidadeFederativaId,
                 grupoUsuarioId,
                 dataNascimento,
                 fotoUrl
@@ -78,7 +77,6 @@ class UsuarioController extends BaseController {
                 generoUsuarioId: parseInt(generoUsuarioId),
                 cidadeId: parseInt(cidadeId),
                 situacaoUsuarioId: parseInt(situacaoUsuarioId),
-                unidadeFederativaId: parseInt(unidadeFederativaId),
                 grupoUsuarioId: parseInt(grupoUsuarioId),
                 dataNascimento: dataNascimento ? new Date(dataNascimento) : null,
                 fotoUrl: fotoUrl || null
@@ -109,7 +107,7 @@ class UsuarioController extends BaseController {
                         route: req.originalUrl,
                     });
                     return res.status(HttpStatus.BAD_REQUEST).json({
-                        error: "Gênero, cidade, situação, unidade federativa ou grupo de usuário não encontrado",
+                        error: "Gênero, cidade, situação ou grupo de usuário não encontrado",
                     });
                 }
                 if (error.code === "P2022") {

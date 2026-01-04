@@ -72,6 +72,50 @@ describe("Tópico - /api/topico", () => {
       topicoTeste = response.body;
     });
 
+    it("deve rejeitar criação de tópico duplicado na mesma disciplina", async () => {
+      const topicoData = {
+        titulo: "Teoria Geral dos Direitos Fundamentais",
+        ordem: 2,
+        disciplinaId: disciplinaTeste.id,
+        situacaoId: situacaoTopicoTeste.id,
+      };
+
+      const response = await request(app)
+        .post("/api/topico")
+        .set("Authorization", `Bearer ${token}`)
+        .send(topicoData);
+
+      expect(response.status).toBe(HttpStatus.CONFLICT);
+      expect(response.body.error).toMatch(/já existe/i);
+    });
+
+    it("deve permitir criar tópico com mesmo título em disciplina diferente", async () => {
+      // Criar uma segunda disciplina
+      const segundaDisciplina = await prisma.disciplina.create({
+        data: {
+          titulo: "Disciplina Teste 2",
+          cor: "#00FF00",
+          planoId: seedData.planoEstudo.id,
+        },
+      });
+
+      const topicoData = {
+        titulo: "Teoria Geral dos Direitos Fundamentais",
+        ordem: 1,
+        disciplinaId: segundaDisciplina.id,
+        situacaoId: situacaoTopicoTeste.id,
+      };
+
+      const response = await request(app)
+        .post("/api/topico")
+        .set("Authorization", `Bearer ${token}`)
+        .send(topicoData);
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body.titulo).toBe("Teoria Geral dos Direitos Fundamentais");
+      expect(response.body.disciplinaId).toBe(segundaDisciplina.id);
+    });
+
     it("deve validar ausência de campos obrigatórios", async () => {
       const response = await request(app)
         .post("/api/topico")

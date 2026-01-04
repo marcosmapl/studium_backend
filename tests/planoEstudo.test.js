@@ -47,6 +47,54 @@ describe("Situação de Plano de Estudo - /api/planoEstudo", () => {
       planoTeste = response.body;
     });
 
+    it("deve rejeitar criação de plano de estudo duplicado para o mesmo usuário", async () => {
+      const planoData = {
+        titulo: "Novo Plano Teste",
+        usuarioId: seedData.usuario.id,
+        situacaoId: seedData.situacaoPlano.id,
+      };
+
+      const response = await request(app)
+        .post("/api/planoEstudo")
+        .set("Authorization", `Bearer ${token}`)
+        .send(planoData);
+
+      expect(response.status).toBe(HttpStatus.CONFLICT);
+      expect(response.body.error).toMatch(/já existe/i);
+    });
+
+    it("deve permitir criar plano de estudo com mesmo título para usuário diferente", async () => {
+      // Criar um segundo usuário
+      const segundoUsuario = await prisma.usuario.create({
+        data: {
+          nome: "Usuario",
+          sobrenome: "Teste 2",
+          username: "teste2",
+          password: await bcrypt.hash("senha123", 10),
+          email: "teste2@example.com",
+          generoUsuarioId: seedData.generoUsuario.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
+        },
+      });
+
+      const planoData = {
+        titulo: "Novo Plano Teste",
+        usuarioId: segundoUsuario.id,
+        situacaoId: seedData.situacaoPlano.id,
+      };
+
+      const response = await request(app)
+        .post("/api/planoEstudo")
+        .set("Authorization", `Bearer ${token}`)
+        .send(planoData);
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body.titulo).toBe("Novo Plano Teste");
+      expect(response.body.usuarioId).toBe(segundoUsuario.id);
+    });
+
     it("deve validar ausência de título", async () => {
       const response = await request(app)
         .post("/api/planoEstudo")

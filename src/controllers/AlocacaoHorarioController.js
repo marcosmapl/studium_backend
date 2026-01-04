@@ -2,6 +2,7 @@ const BaseController = require("./BaseController");
 const AlocacaoHorarioRepository = require("../repositories/AlocacaoHorarioRepository");
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
+const { Prisma } = require("@prisma/client");
 
 class AlocacaoHorarioController extends BaseController {
   constructor() {
@@ -13,6 +14,109 @@ class AlocacaoHorarioController extends BaseController {
         "disciplinaCronogramaId",
       ],
     });
+  }
+
+  /**
+   * Cria uma nova alocação de horário com validações
+   */
+  async create(req, res, next) {
+    try {
+      const { horasAlocadas, ordem } = req.body;
+
+      // Validações de valores
+      if (horasAlocadas !== undefined && horasAlocadas <= 0) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          error: "horasAlocadas deve ser maior que 0",
+        });
+      }
+
+      if (ordem !== undefined && ordem <= 0) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          error: "ordem deve ser maior que 0",
+        });
+      }
+
+      // Chama o método create da classe base
+      return await super.create(req, res, next);
+    } catch (error) {
+      // Tratamento específico para violação de constraint única
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          logger.warn(
+            `Tentativa de criar ${this.entityName} duplicado(a)`,
+            {
+              error: error.message,
+              meta: error.meta,
+              diaEstudoId: req.body.diaEstudoId,
+              disciplinaCronogramaId: req.body.disciplinaCronogramaId,
+            }
+          );
+          return res.status(HttpStatus.CONFLICT).json({
+            error: `Já existe uma alocação de horário para esta combinação de dia de estudo e disciplina de planejamento`,
+          });
+        }
+
+        // Tratamento para foreign key não encontrada
+        if (error.code === "P2003") {
+          const campo = error.meta?.field_name || "relacionado";
+          logger.warn(
+            `Registro relacionado não encontrado ao criar ${this.entityName}`,
+            {
+              error: error.message,
+              meta: error.meta,
+            }
+          );
+
+          let mensagem = "Registro relacionado não encontrado";
+          if (campo.includes("dia_estudo")) {
+            mensagem = "Dia de estudo não encontrado";
+          } else if (campo.includes("disciplina_cronograma")) {
+            mensagem = "Disciplina de planejamento não encontrada";
+          }
+
+          return res.status(HttpStatus.BAD_REQUEST).json({
+            error: mensagem,
+          });
+        }
+      }
+
+      logger.error(`Erro ao criar ${this.entityName}`, {
+        error: error.message,
+        stack: error.stack,
+      });
+      next(error);
+    }
+  }
+
+  /**
+   * Atualiza uma alocação de horário com validações
+   */
+  async update(req, res) {
+    try {
+      const { horasAlocadas, ordem } = req.body;
+
+      // Validações de valores
+      if (horasAlocadas !== undefined && horasAlocadas <= 0) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          error: "horasAlocadas deve ser maior que 0",
+        });
+      }
+
+      if (ordem !== undefined && ordem <= 0) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          error: "ordem deve ser maior que 0",
+        });
+      }
+
+      // Chama o método update da classe base
+      return await super.update(req, res);
+    } catch (error) {
+      logger.error(`Erro ao atualizar ${this.entityName}`, {
+        error: error.message,
+        stack: error.stack,
+      });
+      throw error;
+    }
   }
 
   /**

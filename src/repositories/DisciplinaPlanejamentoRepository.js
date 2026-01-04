@@ -4,7 +4,7 @@ class PrismaDisciplinaPlanejamentoRepository extends BaseRepository {
 
     constructor() {
         super("disciplinaPlanejamento", "DisciplinaPlanejamentoRepository.js", {
-            defaultOrderBy: "prioridade",
+            defaultOrderBy: "importancia",
             orderDirection: "desc",
             includeRelations: {
                 planejamento: true,

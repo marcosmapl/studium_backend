@@ -54,6 +54,50 @@ describe("Disciplina - /api/disciplina", () => {
       disciplinaTeste = response.body;
     });
 
+    it("deve rejeitar criação de disciplina duplicada no mesmo plano", async () => {
+      const disciplinaData = {
+        titulo: "Direito Constitucional",
+        descricao: "Outra descrição",
+        cor: "#00FF00",
+        planoId: seedData.planoEstudo.id,
+      };
+
+      const response = await request(app)
+        .post("/api/disciplina")
+        .set("Authorization", `Bearer ${token}`)
+        .send(disciplinaData);
+
+      expect(response.status).toBe(HttpStatus.CONFLICT);
+      expect(response.body.error).toMatch(/já existe/i);
+    });
+
+    it("deve permitir criar disciplina com mesmo título em plano diferente", async () => {
+      // Criar outro plano de estudo
+      const outroPlano = await prisma.planoEstudo.create({
+        data: {
+          titulo: "Outro Plano",
+          usuarioId: seedData.usuario.id,
+          situacaoId: seedData.situacaoPlano.id,
+        },
+      });
+
+      const disciplinaData = {
+        titulo: "Direito Constitucional",
+        descricao: "Mesma disciplina em plano diferente",
+        cor: "#0000FF",
+        planoId: outroPlano.id,
+      };
+
+      const response = await request(app)
+        .post("/api/disciplina")
+        .set("Authorization", `Bearer ${token}`)
+        .send(disciplinaData);
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body.titulo).toBe("Direito Constitucional");
+      expect(response.body.planoId).toBe(outroPlano.id);
+    });
+
     it("deve validar campos obrigatórios", async () => {
       const response = await request(app)
         .post("/api/disciplina")
@@ -181,7 +225,6 @@ describe("Disciplina - /api/disciplina", () => {
         .send({
           titulo: "Direito Constitucional Avançado",
           descricao: "Aprofundamento em controle de constitucionalidade",
-          progresso: 50,
         });
 
       expect(response.status).toBe(HttpStatus.OK);

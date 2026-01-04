@@ -2,6 +2,7 @@ const BaseController = require("./BaseController");
 const repository = require("../repositories/DisciplinaRepository");
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
+const { Prisma } = require("@prisma/client");
 
 class DisciplinaController extends BaseController {
 
@@ -10,6 +11,73 @@ class DisciplinaController extends BaseController {
             entityNamePlural: "disciplinas",
             requiredFields: ["titulo", "cor", "planoId"]
         });
+    }
+
+    /**
+     * Sobrescreve o método create para tratar melhor a constraint única composta
+     */
+    async create(req, res, next) {
+        try {
+            const { titulo, descricao, cor, planoId, questoesAcertos, questoesErros, tempoEstudo, paginasLidas, concluido, observacoes } = req.body;
+
+            // Validação de campos obrigatórios
+            const missingFields = this.requiredFields.filter((field) => !req.body[field]);
+
+            if (missingFields.length > 0) {
+                logger.warn(`Campos obrigatórios ausentes ao criar ${this.entityName}`, {
+                    route: req.originalUrl,
+                    method: "POST",
+                    missingFields,
+                });
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: "Campos obrigatórios ausentes",
+                    missingFields,
+                });
+            }
+
+            const disciplina = await this.repository.create({
+                titulo,
+                descricao,
+                cor,
+                planoId: parseInt(planoId),
+                questoesAcertos: questoesAcertos !== undefined ? parseInt(questoesAcertos) : 0,
+                questoesErros: questoesErros !== undefined ? parseInt(questoesErros) : 0,
+                tempoEstudo: tempoEstudo !== undefined ? parseFloat(tempoEstudo) : 0.0,
+                paginasLidas: paginasLidas !== undefined ? parseInt(paginasLidas) : 0,
+                concluido: concluido !== undefined ? concluido : false,
+                observacoes,
+            });
+
+            logger.info(`${this.entityName} criado(a) com sucesso`, {
+                id: disciplina.id,
+                route: req.originalUrl,
+            });
+
+            return res.status(HttpStatus.CREATED).json(disciplina);
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                if (error.code === "P2002") {
+                    logger.warn(`Tentativa de criar ${this.entityName} duplicada`, {
+                        route: req.originalUrl,
+                        titulo: req.body.titulo,
+                        planoId: req.body.planoId,
+                    });
+                    return res.status(HttpStatus.CONFLICT).json({
+                        error: `Já existe uma disciplina com o título "${req.body.titulo}" neste plano de estudo`,
+                    });
+                }
+                if (error.code === "P2003") {
+                    logger.warn("Plano de estudo não encontrado ao criar disciplina", {
+                        route: req.originalUrl,
+                        planoId: req.body.planoId,
+                    });
+                    return res.status(HttpStatus.BAD_REQUEST).json({
+                        error: "Plano de estudo não encontrado",
+                    });
+                }
+            }
+            next(error);
+        }
     }
 
     /**

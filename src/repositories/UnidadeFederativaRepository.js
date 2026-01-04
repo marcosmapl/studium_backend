@@ -7,7 +7,6 @@ class PrismaUnidadeFederativaRepository extends BaseRepository {
             defaultOrderBy: "descricao",
             orderDirection: "asc",
             includeRelations: {
-                usuarios: true,
                 cidades: true,
             }
         });
