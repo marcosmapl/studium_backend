@@ -1,4 +1,5 @@
 const { Prisma } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
 const BaseController = require("./BaseController");
 const repository = require("../repositories/UsuarioRepository");
 const logger = require("../config/logger");
@@ -68,11 +69,14 @@ class UsuarioController extends BaseController {
                 });
             }
 
+            // Hash da senha usando bcrypt
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const usuario = await this.repository.create({
                 username,
                 nome,
                 sobrenome,
-                password, // NOTA: Em produção, a senha deveria ser hash usando bcrypt
+                password: hashedPassword,
                 email,
                 generoUsuarioId: parseInt(generoUsuarioId),
                 cidadeId: parseInt(cidadeId),
@@ -249,7 +253,10 @@ class UsuarioController extends BaseController {
             if (username) updateData.username = username;
             if (nome) updateData.nome = nome;
             if (sobrenome) updateData.sobrenome = sobrenome;
-            if (password) updateData.password = password; // NOTA: Hash em produção
+            if (password) {
+                // Hash da senha usando bcrypt
+                updateData.password = await bcrypt.hash(password, 10);
+            }
             if (email) updateData.email = email;
             if (generoUsuarioId !== undefined) updateData.generoUsuarioId = parseInt(generoUsuarioId);
             if (cidadeId !== undefined) updateData.cidadeId = parseInt(cidadeId);

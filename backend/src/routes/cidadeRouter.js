@@ -218,8 +218,7 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
  */
 router.get(
     "/uf/:unidadeFederativaId",
-    verifyToken,
-    controller.findManyByUnidadeFederativa
+    controller.findManyByUnidadeFederativa // Rota pública para formulário de cadastro
 );
 
 /**

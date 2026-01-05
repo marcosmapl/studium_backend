@@ -18,38 +18,61 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - nomeUsuario
- *               - senha
- *               - nomeFuncionario
+ *               - nome
+ *               - sobrenome
+ *               - username
+ *               - password
  *               - email
+ *               - generoUsuarioId
+ *               - situacaoUsuarioId
+ *               - cidadeId
  *               - grupoUsuarioId
- *               - unidadeId
  *             properties:
- *               nomeUsuario:
+ *               nome:
+ *                 type: string
+ *                 description: Primeiro nome do usuário
+ *                 example: "João"
+ *               sobrenome:
+ *                 type: string
+ *                 description: Sobrenome do usuário
+ *                 example: "Silva"
+ *               username:
  *                 type: string
  *                 description: Nome de usuário único
  *                 example: "joao.silva"
- *               senha:
+ *               password:
  *                 type: string
  *                 format: password
  *                 description: Senha do usuário
  *                 example: "senha123"
- *               nomeFuncionario:
- *                 type: string
- *                 description: Nome completo do funcionário
- *                 example: "João Silva"
  *               email:
  *                 type: string
  *                 format: email
  *                 description: E-mail do usuário
  *                 example: "joao.silva@empresa.com"
+ *               dataNascimento:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data de nascimento do usuário (opcional)
+ *               fotoUrl:
+ *                 type: string
+ *                 description: URL da foto do usuário (opcional)
+ *                 example: "https://exemplo.com/foto.jpg"
+ *               generoUsuarioId:
+ *                 type: integer
+ *                 description: ID do gênero do usuário
+ *                 example: 1
+ *               situacaoUsuarioId:
+ *                 type: integer
+ *                 description: ID da situação do usuário (status)
+ *                 example: 2
  *               grupoUsuarioId:
  *                 type: integer
  *                 description: ID do grupo de usuário
  *                 example: 1
- *               unidadeId:
+ *               cidadeId:
  *                 type: integer
- *                 description: ID da unidade
+ *                 description: ID da cidade
  *                 example: 1
  *     responses:
  *       201:
@@ -62,19 +85,36 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 nomeUsuario:
+ *                 nome:
+ *                   type: string
+ *                   example: "João"
+ *                 sobrenome:
+ *                   type: string
+ *                   example: "Silva"
+ *                 username:
  *                   type: string
  *                   example: "joao.silva"
- *                 nomeFuncionario:
- *                   type: string
- *                   example: "João Silva"
  *                 email:
  *                   type: string
  *                   example: "joao.silva@empresa.com"
+ *                 dataNascimento:
+ *                   type: string
+ *                   format: date-time
+ *                 ultimoAcesso:
+ *                   type: string
+ *                   format: date-time
+ *                 fotoUrl:
+ *                   type: string
+ *                 generoUsuarioId:
+ *                   type: integer
+ *                   example: 1
+ *                 situacaoUsuarioId:
+ *                   type: integer
+ *                   example: 2
  *                 grupoUsuarioId:
  *                   type: integer
  *                   example: 1
- *                 unidadeId:
+ *                 cidadeId:
  *                   type: integer
  *                   example: 1
  *                 createdAt:
@@ -92,7 +132,7 @@ const { verifyToken } = require("../middleware/auth");
  *       401:
  *         description: Não autorizado
  *       409:
- *         description: Usuário, e-mail ou nome de usuário já cadastrado
+ *         description: Username ou e-mail já cadastrado
  *       500:
  *         description: Erro interno do servidor
  *   get:
@@ -102,7 +142,7 @@ const { verifyToken } = require("../middleware/auth");
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de usuários ordenados por nome de usuário
+ *         description: Lista de usuários ordenados por username
  *         content:
  *           application/json:
  *             schema:
@@ -113,33 +153,57 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   nomeUsuario:
+ *                   nome:
+ *                     type: string
+ *                     example: "João"
+ *                   sobrenome:
+ *                     type: string
+ *                     example: "Silva"
+ *                   username:
  *                     type: string
  *                     example: "joao.silva"
- *                   nomeFuncionario:
- *                     type: string
- *                     example: "João Silva"
  *                   email:
  *                     type: string
  *                     example: "joao.silva@empresa.com"
+ *                   ultimoAcesso:
+ *                     type: string
+ *                     format: date-time
+ *                   generoUsuarioId:
+ *                     type: integer
+ *                     example: 1
+ *                   situacaoUsuarioId:
+ *                     type: integer
+ *                     example: 2
  *                   grupoUsuarioId:
  *                     type: integer
  *                     example: 1
- *                   unidadeId:
+ *                   cidadeId:
  *                     type: integer
  *                     example: 1
+ *                   generoUsuario:
+ *                     type: object
+ *                     properties:
+ *                       descricao:
+ *                         type: string
+ *                         example: "Masculino"
+ *                   situacaoUsuario:
+ *                     type: object
+ *                     properties:
+ *                       descricao:
+ *                         type: string
+ *                         example: "Ativo"
  *                   grupoUsuario:
  *                     type: object
  *                     properties:
  *                       descricao:
  *                         type: string
  *                         example: "Administrador"
- *                   unidade:
+ *                   cidade:
  *                     type: object
  *                     properties:
- *                       nome:
+ *                       descricao:
  *                         type: string
- *                         example: "Unidade Central"
+ *                         example: "São Paulo"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -151,24 +215,24 @@ const { verifyToken } = require("../middleware/auth");
  *       500:
  *         description: Erro interno do servidor
  */
-router.post("/", verifyToken, usuarioController.createUsuario);
+router.post("/", usuarioController.createUsuario); // Rota pública para cadastro
 router.get("/", verifyToken, usuarioController.findAllUsuarios);
 
 /**
  * @swagger
- * /api/usuarios/nomeUsuario/{nomeUsuario}:
+ * /api/usuarios/username/{username}:
  *   get:
- *     summary: Busca usuário por nome de usuário
+ *     summary: Busca usuário por username
  *     tags: [Usuários]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: nomeUsuario
+ *         name: username
  *         required: true
  *         schema:
  *           type: string
- *         description: Nome de usuário
+ *         description: Username do usuário
  *         example: "joao.silva"
  *     responses:
  *       200:
@@ -180,15 +244,29 @@ router.get("/", verifyToken, usuarioController.findAllUsuarios);
  *               properties:
  *                 id:
  *                   type: integer
- *                 nomeUsuario:
+ *                 nome:
  *                   type: string
- *                 nomeFuncionario:
+ *                 sobrenome:
+ *                   type: string
+ *                 username:
  *                   type: string
  *                 email:
  *                   type: string
+ *                 dataNascimento:
+ *                   type: string
+ *                   format: date-time
+ *                 ultimoAcesso:
+ *                   type: string
+ *                   format: date-time
+ *                 fotoUrl:
+ *                   type: string
+ *                 generoUsuarioId:
+ *                   type: integer
+ *                 situacaoUsuarioId:
+ *                   type: integer
  *                 grupoUsuarioId:
  *                   type: integer
- *                 unidadeId:
+ *                 cidadeId:
  *                   type: integer
  *                 createdAt:
  *                   type: string
@@ -204,9 +282,9 @@ router.get("/", verifyToken, usuarioController.findAllUsuarios);
  *         description: Erro interno do servidor
  */
 router.get(
-  "/username/:username",
-  verifyToken,
-  usuarioController.findByUsername
+    "/username/:username",
+    verifyToken,
+    usuarioController.findByUsername
 );
 
 /**
@@ -237,19 +315,24 @@ router.get(
  *                 properties:
  *                   id:
  *                     type: integer
- *                   username:
- *                     type: string
  *                   nome:
  *                     type: string
  *                   sobrenome:
  *                     type: string
+ *                   username:
+ *                     type: string
  *                   email:
  *                     type: string
+ *                   dataNascimento:
+ *                     type: string
+ *                     format: date-time
  *                   generoUsuarioId:
+ *                     type: integer
+ *                   situacaoUsuarioId:
  *                     type: integer
  *                   cidadeId:
  *                     type: integer
- *                   situacaoUsuarioId:
+ *                   grupoUsuarioId:
  *                     type: integer
  *                   createdAt:
  *                     type: string
@@ -265,9 +348,9 @@ router.get(
  *         description: Erro interno do servidor
  */
 router.get(
-  "/nome/:nome",
-  verifyToken,
-  usuarioController.findByNome
+    "/nome/:nome",
+    verifyToken,
+    usuarioController.findByNome
 );
 
 /**
@@ -296,15 +379,27 @@ router.get(
  *               properties:
  *                 id:
  *                   type: integer
- *                 nomeUsuario:
+ *                 nome:
  *                   type: string
- *                 nomeFuncionario:
+ *                 sobrenome:
+ *                   type: string
+ *                 username:
  *                   type: string
  *                 email:
  *                   type: string
+ *                 dataNascimento:
+ *                   type: string
+ *                   format: date-time
+ *                 ultimoAcesso:
+ *                   type: string
+ *                   format: date-time
+ *                 generoUsuarioId:
+ *                   type: integer
+ *                 situacaoUsuarioId:
+ *                   type: integer
  *                 grupoUsuarioId:
  *                   type: integer
- *                 unidadeId:
+ *                 cidadeId:
  *                   type: integer
  *                 createdAt:
  *                   type: string
@@ -347,26 +442,65 @@ router.get("/email/:email", verifyToken, usuarioController.findByEmail);
  *               properties:
  *                 id:
  *                   type: integer
- *                 nomeUsuario:
+ *                 nome:
  *                   type: string
- *                 nomeFuncionario:
+ *                 sobrenome:
+ *                   type: string
+ *                 username:
  *                   type: string
  *                 email:
  *                   type: string
+ *                 dataNascimento:
+ *                   type: string
+ *                   format: date-time
+ *                 ultimoAcesso:
+ *                   type: string
+ *                   format: date-time
+ *                 fotoUrl:
+ *                   type: string
+ *                 generoUsuarioId:
+ *                   type: integer
+ *                 situacaoUsuarioId:
+ *                   type: integer
  *                 grupoUsuarioId:
  *                   type: integer
- *                 unidadeId:
+ *                 cidadeId:
  *                   type: integer
+ *                 generoUsuario:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     descricao:
+ *                       type: string
+ *                 situacaoUsuario:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     descricao:
+ *                       type: string
  *                 grupoUsuario:
  *                   type: object
  *                   properties:
+ *                     id:
+ *                       type: integer
  *                     descricao:
  *                       type: string
- *                 unidade:
+ *                 cidade:
  *                   type: object
  *                   properties:
- *                     nome:
+ *                     id:
+ *                       type: integer
+ *                     descricao:
  *                       type: string
+ *                     unidadeFederativa:
+ *                       type: object
+ *                       properties:
+ *                         sigla:
+ *                           type: string
+ *                         descricao:
+ *                           type: string
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -399,24 +533,39 @@ router.get("/email/:email", verifyToken, usuarioController.findByEmail);
  *           schema:
  *             type: object
  *             properties:
- *               nomeUsuario:
+ *               nome:
+ *                 type: string
+ *                 example: "João"
+ *               sobrenome:
+ *                 type: string
+ *                 example: "Silva Jr."
+ *               username:
  *                 type: string
  *                 example: "joao.silva2"
- *               senha:
+ *               password:
  *                 type: string
  *                 format: password
  *                 example: "novaSenha123"
- *               nomeFuncionario:
- *                 type: string
- *                 example: "João Silva Jr."
  *               email:
  *                 type: string
  *                 format: email
  *                 example: "joao.silva2@empresa.com"
+ *               dataNascimento:
+ *                 type: string
+ *                 format: date-time
+ *               fotoUrl:
+ *                 type: string
+ *                 example: "https://exemplo.com/nova-foto.jpg"
+ *               generoUsuarioId:
+ *                 type: integer
+ *                 example: 1
+ *               situacaoUsuarioId:
+ *                 type: integer
+ *                 example: 2
  *               grupoUsuarioId:
  *                 type: integer
  *                 example: 2
- *               unidadeId:
+ *               cidadeId:
  *                 type: integer
  *                 example: 2
  *     responses:
@@ -429,15 +578,29 @@ router.get("/email/:email", verifyToken, usuarioController.findByEmail);
  *               properties:
  *                 id:
  *                   type: integer
- *                 nomeUsuario:
+ *                 nome:
  *                   type: string
- *                 nomeFuncionario:
+ *                 sobrenome:
+ *                   type: string
+ *                 username:
  *                   type: string
  *                 email:
  *                   type: string
+ *                 dataNascimento:
+ *                   type: string
+ *                   format: date-time
+ *                 ultimoAcesso:
+ *                   type: string
+ *                   format: date-time
+ *                 fotoUrl:
+ *                   type: string
+ *                 generoUsuarioId:
+ *                   type: integer
+ *                 situacaoUsuarioId:
+ *                   type: integer
  *                 grupoUsuarioId:
  *                   type: integer
- *                 unidadeId:
+ *                 cidadeId:
  *                   type: integer
  *                 createdAt:
  *                   type: string
@@ -450,7 +613,7 @@ router.get("/email/:email", verifyToken, usuarioController.findByEmail);
  *       404:
  *         description: Usuário não encontrado
  *       409:
- *         description: Nome de usuário ou e-mail já cadastrado
+ *         description: Username ou e-mail já cadastrado
  *       401:
  *         description: Não autorizado
  *       500:

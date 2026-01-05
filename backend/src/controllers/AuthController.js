@@ -33,7 +33,7 @@ class AuthController {
                     route: req.originalUrl,
                     username,
                 });
-                return res.status(HttpStatus.UNAUTHORIZED).json({ error: "Credenciais inválidas" });
+                return res.status(HttpStatus.UNAUTHORIZED).json({ error: "Credenciais inválidas! Usuário não encontrado." });
             }
 
             // Comparar senha usando bcrypt
@@ -49,7 +49,7 @@ class AuthController {
                 // TODO: when user enters the wrong password, reduce the number o remaining attempts  
 
                 return res.status(HttpStatus.UNAUTHORIZED).json({
-                    error: "Credenciais inválidas",
+                    error: "Credenciais inválidas! Senha não confere.",
                 });
             }
 

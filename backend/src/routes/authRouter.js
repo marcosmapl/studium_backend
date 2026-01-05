@@ -19,13 +19,13 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - nomeUsuario
- *               - senha
+ *               - username
+ *               - password
  *             properties:
- *               nomeUsuario:
+ *               username:
  *                 type: string
  *                 example: admin
- *               senha:
+ *               password:
  *                 type: string
  *                 format: password
  *                 example: senha123
@@ -49,12 +49,18 @@ const { verifyToken } = require("../middleware/auth");
  *                     id:
  *                       type: integer
  *                       example: 1
- *                     nomeUsuario:
+ *                     username:
  *                       type: string
  *                       example: admin
- *                     nomeFuncionario:
+ *                     nome:
  *                       type: string
- *                       example: João Silva
+ *                       example: João
+ *                     sobrenome:
+ *                       type: string
+ *                       example: Silva
+ *                     email:
+ *                       type: string
+ *                       example: joao.silva@exemplo.com
  *       401:
  *         description: Credenciais inválidas
  *         content:

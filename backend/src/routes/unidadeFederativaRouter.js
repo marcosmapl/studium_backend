@@ -94,8 +94,7 @@ router.post(
 );
 router.get(
   "/",
-  verifyToken,
-  unidadeFederativaController.findAllUnidadesFederativas
+  unidadeFederativaController.findAllUnidadesFederativas // Rota pública para formulário de cadastro
 );
 
 /**

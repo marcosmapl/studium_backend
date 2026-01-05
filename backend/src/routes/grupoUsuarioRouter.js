@@ -78,7 +78,7 @@ const { verifyToken } = require("../middleware/auth");
  *         description: Erro interno do servidor
  */
 router.post("/", verifyToken, controller.create);
-router.get("/", verifyToken, controller.findAll);
+router.get("/", controller.findAll); // Rota pública para formulário de cadastro
 
 /**
  * @swagger
