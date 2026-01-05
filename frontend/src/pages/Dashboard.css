@@ -1,0 +1,63 @@
+/* Navigation Bar */
+.dashboard-nav {
+    background-color: #262c39;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+    background-color: #262c39;
+}
+
+/* Sidebar Menu Items */
+.sidebar-menu-item {
+    color: #bec2c6;
+}
+
+.sidebar-menu-item:hover {
+    background-color: #343c4b;
+}
+
+.sidebar-menu-item-active {
+    background-color: #343c4b;
+    color: white;
+    border-right: 4px solid #bec2c6;
+}
+
+/* KPI Cards */
+.kpi-card {
+    background-color: #262c39;
+    border-color: #262c39;
+}
+
+.kpi-card-title {
+    color: white;
+}
+
+.kpi-card-value {
+    color: #bec2c6;
+}
+
+/* Study Consistency Section */
+.study-consistency-section {
+    background-color: #262c39;
+    border-color: #262c39;
+}
+
+.study-consistency-title {
+    color: white;
+}
+
+.study-consistency-text {
+    color: #bec2c6;
+}
+
+/* Study Days Grid */
+.study-days-grid {
+    background-color: #1a1f2e;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+    gap: 0.75rem;
+}

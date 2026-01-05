@@ -243,7 +243,7 @@ const Cadastro = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4">
+        <div className="min-h-screen flex items-center justify-center py-8 px-4" style={{ backgroundColor: '#343c4b' }}>
             <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl">
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-blue-600 mb-2">Criar Conta</h1>
@@ -476,8 +476,8 @@ const Cadastro = () => {
                                 disabled={loading || !formData.unidadeFederativaId}
                             >
                                 <option value="">
-                                    {formData.unidadeFederativaId 
-                                        ? 'Selecione uma cidade' 
+                                    {formData.unidadeFederativaId
+                                        ? 'Selecione uma cidade'
                                         : 'Primeiro selecione um estado'}
                                 </option>
                                 {cidades.map(cidade => (
