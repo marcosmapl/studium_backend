@@ -9,80 +9,80 @@ const { cleanDatabase, seedBasicData, prisma } = require("./testUtils");
 const HttpStatus = require("../src/utils/httpStatus");
 
 describe("Autenticação - /api", () => {
-  beforeEach(async () => {
-    await cleanDatabase();
-    await seedBasicData();
-  });
+    beforeEach(async () => {
+        await cleanDatabase();
+        await seedBasicData();
+    }, 30000);
 
-  afterAll(async () => {
-    await prisma.$disconnect();
-  });
-
-  describe("POST /api/login", () => {
-    it("deve fazer login com credenciais válidas", async () => {
-      const response = await request(app).post("/api/login").send({
-        username: "teste",
-        password: "teste123",
-      });
-
-      expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body).toHaveProperty("token");
-      expect(response.body.token).toBeTruthy();
+    afterAll(async () => {
+        await prisma.$disconnect();
     });
 
-    it("deve rejeitar login com senha incorreta", async () => {
-      const response = await request(app).post("/api/login").send({
-        username: "teste",
-        password: "senhaerrada",
-      });
+    describe("POST /api/login", () => {
+        it("deve fazer login com credenciais válidas", async () => {
+            const response = await request(app).post("/api/login").send({
+                username: "teste",
+                password: "teste123",
+            });
 
-      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      expect(response.body).toHaveProperty("error");
-    });
-
-    it("deve rejeitar login com usuário inexistente", async () => {
-      const response = await request(app).post("/api/login").send({
-        username: "usuarioinexistente",
-        password: "qualquersenha",
-      });
-
-      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      expect(response.body).toHaveProperty("error");
-    });
-
-    it("deve validar campos obrigatórios", async () => {
-      const response = await request(app).post("/api/login").send({});
-
-      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body).toHaveProperty("error");
-    });
-  });
-
-  describe("POST /api/logout", () => {
-    it("deve fazer logout com sucesso", async () => {
-      // Primeiro fazer login
-      const loginResponse = await request(app)
-        .post("/api/login")
-        .send({
-          username: "teste",
-          password: "teste123",
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(response.body).toHaveProperty("token");
+            expect(response.body.token).toBeTruthy();
         });
 
-      const token = loginResponse.body.token;
+        it("deve rejeitar login com senha incorreta", async () => {
+            const response = await request(app).post("/api/login").send({
+                username: "teste",
+                password: "senhaerrada",
+            });
 
-      // Fazer logout
-      const response = await request(app)
-        .post("/api/logout")
-        .set("Authorization", `Bearer ${token}`);
+            expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+            expect(response.body).toHaveProperty("error");
+        });
 
-      expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body).toHaveProperty("message");
+        it("deve rejeitar login com usuário inexistente", async () => {
+            const response = await request(app).post("/api/login").send({
+                username: "usuarioinexistente",
+                password: "qualquersenha",
+            });
+
+            expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+            expect(response.body).toHaveProperty("error");
+        });
+
+        it("deve validar campos obrigatórios", async () => {
+            const response = await request(app).post("/api/login").send({});
+
+            expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+            expect(response.body).toHaveProperty("error");
+        });
     });
 
-    it("deve rejeitar logout sem token", async () => {
-      const response = await request(app).post("/api/logout");
+    describe("POST /api/logout", () => {
+        it("deve fazer logout com sucesso", async () => {
+            // Primeiro fazer login
+            const loginResponse = await request(app)
+                .post("/api/login")
+                .send({
+                    username: "teste",
+                    password: "teste123",
+                });
 
-      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+            const token = loginResponse.body.token;
+
+            // Fazer logout
+            const response = await request(app)
+                .post("/api/logout")
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(response.body).toHaveProperty("message");
+        });
+
+        it("deve rejeitar logout sem token", async () => {
+            const response = await request(app).post("/api/logout");
+
+            expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        });
     });
-  });
 });

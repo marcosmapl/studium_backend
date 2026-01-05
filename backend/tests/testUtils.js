@@ -10,35 +10,45 @@ const prisma = require("../src/orm/prismaClient");
  * Deve ser usado com cuidado, apenas em ambiente de teste
  */
 const cleanDatabase = async () => {
+    try {
+        // Desabilitar verificação de chaves estrangeiras temporariamente
+        await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
 
-    // Desabilitar verificação de chaves estrangeiras temporariamente
-    await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
+        // Limpar tabelas na ordem correta para respeitar foreign keys
+        await prisma.alocacaoHorario.deleteMany();
+        await prisma.disciplinaPlanejamento.deleteMany();
+        await prisma.diaEstudo.deleteMany();
+        await prisma.planejamento.deleteMany();
+        await prisma.revisao.deleteMany();
+        await prisma.sessaoEstudo.deleteMany();
+        await prisma.topico.deleteMany();
+        await prisma.disciplina.deleteMany();
+        await prisma.planoEstudo.deleteMany();
+        await prisma.usuario.deleteMany();
+        await prisma.cidade.deleteMany();
+        await prisma.unidadeFederativa.deleteMany();
+        await prisma.generoUsuario.deleteMany();
+        await prisma.situacaoUsuario.deleteMany();
+        await prisma.situacaoPlano.deleteMany();
+        await prisma.situacaoTopico.deleteMany();
+        await prisma.categoriaSessao.deleteMany();
+        await prisma.situacaoSessao.deleteMany();
+        await prisma.categoriaRevisao.deleteMany();
+        await prisma.situacaoRevisao.deleteMany();
+        await prisma.grupoUsuario.deleteMany();
 
-    // Limpar tabelas na ordem correta para respeitar foreign keys
-    await prisma.alocacaoHorario.deleteMany();
-    await prisma.disciplinaPlanejamento.deleteMany();
-    await prisma.diaEstudo.deleteMany();
-    await prisma.planejamento.deleteMany();
-    await prisma.revisao.deleteMany();
-    await prisma.sessaoEstudo.deleteMany();
-    await prisma.topico.deleteMany();
-    await prisma.disciplina.deleteMany();
-    await prisma.planoEstudo.deleteMany();
-    await prisma.usuario.deleteMany();
-    await prisma.cidade.deleteMany();
-    await prisma.unidadeFederativa.deleteMany();
-    await prisma.generoUsuario.deleteMany();
-    await prisma.situacaoUsuario.deleteMany();
-    await prisma.situacaoPlano.deleteMany();
-    await prisma.situacaoTopico.deleteMany();
-    await prisma.categoriaSessao.deleteMany();
-    await prisma.situacaoSessao.deleteMany();
-    await prisma.categoriaRevisao.deleteMany();
-    await prisma.situacaoRevisao.deleteMany();
-    await prisma.grupoUsuario.deleteMany();
-
-    // Reabilitar verificação de chaves estrangeiras
-    await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 1;`;
+        // Reabilitar verificação de chaves estrangeiras
+        await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 1;`;
+    } catch (error) {
+        console.error('Erro ao limpar banco de dados:', error);
+        // Garantir que as chaves estrangeiras sejam reabilitadas mesmo em caso de erro
+        try {
+            await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 1;`;
+        } catch (e) {
+            console.error('Erro ao reabilitar chaves estrangeiras:', e);
+        }
+        throw error;
+    }
 };
 
 /**
@@ -91,7 +101,7 @@ const seedBasicData = async () => {
         },
     });
 
-    
+
     // Criar situação de usuário
     const situacaoPlano = await prisma.situacaoPlano.create({
         data: { descricao: "Ativo" },
