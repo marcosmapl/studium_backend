@@ -40,4 +40,11 @@ export const createUsuario = (dadosUsuario) => {
     return api.post(endpoint, dadosUsuario);
 };
 
+// Métodos para dados de cadastro
+export const getGeneros = () => api.get('/generoUsuario');
+export const getUnidadesFederativas = () => api.get('/unidadeFederativa');
+export const getGruposUsuario = () => api.get('/grupoUsuario');
+export const getSituacoesUsuario = () => api.get('/situacaoUsuario');
+export const getCidadesByUF = (ufId) => api.get(`/cidade/uf/${ufId}`);
+
 export default api;

@@ -1,0 +1,106 @@
+/* ================================================================
+   SIDEBAR - MENU LATERAL DE NAVEGAÇÃO
+   ================================================================
+   Estilos do menu lateral usando variáveis globais do index.css
+   ================================================================ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTAINER PRINCIPAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.sidebar {
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-all-base);
+    overflow: hidden;
+    min-height: calc(100vh - 3.5rem);
+}
+
+.sidebar-open {
+    width: 15rem;
+    /* 240px */
+}
+
+.sidebar-closed {
+    width: 0;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NAVEGAÇÃO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.sidebar-nav {
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ITENS DO MENU
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.sidebar-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary-dark);
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+}
+
+.sidebar-menu-item:hover {
+    background-color: var(--color-hover);
+    color: var(--color-text-primary-dark);
+}
+
+.sidebar-menu-item-active {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    text-align: left;
+    background-color: var(--color-active);
+    border: none;
+    border-right: var(--border-width-4) solid var(--color-border-accent);
+    color: var(--color-text-primary-dark);
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+}
+
+/* Ícone do item */
+.sidebar-item-icon {
+    font-size: var(--font-size-2xl);
+}
+
+/* Label do item */
+.sidebar-item-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVIDADE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 767px) {
+    .sidebar-open {
+        width: 100%;
+        position: absolute;
+        z-index: 50;
+    }
+
+    .sidebar-menu-item,
+    .sidebar-menu-item-active {
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+}

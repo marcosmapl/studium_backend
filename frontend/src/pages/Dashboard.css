@@ -1,63 +1,108 @@
-/* Navigation Bar */
+/* ================================================================
+   DASHBOARD - PÁGINA PRINCIPAL
+   ================================================================
+   Estilos da tela de dashboard usando variáveis globais do index.css
+   ================================================================ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NAVIGATION BAR
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .dashboard-nav {
-    background-color: #262c39;
+    background-color: var(--color-background-dark);
+    box-shadow: var(--shadow-md);
 }
 
-/* Sidebar */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SIDEBAR
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .dashboard-sidebar {
-    background-color: #262c39;
+    background-color: var(--color-background-dark);
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-all-base);
 }
 
-/* Sidebar Menu Items */
+/* Itens do menu do sidebar */
 .sidebar-menu-item {
-    color: #bec2c6;
+    transition: var(--transition-all-fast);
+    color: var(--color-text-secondary-dark);
 }
 
 .sidebar-menu-item:hover {
-    background-color: #343c4b;
+    background-color: var(--color-hover);
+    color: var(--color-text-primary-dark);
 }
 
 .sidebar-menu-item-active {
-    background-color: #343c4b;
-    color: white;
-    border-right: 4px solid #bec2c6;
+    background-color: var(--color-hover);
+    color: var(--color-text-primary-dark);
+    border-right: var(--border-width-4) solid var(--color-border-accent);
 }
 
-/* KPI Cards */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   KPI CARDS (INDICADORES)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .kpi-card {
-    background-color: #262c39;
-    border-color: #262c39;
+    background-color: var(--color-primary);
+    border-color: var(--color-border);
 }
 
 .kpi-card-title {
-    color: white;
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
 }
 
 .kpi-card-value {
-    color: #bec2c6;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-bold);
 }
 
-/* Study Consistency Section */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONSISTÊNCIA DE ESTUDOS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .study-consistency-section {
-    background-color: #262c39;
-    border-color: #262c39;
+    background-color: var(--color-primary);
+    border-color: var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-md);
 }
 
 .study-consistency-title {
-    color: white;
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-bold);
 }
 
 .study-consistency-text {
-    color: #bec2c6;
+    color: var(--color-text-secondary);
 }
 
-/* Study Days Grid */
+/* Grid de dias de estudo */
 .study-days-grid {
-    background-color: #1a1f2e;
-    border-radius: 0.75rem;
-    padding: 0.75rem;
+    background-color: var(--color-background-dark);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
     width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
-    gap: 0.75rem;
+    gap: var(--spacing-lg);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVIDADE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 767px) {
+    .dashboard-sidebar {
+        width: 100%;
+    }
+
+    .study-days-grid {
+        grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+    }
 }

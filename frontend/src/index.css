@@ -1,3 +1,1162 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ================================================================
+   🎨 SISTEMA DE VARIÁVEIS CSS - STUDIUM
+   ================================================================
+   Centralizador de estilos para padronização e fácil manutenção
+   ================================================================ */
+
+:root {
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PALETA DE CORES
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PALETA DE CORES — THOTH (PROFISSIONAL)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --color-primary: #0E1C2B;
+    /* Azul noturno técnico */
+
+    /* Cores Secundárias do Sistema (Estrutura / Base) */
+    --color-secondary: #E4E7EC;
+
+    /* Cores de Destaque do Sistema (Progresso / Decisão) */
+    --color-accent: #3FAF82;
+    /* Verde progresso (escuro) */
+
+    /* Cores de Fundo */
+    --color-white: #FFFFFF;
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CORES DE TEXTO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* Texto Primário (Leitura longa) */
+    --color-text-primary: #E5E7EB;
+    --color-text-secondary: #9CA3AF;
+    --color-text-muted: #8A94A3;
+    --color-text-accent: #3FAF82;
+
+    /* Cores de Status e Feedback */
+    --color-success: #10b981;
+    /* Verde - sucesso, confirmação */
+    --color-success-light: #d1fae5;
+    /* Verde claro - fundo de sucesso */
+    --color-success-dark: #065f46;
+    /* Verde escuro - hover */
+
+    --color-error: #ef4444;
+    /* Vermelho - erro, perigo */
+    --color-error-light: #fee2e2;
+    /* Vermelho claro - fundo de erro */
+    --color-error-dark: #991b1b;
+    /* Vermelho escuro - hover */
+
+    --color-warning: #f59e0b;
+    /* Amarelo/Laranja - aviso */
+    --color-warning-light: #fef3c7;
+    /* Amarelo claro - fundo de aviso */
+    --color-warning-dark: #b45309;
+    /* Laranja escuro - hover */
+
+    --color-info: #3b82f6;
+    /* Azul - informação */
+    --color-info-light: #dbeafe;
+    /* Azul claro - fundo de info */
+    --color-info-dark: #1e40af;
+    /* Azul escuro - hover */
+
+    /* Cores de Interação */
+    --color-hover: #343c4b;
+    /* Hover padrão */
+    --color-hover-light: #f3f4f6;
+    /* Hover em fundos claros */
+    --color-active: #343c4b;
+    /* Estado ativo/selecionado */
+    --color-focus: #3b82f6;
+    /* Cor de foco (outline) */
+
+    /* Cores de Borda */
+    --color-border: #262c39;
+    /* Borda padrão */
+    --color-border-light: #e5e7eb;
+    /* Borda clara */
+    --color-border-accent: #bec2c6;
+    /* Borda de destaque */
+
+    /* Cores do Tailwind (para compatibilidade) */
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+
+    --color-blue-50: #eff6ff;
+    --color-blue-500: #3b82f6;
+    --color-blue-600: #2563eb;
+    --color-blue-700: #1d4ed8;
+    --color-blue-800: #1e40af;
+
+    --color-green-400: #4ade80;
+    --color-green-500: #22c55e;
+    --color-green-600: #16a34a;
+
+    --color-red-400: #f87171;
+    --color-red-500: #ef4444;
+    --color-red-600: #dc2626;
+
+    --color-yellow-300: #fde047;
+    --color-yellow-400: #facc15;
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CORES DE BOTÕES
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* Botão Primário — Ação principal (confirmação / avanço) */
+    --btn-primary-bg: #2F8F6B;
+    /* Verde estratégico */
+    --btn-primary-bg-hover: #257A5A;
+    /* Verde mais escuro no hover */
+    --btn-primary-bg-active: #1E6248;
+    /* Verde profundo ao clicar */
+    --btn-primary-text: #FFFFFF;
+    /* Texto branco */
+    --btn-primary-border: #2F8F6B;
+    /* Borda igual ao fundo */
+    --btn-primary-shadow: rgba(47, 143, 107, 0.35);
+    /* Sombra verde sutil */
+
+    /* Botão Secundário — Ação secundária (controle / navegação) */
+    --btn-secondary-bg: transparent;
+    --btn-secondary-bg-hover: #2F8F6B;
+    /* Azul institucional leve */
+    --btn-secondary-bg-active: rgba(30, 58, 95, 0.16);
+    --btn-secondary-text: #1E3A5F;
+    /* Azul profundo */
+    --btn-secondary-text-hover: #162C47;
+    --btn-secondary-border: #1E3A5F;
+    --btn-secondary-border-hover: #162C47;
+
+    /* Botão Sucesso - Confirmações e ações positivas */
+    --btn-success-bg: #10b981;
+    /* Verde vibrante */
+    --btn-success-bg-hover: #059669;
+    /* Verde mais escuro no hover */
+    --btn-success-bg-active: #047857;
+    /* Verde ainda mais escuro ao clicar */
+    --btn-success-text: #ffffff;
+    /* Texto branco */
+    --btn-success-border: #10b981;
+    /* Borda igual ao fundo */
+    --btn-success-shadow: rgba(16, 185, 129, 0.4);
+    /* Sombra verde para foco */
+
+    /* Botão Perigo - Ações destrutivas */
+    --btn-danger-bg: #ef4444;
+    /* Vermelho vibrante */
+    --btn-danger-bg-hover: #dc2626;
+    /* Vermelho mais escuro no hover */
+    --btn-danger-bg-active: #b91c1c;
+    /* Vermelho ainda mais escuro ao clicar */
+    --btn-danger-text: #ffffff;
+    /* Texto branco */
+    --btn-danger-border: #ef4444;
+    /* Borda igual ao fundo */
+    --btn-danger-shadow: rgba(239, 68, 68, 0.4);
+    /* Sombra vermelha para foco */
+
+    /* Botão Aviso - Ações que requerem atenção */
+    --btn-warning-bg: #f59e0b;
+    /* Laranja vibrante */
+    --btn-warning-bg-hover: #d97706;
+    /* Laranja mais escuro no hover */
+    --btn-warning-bg-active: #b45309;
+    /* Laranja ainda mais escuro ao clicar */
+    --btn-warning-text: #ffffff;
+    /* Texto branco */
+    --btn-warning-border: #f59e0b;
+    /* Borda igual ao fundo */
+    --btn-warning-shadow: rgba(245, 158, 11, 0.4);
+    /* Sombra laranja para foco */
+
+    /* Botão Neutro - Ações neutras ou cancelamentos */
+    --btn-neutral-bg: #6b7280;
+    /* Cinza médio */
+    --btn-neutral-bg-hover: #4b5563;
+    /* Cinza mais escuro no hover */
+    --btn-neutral-bg-active: #374151;
+    /* Cinza ainda mais escuro ao clicar */
+    --btn-neutral-text: #ffffff;
+    /* Texto branco */
+    --btn-neutral-border: #6b7280;
+    /* Borda igual ao fundo */
+    --btn-neutral-shadow: rgba(107, 114, 128, 0.4);
+    /* Sombra cinza para foco */
+
+    /* Botão Fantasma - Ações leves (mínimo destaque) */
+    --btn-ghost-bg: transparent;
+    /* Fundo transparente */
+    --btn-ghost-bg-hover: rgba(255, 255, 255, 0.1);
+    /* Branco muito claro no hover */
+    --btn-ghost-bg-active: rgba(255, 255, 255, 0.15);
+    /* Branco claro ao clicar */
+    --btn-ghost-text: #bec2c6;
+    /* Texto cinza claro */
+    --btn-ghost-text-hover: #ffffff;
+    /* Texto branco no hover */
+    --btn-ghost-border: transparent;
+    /* Sem borda */
+
+    /* Estados de Botão - Aplicáveis a todos os tipos */
+    --btn-disabled-bg: #9ca3af;
+    /* Cinza claro */
+    --btn-disabled-text: #d1d5db;
+    /* Cinza muito claro */
+    --btn-disabled-opacity: 0.6;
+    /* Opacidade reduzida */
+    --btn-disabled-cursor: not-allowed;
+    /* Cursor não permitido */
+
+    --btn-focus-ring-width: 3px;
+    /* Largura do anel de foco */
+    --btn-focus-ring-offset: 2px;
+    /* Distância do anel de foco */
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ESPAÇAMENTOS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --spacing-xs: 0.25rem;
+    /* 4px */
+    --spacing-sm: 0.5rem;
+    /* 8px */
+    --spacing-md: 1rem;
+    /* 16px */
+    --spacing-lg: 1.5rem;
+    /* 24px */
+    --spacing-xl: 2rem;
+    /* 32px */
+    --spacing-2xl: 3rem;
+    /* 48px */
+    --spacing-3xl: 4rem;
+    /* 64px */
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TIPOGRAFIA
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* Tamanhos de Fonte */
+    --font-size-xs: 0.75rem;
+    /* 12px */
+    --font-size-sm: 0.875rem;
+    /* 14px */
+    --font-size-base: 1rem;
+    /* 16px */
+    --font-size-lg: 1.125rem;
+    /* 18px */
+    --font-size-xl: 1.25rem;
+    /* 20px */
+    --font-size-2xl: 1.5rem;
+    /* 24px */
+    --font-size-3xl: 1.875rem;
+    /* 30px */
+    --font-size-4xl: 2.25rem;
+    /* 36px */
+    --font-size-5xl: 2.75rem;
+    /* 44px */
+
+    /* Pesos de Fonte */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* Altura de Linha */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Família de Fontes */
+    --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     BORDAS E RAIOS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --border-width: 1px;
+    --border-width-2: 2px;
+    --border-width-4: 4px;
+
+    --border-radius-none: 0;
+    --border-radius-sm: 0.375rem;
+    /* 6px */
+    --border-radius-md: 0.5rem;
+    /* 8px */
+    --border-radius-lg: 0.75rem;
+    /* 12px */
+    --border-radius-xl: 1rem;
+    /* 16px */
+    --border-radius-2xl: 1.5rem;
+    /* 24px */
+    --border-radius-full: 9999px;
+    /* Circular */
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SOMBRAS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TRANSIÇÕES E ANIMAÇÕES
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 300ms ease-in-out;
+    --transition-slow: 500ms ease-in-out;
+
+    --transition-all-fast: all 150ms ease-in-out;
+    --transition-all-base: all 300ms ease-in-out;
+    --transition-all-slow: all 500ms ease-in-out;
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     Z-INDEX (Camadas)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --z-index-base: 1;
+    --z-index-dropdown: 10;
+    --z-index-sticky: 20;
+    --z-index-fixed: 30;
+    --z-index-modal-backdrop: 40;
+    --z-index-modal: 50;
+    --z-index-popover: 60;
+    --z-index-tooltip: 70;
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     DIMENSÕES COMUNS
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    --navbar-height: 3.5rem;
+    /* 56px */
+    --sidebar-width: 15rem;
+    /* 240px */
+    --sidebar-width-collapsed: 0;
+    --max-content-width: 80rem;
+    /* 1280px */
+}
+
+/* ================================================================
+   RESET E CONFIGURAÇÕES GLOBAIS
+   ================================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+}
+
+#root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ================================================================
+   COMPONENTES DE FORMULÁRIO
+   ================================================================ */
+
+/* Grupo de campo do formulário */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label do formulário */
+.form-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Input do formulário */
+.form-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: var(--border-width) solid var(--color-border-light);
+    border-radius: var(--border-radius-lg);
+    background-color: var(--color-white);
+    color: var(--color-text-primary-light);
+    font-size: var(--font-size-base);
+    transition: var(--transition-all-fast);
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--color-info);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input:disabled {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-secondary-light);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.form-input::placeholder {
+    color: var(--color-text-secondary-light);
+    opacity: 0.5;
+}
+
+/* Estado de erro */
+.form-input.error {
+    border-color: var(--color-error);
+}
+
+.form-input.error:focus {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Campo de senha com ícone */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    position: absolute;
+    right: var(--spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary-light);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-all-fast);
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.password-toggle:hover {
+    color: var(--color-text-primary-light);
+}
+
+.password-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Mensagens de erro */
+.error-message {
+    color: var(--color-error);
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacing-xs);
+    display: block;
+}
+
+/* ================================================================
+   COMPONENTES DE NAVEGAÇÃO
+   ================================================================ */
+
+.nav-base {
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+    height: var(--navbar-height);
+}
+
+.nav-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* ================================================================
+   COMPONENTES DE SIDEBAR
+   ================================================================ */
+
+.sidebar-base {
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    width: var(--sidebar-width);
+    transition: var(--transition-all-base);
+    overflow: hidden;
+}
+
+.sidebar-collapsed {
+    width: var(--sidebar-width-collapsed);
+}
+
+.sidebar-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    text-align: left;
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.sidebar-menu-item:hover {
+    background-color: var(--color-hover);
+    color: var(--color-text-primary);
+}
+
+.sidebar-menu-item-active {
+    background-color: var(--color-active);
+    color: var(--color-text-primary);
+    border-right: var(--border-width-4) solid var(--color-border-accent);
+}
+
+/* ================================================================
+   COMPONENTES DE CARD
+   ================================================================ */
+
+.card-base {
+    background-color: var(--color-primary);
+    border: var(--border-width-2) solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-fast);
+}
+
+.card-base:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.card-icon {
+    font-size: var(--font-size-3xl);
+}
+
+.card-title {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-xl);
+    margin: 0;
+}
+
+.card-subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--spacing-xs);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-footer {
+    margin-top: auto;
+    text-align: right;
+}
+
+.card-value {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-3xl);
+}
+
+.card-value-success {
+    color: var(--color-success);
+}
+
+.card-value-error {
+    color: var(--color-error);
+}
+
+.card-value-warning {
+    color: var(--color-warning);
+}
+
+.card-value-info {
+    color: var(--color-info);
+}
+
+/* ================================================================
+   COMPONENTES DE SEÇÃO
+   ================================================================ */
+
+.section-base {
+    background-color: var(--color-primary);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-lg);
+}
+
+.section-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.section-title {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.section-subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+}
+
+.section-content {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+}
+
+/* ================================================================
+   COMPONENTES DE DROPDOWN
+   ================================================================ */
+
+.dropdown-base {
+    position: absolute;
+    background-color: var(--color-background-light);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: var(--border-width) solid var(--color-border-light);
+    z-index: var(--z-index-dropdown);
+    min-width: 200px;
+}
+
+.dropdown-header {
+    padding: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border-light);
+}
+
+.dropdown-content {
+    padding: var(--spacing-sm) 0;
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    width: 100%;
+    text-align: left;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-dark);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-hover-light);
+}
+
+.dropdown-item-danger {
+    color: var(--color-error);
+}
+
+.dropdown-item-danger:hover {
+    background-color: var(--color-error-light);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: var(--color-border-light);
+    margin: var(--spacing-sm) 0;
+}
+
+/* ================================================================
+   COMPONENTES DE BOTÃO
+   ================================================================ */
+
+/* Estilos Base Comuns para Todos os Botões */
+button,
+.btn {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    transition: var(--transition-all-base);
+    border: none;
+    outline: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+button:focus,
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 var(--btn-focus-ring-width) var(--btn-primary-shadow);
+}
+
+button:disabled,
+.btn:disabled {
+    opacity: var(--btn-disabled-opacity);
+    cursor: var(--btn-disabled-cursor);
+}
+
+.btn-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+    text-decoration: none;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-full);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+}
+
+.btn-icon:hover {
+    background-color: var(--color-hover-light);
+}
+
+.btn-primary {
+    background-color: var(--color-info);
+    color: var(--color-text-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-info-dark);
+}
+
+.btn-success {
+    background-color: var(--color-success);
+    color: var(--color-text-primary);
+}
+
+.btn-success:hover {
+    background-color: var(--color-success-dark);
+}
+
+.btn-danger {
+    background-color: var(--color-error);
+    color: var(--color-text-primary);
+}
+
+.btn-danger:hover {
+    background-color: var(--color-error-dark);
+}
+
+.btn-warning {
+    background-color: var(--color-warning);
+    color: var(--color-text-primary);
+}
+
+.btn-warning:hover {
+    background-color: var(--color-warning-dark);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: var(--border-width-2) solid var(--color-border);
+    color: var(--color-text-primary);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-hover);
+}
+
+/* ================================================================
+   COMPONENTES DE GRADE/GRID
+   ================================================================ */
+
+.grid-base {
+    background-color: var(--color-background-dark);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    width: 100%;
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+/* ================================================================
+   UTILITÁRIOS DE TEXTO
+   ================================================================ */
+
+.text-primary {
+    color: var(--color-text-primary);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-muted {
+    color: var(--color-text-muted);
+}
+
+.text-dark {
+    color: var(--color-text-dark);
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.text-error {
+    color: var(--color-error);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-info {
+    color: var(--color-info);
+}
+
+.text-xs {
+    font-size: var(--font-size-xs);
+}
+
+.text-sm {
+    font-size: var(--font-size-sm);
+}
+
+.text-base {
+    font-size: var(--font-size-base);
+}
+
+.text-lg {
+    font-size: var(--font-size-lg);
+}
+
+.text-xl {
+    font-size: var(--font-size-xl);
+}
+
+.text-2xl {
+    font-size: var(--font-size-2xl);
+}
+
+.text-3xl {
+    font-size: var(--font-size-3xl);
+}
+
+.font-normal {
+    font-weight: var(--font-weight-normal);
+}
+
+.font-medium {
+    font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+    font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+    font-weight: var(--font-weight-bold);
+}
+
+/* ================================================================
+   UTILITÁRIOS DE FUNDO
+   ================================================================ */
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+    background-color: var(--color-primary-light);
+}
+
+.bg-primary-dark {
+    background-color: var(--color-primary-dark);
+}
+
+.bg-secondary {
+    background-color: var(--color-background);
+}
+
+.bg-light {
+    background-color: var(--color-background-light);
+}
+
+.bg-dark {
+    background-color: var(--color-background-dark);
+}
+
+.bg-success {
+    background-color: var(--color-success);
+}
+
+.bg-success-light {
+    background-color: var(--color-success-light);
+}
+
+.bg-error {
+    background-color: var(--color-error);
+}
+
+.bg-error-light {
+    background-color: var(--color-error-light);
+}
+
+.bg-warning {
+    background-color: var(--color-warning);
+}
+
+.bg-warning-light {
+    background-color: var(--color-warning-light);
+}
+
+.bg-info {
+    background-color: var(--color-info);
+}
+
+.bg-info-light {
+    background-color: var(--color-info-light);
+}
+
+/* ================================================================
+   UTILITÁRIOS DE ESPAÇAMENTO
+   ================================================================ */
+
+.p-xs {
+    padding: var(--spacing-xs);
+}
+
+.p-sm {
+    padding: var(--spacing-sm);
+}
+
+.p-md {
+    padding: var(--spacing-md);
+}
+
+.p-lg {
+    padding: var(--spacing-lg);
+}
+
+.p-xl {
+    padding: var(--spacing-xl);
+}
+
+.p-2xl {
+    padding: var(--spacing-2xl);
+}
+
+.m-xs {
+    margin: var(--spacing-xs);
+}
+
+.m-sm {
+    margin: var(--spacing-sm);
+}
+
+.m-md {
+    margin: var(--spacing-md);
+}
+
+.m-lg {
+    margin: var(--spacing-lg);
+}
+
+.m-xl {
+    margin: var(--spacing-xl);
+}
+
+.m-2xl {
+    margin: var(--spacing-2xl);
+}
+
+.gap-xs {
+    gap: var(--spacing-xs);
+}
+
+.gap-sm {
+    gap: var(--spacing-sm);
+}
+
+.gap-md {
+    gap: var(--spacing-md);
+}
+
+.gap-lg {
+    gap: var(--spacing-lg);
+}
+
+.gap-xl {
+    gap: var(--spacing-xl);
+}
+
+/* ================================================================
+   UTILITÁRIOS DE BORDAS
+   ================================================================ */
+
+.rounded-none {
+    border-radius: var(--border-radius-none);
+}
+
+.rounded-sm {
+    border-radius: var(--border-radius-sm);
+}
+
+.rounded-md {
+    border-radius: var(--border-radius-md);
+}
+
+.rounded-lg {
+    border-radius: var(--border-radius-lg);
+}
+
+.rounded-xl {
+    border-radius: var(--border-radius-xl);
+}
+
+.rounded-2xl {
+    border-radius: var(--border-radius-2xl);
+}
+
+.rounded-full {
+    border-radius: var(--border-radius-full);
+}
+
+.border {
+    border: var(--border-width) solid var(--color-border);
+}
+
+.border-2 {
+    border: var(--border-width-2) solid var(--color-border);
+}
+
+.border-4 {
+    border: var(--border-width-4) solid var(--color-border);
+}
+
+.border-light {
+    border-color: var(--color-border-light);
+}
+
+.border-accent {
+    border-color: var(--color-border-accent);
+}
+
+/* ================================================================
+   UTILITÁRIOS DE SOMBRA
+   ================================================================ */
+
+.shadow-sm {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+    box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+.shadow-xl {
+    box-shadow: var(--shadow-xl);
+}
+
+.shadow-2xl {
+    box-shadow: var(--shadow-2xl);
+}
+
+.shadow-inner {
+    box-shadow: var(--shadow-inner);
+}
+
+.shadow-none {
+    box-shadow: none;
+}
+
+/* ================================================================
+   UTILITÁRIOS DE TRANSIÇÃO
+   ================================================================ */
+
+.transition-fast {
+    transition: var(--transition-all-fast);
+}
+
+.transition-base {
+    transition: var(--transition-all-base);
+}
+
+.transition-slow {
+    transition: var(--transition-all-slow);
+}

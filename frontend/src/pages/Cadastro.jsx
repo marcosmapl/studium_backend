@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api, { createUsuario } from '../services/api';
-// Usar ícones do componente local
+import { createUsuario, getCidadesByUF } from '../services/api';
 import { Eye, EyeOff } from '../components/Icons';
+import { useCadastroData } from '../hooks/useCadastroData';
+import './Cadastro.css';
 
 const Cadastro = () => {
     const navigate = useNavigate();
+
+    // Hook customizado para carregar dados iniciais
+    const { loading: loadingData, generos, unidadesFederativas, grupoBasicoId, situacaoAtivoId } = useCadastroData();
+
     const [loading, setLoading] = useState(false);
     const [showSenha, setShowSenha] = useState(false);
     const [showConfirmaSenha, setShowConfirmaSenha] = useState(false);
-    const [generos, setGeneros] = useState([]);
-    const [unidadesFederativas, setUnidadesFederativas] = useState([]);
     const [cidades, setCidades] = useState([]);
-    const [grupoBasicoId, setGrupoBasicoId] = useState(null);
-    const [situacaoAtivoId, setSituacaoAtivoId] = useState(null);
     const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
@@ -30,62 +31,6 @@ const Cadastro = () => {
         cidadeId: ''
     });
 
-    useEffect(() => {
-        carregarDadosIniciais();
-    }, []);
-
-    const carregarDadosIniciais = async () => {
-        try {
-            const [generosResponse, unidadesResponse, gruposResponse, situacoesResponse] = await Promise.all([
-                api.get('/generoUsuario'),
-                api.get('/unidadeFederativa'),
-                api.get('/grupoUsuario'),
-                api.get('/situacaoUsuario')
-            ]);
-
-            console.log('Gêneros:', generosResponse.data);
-            console.log('Unidades Federativas:', unidadesResponse.data);
-            console.log('Grupos:', gruposResponse.data);
-            console.log('Situações:', situacoesResponse.data);
-
-            if (generosResponse.data) {
-                setGeneros(generosResponse.data);
-            }
-
-            if (unidadesResponse.data) {
-                setUnidadesFederativas(unidadesResponse.data);
-            }
-
-            // Buscar automaticamente o grupo "Básico"
-            if (gruposResponse.data) {
-                const grupoBasico = gruposResponse.data.find(g => g.descricao === 'Básico');
-                if (grupoBasico) {
-                    setGrupoBasicoId(grupoBasico.id);
-                    console.log('Grupo Básico ID:', grupoBasico.id);
-                } else {
-                    console.error('Grupo "Básico" não encontrado');
-                    toast.error('Erro: Grupo de usuário "Básico" não configurado');
-                }
-            }
-
-            // Buscar automaticamente a situação "Ativo"
-            if (situacoesResponse.data) {
-                const situacaoAtivo = situacoesResponse.data.find(s => s.descricao === 'Ativo');
-                if (situacaoAtivo) {
-                    setSituacaoAtivoId(situacaoAtivo.id);
-                    console.log('Situação Ativo ID:', situacaoAtivo.id);
-                } else {
-                    console.error('Situação "Ativo" não encontrada');
-                    toast.error('Erro: Situação de usuário "Ativo" não configurada');
-                }
-            }
-        } catch (error) {
-            console.error('Erro ao carregar dados iniciais:', error);
-            console.error('Detalhes do erro:', error.response);
-            toast.error('Erro ao carregar dados do formulário');
-        }
-    };
-
     const handleChange = async (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -98,7 +43,7 @@ const Cadastro = () => {
         // Carrega cidades quando uma UF for selecionada
         if (name === 'unidadeFederativaId' && value) {
             try {
-                const response = await api.get(`/cidade/uf/${value}`);
+                const response = await getCidadesByUF(value);
                 if (response.data) {
                     setCidades(response.data);
                 }
@@ -237,276 +182,281 @@ const Cadastro = () => {
     };
 
     const getInputClassName = (fieldName) => {
-        const baseClass = "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition";
-        const errorClass = errors[fieldName] ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500";
-        return `${baseClass} ${errorClass}`;
+        return errors[fieldName] ? "form-input error" : "form-input";
     };
 
+    // Desabilita o formulário enquanto carrega dados iniciais
+    const isFormDisabled = loadingData || loading;
+
     return (
-        <div className="min-h-screen flex items-center justify-center py-8 px-4" style={{ backgroundColor: '#343c4b' }}>
-            <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-blue-600 mb-2">Criar Conta</h1>
-                    <p className="text-gray-600">Preencha os dados para se cadastrar no Studium</p>
+        <div className="cadastro-container">
+            <div className="cadastro-card">
+                <div className="cadastro-header">
+                    <h1 className="cadastro-title">Criar Conta</h1>
+                    <p className="cadastro-subtitle">Preencha os dados para se cadastrar no Studium</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Nome */}
-                        <div>
-                            <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-2">
-                                Nome *
+                {loadingData ? (
+                    <div style={{ textAlign: 'center', padding: '2rem' }}>
+                        <p style={{ color: '#6b7280' }}>Carregando formulário...</p>
+                    </div>
+                ) : (
+                    <form onSubmit={handleSubmit} className="cadastro-form">
+                        <div className="form-grid">
+                            {/* Nome */}
+                            <div className="form-group">
+                                <label htmlFor="nome" className="form-label">
+                                    Nome *
+                                </label>
+                                <input
+                                    id="nome"
+                                    name="nome"
+                                    type="text"
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                    className={getInputClassName('nome')}
+                                    placeholder="ex: João"
+                                    disabled={isFormDisabled}
+                                />
+                                {errors.nome && (
+                                    <span className="error-message">{errors.nome}</span>
+                                )}
+                            </div>
+
+                            {/* Sobrenome */}
+                            <div className="form-group">
+                                <label htmlFor="sobrenome" className="form-label">
+                                    Sobrenome *
+                                </label>
+                                <input
+                                    id="sobrenome"
+                                    name="sobrenome"
+                                    type="text"
+                                    value={formData.sobrenome}
+                                    onChange={handleChange}
+                                    className={getInputClassName('sobrenome')}
+                                    placeholder="ex: Silva"
+                                    disabled={isFormDisabled}
+                                />
+                                {errors.sobrenome && (
+                                    <span className="error-message">{errors.sobrenome}</span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Username */}
+                        <div className="form-group">
+                            <label htmlFor="username" className="form-label">
+                                Nome de Usuário *
                             </label>
                             <input
-                                id="nome"
-                                name="nome"
+                                id="username"
+                                name="username"
                                 type="text"
-                                value={formData.nome}
+                                value={formData.username}
                                 onChange={handleChange}
-                                className={getInputClassName('nome')}
-                                placeholder="ex: João"
-                                disabled={loading}
+                                className={getInputClassName('username')}
+                                placeholder="ex: joao.silva"
+                                disabled={isFormDisabled}
                             />
-                            {errors.nome && (
-                                <p className="text-red-500 text-xs mt-1">{errors.nome}</p>
+                            {errors.username && (
+                                <span className="error-message">{errors.username}</span>
                             )}
                         </div>
 
-                        {/* Sobrenome */}
-                        <div>
-                            <label htmlFor="sobrenome" className="block text-sm font-medium text-gray-700 mb-2">
-                                Sobrenome *
+                        {/* E-mail */}
+                        <div className="form-group">
+                            <label htmlFor="email" className="form-label">
+                                E-mail *
                             </label>
                             <input
-                                id="sobrenome"
-                                name="sobrenome"
-                                type="text"
-                                value={formData.sobrenome}
+                                id="email"
+                                name="email"
+                                type="email"
+                                value={formData.email}
                                 onChange={handleChange}
-                                className={getInputClassName('sobrenome')}
-                                placeholder="ex: Silva"
-                                disabled={loading}
+                                className={getInputClassName('email')}
+                                placeholder="seu.email@exemplo.com"
+                                disabled={isFormDisabled}
                             />
-                            {errors.sobrenome && (
-                                <p className="text-red-500 text-xs mt-1">{errors.sobrenome}</p>
+                            {errors.email && (
+                                <span className="error-message">{errors.email}</span>
                             )}
                         </div>
-                    </div>
 
-                    {/* Username */}
-                    <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                            Nome de Usuário *
-                        </label>
-                        <input
-                            id="username"
-                            name="username"
-                            type="text"
-                            value={formData.username}
-                            onChange={handleChange}
-                            className={getInputClassName('username')}
-                            placeholder="ex: joao.silva"
-                            disabled={loading}
-                        />
-                        {errors.username && (
-                            <p className="text-red-500 text-xs mt-1">{errors.username}</p>
-                        )}
-                    </div>
-
-                    {/* E-mail */}
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                            E-mail *
-                        </label>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className={getInputClassName('email')}
-                            placeholder="seu.email@exemplo.com"
-                            disabled={loading}
-                        />
-                        {errors.email && (
-                            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                        )}
-                    </div>
-
-                    {/* Data de Nascimento */}
-                    <div>
-                        <label htmlFor="dataNascimento" className="block text-sm font-medium text-gray-700 mb-2">
-                            Data de Nascimento (opcional)
-                        </label>
-                        <input
-                            id="dataNascimento"
-                            name="dataNascimento"
-                            type="date"
-                            value={formData.dataNascimento}
-                            onChange={handleChange}
-                            className={getInputClassName('dataNascimento')}
-                            disabled={loading}
-                        />
-                    </div>
-
-                    {/* Gênero */}
-                    <div>
-                        <label htmlFor="generoUsuarioId" className="block text-sm font-medium text-gray-700 mb-2">
-                            Gênero *
-                        </label>
-                        <select
-                            id="generoUsuarioId"
-                            name="generoUsuarioId"
-                            value={formData.generoUsuarioId}
-                            onChange={handleChange}
-                            className={getInputClassName('generoUsuarioId')}
-                            disabled={loading}
-                        >
-                            <option value="">Selecione seu gênero</option>
-                            {generos.map(genero => (
-                                <option key={genero.id} value={genero.id}>
-                                    {genero.descricao}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.generoUsuarioId && (
-                            <p className="text-red-500 text-xs mt-1">{errors.generoUsuarioId}</p>
-                        )}
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Senha */}
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                                Senha *
+                        {/* Data de Nascimento */}
+                        <div className="form-group">
+                            <label htmlFor="dataNascimento" className="form-label">
+                                Data de Nascimento (opcional)
                             </label>
-                            <div className="relative">
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type={showSenha ? 'text' : 'password'}
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className={getInputClassName('password')}
-                                    placeholder="Mínimo 6 caracteres"
-                                    disabled={loading}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowSenha(!showSenha)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                    disabled={loading}
-                                >
-                                    {showSenha ? <EyeOff size={20} /> : <Eye size={20} />}
-                                </button>
-                            </div>
-                            {errors.password && (
-                                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-                            )}
+                            <input
+                                id="dataNascimento"
+                                name="dataNascimento"
+                                type="date"
+                                value={formData.dataNascimento}
+                                onChange={handleChange}
+                                className={getInputClassName('dataNascimento')}
+                                disabled={isFormDisabled}
+                            />
                         </div>
 
-                        {/* Confirmar Senha */}
-                        <div>
-                            <label htmlFor="confirmaSenha" className="block text-sm font-medium text-gray-700 mb-2">
-                                Confirmar Senha *
-                            </label>
-                            <div className="relative">
-                                <input
-                                    id="confirmaSenha"
-                                    name="confirmaSenha"
-                                    type={showConfirmaSenha ? 'text' : 'password'}
-                                    value={formData.confirmaSenha}
-                                    onChange={handleChange}
-                                    className={getInputClassName('confirmaSenha')}
-                                    placeholder="Repita a senha"
-                                    disabled={loading}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmaSenha(!showConfirmaSenha)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                    disabled={loading}
-                                >
-                                    {showConfirmaSenha ? <EyeOff size={20} /> : <Eye size={20} />}
-                                </button>
-                            </div>
-                            {errors.confirmaSenha && (
-                                <p className="text-red-500 text-xs mt-1">{errors.confirmaSenha}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Unidade Federativa */}
-                        <div>
-                            <label htmlFor="unidadeFederativaId" className="block text-sm font-medium text-gray-700 mb-2">
-                                Estado (UF) *
+                        {/* Gênero */}
+                        <div className="form-group">
+                            <label htmlFor="generoUsuarioId" className="form-label">
+                                Gênero *
                             </label>
                             <select
-                                id="unidadeFederativaId"
-                                name="unidadeFederativaId"
-                                value={formData.unidadeFederativaId}
+                                id="generoUsuarioId"
+                                name="generoUsuarioId"
+                                value={formData.generoUsuarioId}
                                 onChange={handleChange}
-                                className={getInputClassName('unidadeFederativaId')}
-                                disabled={loading}
+                                className={getInputClassName('generoUsuarioId')}
+                                disabled={isFormDisabled}
                             >
-                                <option value="">Selecione um estado</option>
-                                {unidadesFederativas.map(uf => (
-                                    <option key={uf.id} value={uf.id}>
-                                        {uf.sigla} - {uf.descricao}
+                                <option value="">Selecione seu gênero</option>
+                                {generos.map(genero => (
+                                    <option key={genero.id} value={genero.id}>
+                                        {genero.descricao}
                                     </option>
                                 ))}
                             </select>
-                            {errors.unidadeFederativaId && (
-                                <p className="text-red-500 text-xs mt-1">{errors.unidadeFederativaId}</p>
+                            {errors.generoUsuarioId && (
+                                <span className="error-message">{errors.generoUsuarioId}</span>
                             )}
                         </div>
 
-                        {/* Cidade */}
-                        <div>
-                            <label htmlFor="cidadeId" className="block text-sm font-medium text-gray-700 mb-2">
-                                Cidade *
-                            </label>
-                            <select
-                                id="cidadeId"
-                                name="cidadeId"
-                                value={formData.cidadeId}
-                                onChange={handleChange}
-                                className={getInputClassName('cidadeId')}
-                                disabled={loading || !formData.unidadeFederativaId}
-                            >
-                                <option value="">
-                                    {formData.unidadeFederativaId
-                                        ? 'Selecione uma cidade'
-                                        : 'Primeiro selecione um estado'}
-                                </option>
-                                {cidades.map(cidade => (
-                                    <option key={cidade.id} value={cidade.id}>
-                                        {cidade.descricao}
+                        <div className="form-grid">
+                            {/* Senha */}
+                            <div className="form-group">
+                                <label htmlFor="password" className="form-label">
+                                    Senha *
+                                </label>
+                                <div className="password-field">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={showSenha ? 'text' : 'password'}
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className={getInputClassName('password')}
+                                        placeholder="Mínimo 6 caracteres"
+                                        disabled={isFormDisabled}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowSenha(!showSenha)}
+                                        className="password-toggle"
+                                        disabled={isFormDisabled}
+                                    >
+                                        {showSenha ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+                                {errors.password && (
+                                    <span className="error-message">{errors.password}</span>
+                                )}
+                            </div>
+
+                            {/* Confirmar Senha */}
+                            <div className="form-group">
+                                <label htmlFor="confirmaSenha" className="form-label">
+                                    Confirmar Senha *
+                                </label>
+                                <div className="password-field">
+                                    <input
+                                        id="confirmaSenha"
+                                        name="confirmaSenha"
+                                        type={showConfirmaSenha ? 'text' : 'password'}
+                                        value={formData.confirmaSenha}
+                                        onChange={handleChange}
+                                        className={getInputClassName('confirmaSenha')}
+                                        placeholder="Repita a senha"
+                                        disabled={isFormDisabled}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmaSenha(!showConfirmaSenha)}
+                                        className="password-toggle"
+                                        disabled={isFormDisabled}
+                                    >
+                                        {showConfirmaSenha ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+                                {errors.confirmaSenha && (
+                                    <span className="error-message">{errors.confirmaSenha}</span>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="form-grid">
+                            {/* Unidade Federativa */}
+                            <div className="form-group">
+                                <label htmlFor="unidadeFederativaId" className="form-label">
+                                    Estado (UF) *
+                                </label>
+                                <select
+                                    id="unidadeFederativaId"
+                                    name="unidadeFederativaId"
+                                    value={formData.unidadeFederativaId}
+                                    onChange={handleChange}
+                                    className={getInputClassName('unidadeFederativaId')}
+                                    disabled={isFormDisabled}
+                                >
+                                    <option value="">Selecione um estado</option>
+                                    {unidadesFederativas.map(uf => (
+                                        <option key={uf.id} value={uf.id}>
+                                            {uf.sigla} - {uf.descricao}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.unidadeFederativaId && (
+                                    <span className="error-message">{errors.unidadeFederativaId}</span>
+                                )}
+                            </div>
+
+                            {/* Cidade */}
+                            <div className="form-group">
+                                <label htmlFor="cidadeId" className="form-label">
+                                    Cidade *
+                                </label>
+                                <select
+                                    id="cidadeId"
+                                    name="cidadeId"
+                                    value={formData.cidadeId}
+                                    onChange={handleChange}
+                                    className={getInputClassName('cidadeId')}
+                                    disabled={isFormDisabled || !formData.unidadeFederativaId}
+                                >
+                                    <option value="">
+                                        {formData.unidadeFederativaId
+                                            ? 'Selecione uma cidade'
+                                            : 'Primeiro selecione um estado'}
                                     </option>
-                                ))}
-                            </select>
-                            {errors.cidadeId && (
-                                <p className="text-red-500 text-xs mt-1">{errors.cidadeId}</p>
-                            )}
+                                    {cidades.map(cidade => (
+                                        <option key={cidade.id} value={cidade.id}>
+                                            {cidade.descricao}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.cidadeId && (
+                                    <span className="error-message">{errors.cidadeId}</span>
+                                )}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="pt-4">
                         <button
                             type="submit"
-                            disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isFormDisabled}
+                            className="btn-submit"
                         >
                             {loading ? 'Cadastrando...' : 'Cadastrar'}
                         </button>
-                    </div>
-                </form>
+                    </form>
+                )}
 
-                <div className="mt-6 text-center">
-                    <p className="text-gray-600">
+                <div className="cadastro-footer">
+                    <p className="cadastro-footer-text">
                         Já tem uma conta?{' '}
-                        <Link to="/" className="text-blue-600 hover:text-blue-700 font-medium">
+                        <Link to="/" className="cadastro-link">
                             Fazer login
                         </Link>
                     </p>

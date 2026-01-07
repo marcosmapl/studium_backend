@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import { Eye, EyeOff } from '../components/Icons';
+import './Login.css';
 
 const Login = () => {
     const location = useLocation();
     const [username, setUsername] = useState(location.state?.username || '');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -56,16 +59,16 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#343c4b' }}>
-            <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-blue-600 mb-2">Studium</h1>
-                    <p className="text-gray-600">Sistema de Gestão de Estudos</p>
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-header">
+                    <h1 className="login-title">Studium</h1>
+                    <p className="login-subtitle">Sistema de Gestão de Estudos</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label htmlFor="usuario" className="block text-sm font-medium text-gray-700 mb-2">
+                <form onSubmit={handleSubmit} className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="usuario" className="form-label">
                             Usuário
                         </label>
                         <input
@@ -73,58 +76,66 @@ const Login = () => {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                            className="form-input"
                             placeholder="Digite seu usuário"
                             disabled={loading}
                         />
                     </div>
 
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="form-group">
+                        <label htmlFor="password" className="form-label">
                             Senha
                         </label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                            placeholder="Digite sua senha"
-                            disabled={loading}
-                        />
+                        <div className="password-field">
+                            <input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="form-input"
+                                placeholder="Digite sua senha"
+                                disabled={loading}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="password-toggle"
+                                disabled={loading}
+                                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn-primary"
                     >
                         {loading ? 'Entrando...' : 'Entrar'}
                     </button>
                 </form>
 
-                <div className="mt-6 space-y-3">
+                <div className="login-footer">
                     <button
                         type="button"
                         onClick={handleEsqueciSenha}
-                        className="w-full text-blue-600 hover:text-blue-700 font-medium text-sm transition"
+                        className="btn-link"
                     >
                         Esqueci minha senha
                     </button>
 
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-white text-gray-500">ou</span>
+                    <div className="divider">
+                        <div className="divider-text">
+                            <span>ou</span>
                         </div>
                     </div>
 
                     <button
                         type="button"
                         onClick={handleCadastrar}
-                        className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+                        className="btn-secondary"
                     >
                         Criar uma conta
                     </button>
