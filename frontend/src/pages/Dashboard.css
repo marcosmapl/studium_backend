@@ -1,94 +1,114 @@
-/* ================================================================
-   DASHBOARD - PÁGINA PRINCIPAL
-   ================================================================
-   Estilos da tela de dashboard usando variáveis globais do index.css
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   DASHBOARD - PÁGINA PRINCIPAL                            ██
+   ██   Estilos personalizados usando variáveis do index.css    ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   NAVIGATION BAR
+   CONTAINER PRINCIPAL DO DASHBOARD
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.dashboard-nav {
+.dashboard-container {
     background-color: var(--color-background-dark);
-    box-shadow: var(--shadow-md);
+    min-height: 100vh;
+    padding: var(--spacing-xl) var(--spacing-2xl);
+}
+
+.dashboard-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xl);
+    text-align: left;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SIDEBAR
+   GRID DE MÉTRICAS (KPI)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.dashboard-sidebar {
-    background-color: var(--color-background-dark);
-    box-shadow: var(--shadow-lg);
-    transition: var(--transition-all-base);
+.dashboard-metrics-grid {
+    margin-top: var(--spacing-2xl);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
 }
 
-/* Itens do menu do sidebar */
-.sidebar-menu-item {
-    transition: var(--transition-all-fast);
-    color: var(--color-text-secondary-dark);
+@media (min-width: 768px) {
+    .dashboard-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.sidebar-menu-item:hover {
-    background-color: var(--color-hover);
-    color: var(--color-text-primary-dark);
-}
-
-.sidebar-menu-item-active {
-    background-color: var(--color-hover);
-    color: var(--color-text-primary-dark);
-    border-right: var(--border-width-4) solid var(--color-border-accent);
+@media (min-width: 1024px) {
+    .dashboard-metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   KPI CARDS (INDICADORES)
+   KPI CARDS (Indicadores)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .kpi-card {
-    background-color: var(--color-primary);
-    border-color: var(--color-border);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-primary-light);
 }
 
-.kpi-card-title {
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-semibold);
-}
-
-.kpi-card-value {
-    color: var(--color-text-secondary);
-    font-weight: var(--font-weight-bold);
+.kpi-details {
+    margin-left: var(--spacing-xl);
+    margin-bottom: var(--spacing-sm);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CONSISTÊNCIA DE ESTUDOS
+   SEÇÃO DE CONSTÂNCIA DE ESTUDOS
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .study-consistency-section {
-    background-color: var(--color-primary);
-    border-color: var(--color-border);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md);
-    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-xl);
+    background-color: var(--color-primary-light);
 }
 
-.study-consistency-title {
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-bold);
-}
-
-.study-consistency-text {
-    color: var(--color-text-secondary);
-}
-
-/* Grid de dias de estudo */
+/* Grid de Dias de Estudo */
 .study-days-grid {
-    background-color: var(--color-background-dark);
+    background-color: var(--color-primary-dark);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-lg);
     width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
-    gap: var(--spacing-lg);
+    gap: var(--spacing-sm);
+}
+
+.study-day-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.study-day-item:hover {
+    transform: scale(1.1);
+    transition: var(--transition-all-fast);
+}
+
+/* Ícones de Estudo */
+.study-icon-success {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-success);
+}
+
+.study-icon-error {
+    width: 1.75rem;
+    height: 2rem;
+    color: var(--color-error);
+}
+
+.study-icon-bg {
+    opacity: 0.15;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -96,13 +116,28 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @media (max-width: 767px) {
-    .dashboard-sidebar {
-        width: 100%;
+    .dashboard-container {
+        padding: var(--spacing-lg) var(--spacing-md);
     }
-
+    
+    .dashboard-title {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-lg);
+    }
+    
     .study-days-grid {
         grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
         gap: var(--spacing-md);
         padding: var(--spacing-md);
+    }
+    
+    .study-icon-success {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    
+    .study-icon-error {
+        width: 1.25rem;
+        height: 1.5rem;
     }
 }

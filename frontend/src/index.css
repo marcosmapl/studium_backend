@@ -2,74 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ================================================================
-   🎨 SISTEMA DE VARIÁVEIS CSS - STUDIUM
-   ================================================================
-   Centralizador de estilos para padronização e fácil manutenção
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   🎨 SISTEMA DE VARIÁVEIS CSS - STUDIUM                   ██
+   ██   Centralizador de estilos para manutenção                ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
 :root {
-    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     PALETA DE CORES
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   PALETA DE CORES — THOTH (PROFISSIONAL)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+       CORES PRINCIPAIS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+    /* Cores Primárias do Sistema */
     --color-primary: #0E1C2B;
     /* Azul noturno técnico */
+    --color-primary-light: #1A2D42;
+    /* Azul noturno claro */
+    --color-primary-dark: #050D15;
+    /* Azul noturno escuro */
 
-    /* Cores Secundárias do Sistema (Estrutura / Base) */
+    /* Cores Secundárias do Sistema */
     --color-secondary: #E4E7EC;
-
-    /* Cores de Destaque do Sistema (Progresso / Decisão) */
+    /* Cinza claro estrutural */
     --color-accent: #3FAF82;
-    /* Verde progresso (escuro) */
+    /* Verde progresso */
+    --color-white: #FFFFFF;
+    /* Branco puro */
 
     /* Cores de Fundo */
-    --color-white: #FFFFFF;
+    --color-background: #0E1C2B;
+    /* Fundo principal escuro */
+    --color-background-light: #FFFFFF;
+    /* Fundo claro */
+    --color-background-dark: #08121D;
+    /* Fundo mais escuro */
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CORES DE TEXTO
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+       CORES DE TEXTO
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-    /* Texto Primário (Leitura longa) */
+    /* Texto em Fundos Escuros */
     --color-text-primary: #E5E7EB;
+    /* Texto principal claro */
     --color-text-secondary: #9CA3AF;
+    /* Texto secundário */
     --color-text-muted: #8A94A3;
+    /* Texto esmaecido */
     --color-text-accent: #3FAF82;
+    /* Texto de destaque verde */
 
-    /* Cores de Status e Feedback */
+    /* Texto em Fundos Claros */
+    --color-text-title: #065f46;
+    /* Títulos verdes */
+    --color-text-subtitle: #0E1C2B;
+    /* Subtítulos azul escuro */
+    --color-text-primary-light: #1F2937;
+    /* Texto principal escuro */
+    --color-text-secondary-light: #6B7280;
+    /* Texto secundário escuro */
+    --color-text-dark: #111827;
+    /* Texto muito escuro */
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CORES DE STATUS E FEEDBACK
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* Sucesso */
     --color-success: #10b981;
     /* Verde - sucesso, confirmação */
     --color-success-light: #d1fae5;
-    /* Verde claro - fundo de sucesso */
+    /* Verde claro - fundo */
     --color-success-dark: #065f46;
     /* Verde escuro - hover */
 
+    /* Erro */
     --color-error: #ef4444;
     /* Vermelho - erro, perigo */
     --color-error-light: #fee2e2;
-    /* Vermelho claro - fundo de erro */
+    /* Vermelho claro - fundo */
     --color-error-dark: #991b1b;
     /* Vermelho escuro - hover */
 
+    /* Aviso */
     --color-warning: #f59e0b;
     /* Amarelo/Laranja - aviso */
     --color-warning-light: #fef3c7;
-    /* Amarelo claro - fundo de aviso */
+    /* Amarelo claro - fundo */
     --color-warning-dark: #b45309;
     /* Laranja escuro - hover */
 
+    /* Informação */
     --color-info: #3b82f6;
     /* Azul - informação */
     --color-info-light: #dbeafe;
-    /* Azul claro - fundo de info */
+    /* Azul claro - fundo */
     --color-info-dark: #1e40af;
     /* Azul escuro - hover */
 
-    /* Cores de Interação */
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CORES DE INTERAÇÃO
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
     --color-hover: #343c4b;
     /* Hover padrão */
     --color-hover-light: #f3f4f6;
@@ -79,7 +114,10 @@
     --color-focus: #3b82f6;
     /* Cor de foco (outline) */
 
-    /* Cores de Borda */
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CORES DE BORDA
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
     --color-border: #262c39;
     /* Borda padrão */
     --color-border-light: #e5e7eb;
@@ -87,7 +125,9 @@
     --color-border-accent: #bec2c6;
     /* Borda de destaque */
 
-    /* Cores do Tailwind (para compatibilidade) */
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CORES DO TAILWIND (Compatibilidade)
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     --color-gray-50: #f9fafb;
     --color-gray-100: #f3f4f6;
     --color-gray-200: #e5e7eb;
@@ -312,8 +352,8 @@
     /* Circular */
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     SOMBRAS
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+       SOMBRAS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -323,20 +363,19 @@
     --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     TRANSIÇÕES E ANIMAÇÕES
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+       TRANSIÇÕES E ANIMAÇÕES
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
     --transition-fast: 150ms ease-in-out;
     --transition-base: 300ms ease-in-out;
     --transition-slow: 500ms ease-in-out;
-
     --transition-all-fast: all 150ms ease-in-out;
     --transition-all-base: all 300ms ease-in-out;
     --transition-all-slow: all 500ms ease-in-out;
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Z-INDEX (Camadas)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+       Z-INDEX (Camadas)
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
     --z-index-base: 1;
     --z-index-dropdown: 10;
@@ -348,8 +387,8 @@
     --z-index-tooltip: 70;
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     DIMENSÕES COMUNS
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+       DIMENSÕES COMUNS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
     --navbar-height: 3.5rem;
     /* 56px */
@@ -360,9 +399,11 @@
     /* 1280px */
 }
 
-/* ================================================================
-   RESET E CONFIGURAÇÕES GLOBAIS
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   RESET E CONFIGURAÇÕES GLOBAIS                           ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
 * {
     box-sizing: border-box;
@@ -391,27 +432,86 @@ body {
     min-height: 100vh;
 }
 
-/* ================================================================
-   COMPONENTES DE FORMULÁRIO
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   LAYOUT - CONTAINERS E ESTRUTURAS                        ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
-/* Grupo de campo do formulário */
-.form-group {
+/* Container Principal */
+.std-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    padding: var(--spacing-2xl) var(--spacing-md);
+}
+
+/* Card de Cadastro/Login */
+.std-card {
+    background-color: var(--color-secondary);
+    padding: var(--spacing-2xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-2xl);
+    width: 100%;
+    max-width: 42rem;
+}
+
+/* Header do Formulário */
+.std-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.std-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-title);
+    margin-bottom: var(--spacing-sm);
+}
+
+.std-subtitle {
+    color: var(--color-text-subtitle);
+    font-size: var(--font-size-base);
+}
+
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   COMPONENTES DE FORMULÁRIO                               ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
+
+/* Estrutura do Formulário */
+.std-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.std-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+/* Grupo de Campo */
+.std-form-group {
     display: flex;
     flex-direction: column;
 }
 
-/* Label do formulário */
-.form-label {
+/* Label */
+.std-form-label {
     display: block;
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary-light);
+    color: var(--color-text-subtitle);
     margin-bottom: var(--spacing-sm);
 }
 
-/* Input do formulário */
-.form-input {
+/* Input */
+.std-form-input {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     border: var(--border-width) solid var(--color-border-light);
@@ -423,34 +523,34 @@ body {
     outline: none;
 }
 
-.form-input:focus {
+.std-form-input:focus {
     border-color: var(--color-info);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.form-input:disabled {
+.std-form-input:disabled {
     background-color: var(--color-gray-100);
     color: var(--color-text-secondary-light);
     cursor: not-allowed;
     opacity: 0.6;
 }
 
-.form-input::placeholder {
+.std-form-input::placeholder {
     color: var(--color-text-secondary-light);
     opacity: 0.5;
 }
 
-/* Estado de erro */
-.form-input.error {
+/* Estado de Erro */
+.std-form-input.error {
     border-color: var(--color-error);
 }
 
-.form-input.error:focus {
+.std-form-input.error:focus {
     border-color: var(--color-error);
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-/* Campo de senha com ícone */
+/* Campo de Senha com Ícone */
 .password-field {
     position: relative;
     display: flex;
@@ -484,7 +584,7 @@ body {
     opacity: 0.5;
 }
 
-/* Mensagens de erro */
+/* Mensagens de Erro */
 .error-message {
     color: var(--color-error);
     font-size: var(--font-size-xs);
@@ -492,10 +592,13 @@ body {
     display: block;
 }
 
-/* ================================================================
-   COMPONENTES DE NAVEGAÇÃO
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   COMPONENTES DE NAVEGAÇÃO                                ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
+/* Navbar */
 .nav-base {
     background-color: var(--color-primary);
     box-shadow: var(--shadow-md);
@@ -508,10 +611,7 @@ body {
     padding: 0 var(--spacing-md);
 }
 
-/* ================================================================
-   COMPONENTES DE SIDEBAR
-   ================================================================ */
-
+/* Sidebar */
 .sidebar-base {
     background-color: var(--color-primary);
     box-shadow: var(--shadow-lg);
@@ -551,11 +651,13 @@ body {
     border-right: var(--border-width-4) solid var(--color-border-accent);
 }
 
-/* ================================================================
-   COMPONENTES DE CARD
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   COMPONENTES DE CARD                                     ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
-.card-base {
+.std-card-base {
     background-color: var(--color-primary);
     border: var(--border-width-2) solid var(--color-border);
     border-radius: var(--border-radius-lg);
@@ -564,69 +666,71 @@ body {
     transition: box-shadow var(--transition-fast);
 }
 
-.card-base:hover {
+.std-card-base:hover {
     box-shadow: var(--shadow-md);
 }
 
-.card-header {
+.std-card-header {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
 }
 
-.card-icon {
+.std-card-icon {
     font-size: var(--font-size-3xl);
 }
 
-.card-title {
+.std-card-title {
     color: var(--color-text-primary);
     font-weight: var(--font-weight-semibold);
     font-size: var(--font-size-xl);
     margin: 0;
 }
 
-.card-subtitle {
+.std-card-subtitle {
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     margin-top: var(--spacing-xs);
 }
 
-.card-content {
+.std-card-content {
     flex: 1;
 }
 
-.card-footer {
+.std-card-footer {
     margin-top: auto;
     text-align: right;
 }
 
-.card-value {
+.std-card-value {
     color: var(--color-text-secondary);
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-3xl);
 }
 
-.card-value-success {
+.std-card-value-success {
     color: var(--color-success);
 }
 
-.card-value-error {
+.std-card-value-error {
     color: var(--color-error);
 }
 
-.card-value-warning {
+.std-card-value-warning {
     color: var(--color-warning);
 }
 
-.card-value-info {
+.std-card-value-info {
     color: var(--color-info);
 }
 
-/* ================================================================
-   COMPONENTES DE SEÇÃO
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   COMPONENTES DE SEÇÃO                                     ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
 .section-base {
     background-color: var(--color-primary);
@@ -660,16 +764,18 @@ body {
     line-height: var(--line-height-normal);
 }
 
-/* ================================================================
-   COMPONENTES DE DROPDOWN
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   COMPONENTES DE DROPDOWN                                  ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
 .dropdown-base {
     position: absolute;
-    background-color: var(--color-background-light);
-    border-radius: var(--border-radius-lg);
+    background-color: var(--color-primary-light);
+    border-radius: var(--border-radius-sm);
     box-shadow: var(--shadow-xl);
-    border: var(--border-width) solid var(--color-border-light);
+    border: var(--border-width) solid var(--color-primary-light);
     z-index: var(--z-index-dropdown);
     min-width: 200px;
 }
@@ -677,6 +783,8 @@ body {
 .dropdown-header {
     padding: var(--spacing-md);
     border-bottom: var(--border-width) solid var(--color-border-light);
+    text-align: left;
+    color: var(--color-text-primary);
 }
 
 .dropdown-content {
@@ -690,7 +798,7 @@ body {
     text-align: left;
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
-    color: var(--color-text-dark);
+    color: var(--color-secondary);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -701,7 +809,8 @@ body {
 }
 
 .dropdown-item:hover {
-    background-color: var(--color-hover-light);
+    background-color: var(--color-hover);
+    color: var(--color-text-primary);
 }
 
 .dropdown-item-danger {
@@ -710,6 +819,7 @@ body {
 
 .dropdown-item-danger:hover {
     background-color: var(--color-error-light);
+    color: var(--color-red-600);
 }
 
 .dropdown-divider {
@@ -718,11 +828,13 @@ body {
     margin: var(--spacing-sm) 0;
 }
 
-/* ================================================================
-   COMPONENTES DE BOTÃO
-   ================================================================ */
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   COMPONENTES DE BOTÃO                                    ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
 
-/* Estilos Base Comuns para Todos os Botões */
+/* Estilos Base para Todos os Botões */
 button,
 .btn {
     font-family: var(--font-family-base);
@@ -757,6 +869,7 @@ button:disabled,
     cursor: var(--btn-disabled-cursor);
 }
 
+/* Variantes de Botão */
 .btn-base {
     display: inline-flex;
     align-items: center;
@@ -791,12 +904,66 @@ button:disabled,
 }
 
 .btn-primary {
-    background-color: var(--color-info);
-    color: var(--color-text-primary);
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-base);
+    margin-top: var(--spacing-md);
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
 }
 
 .btn-primary:hover {
-    background-color: var(--color-info-dark);
+    background-color: var(--btn-primary-bg-hover);
+}
+
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--btn-primary-shadow);
+}
+
+.btn-primary:active {
+    background-color: var(--btn-primary-bg-active);
+}
+
+.btn-primary:disabled {
+    background-color: var(--btn-disabled-bg);
+    color: var(--btn-disabled-text);
+    cursor: var(--btn-disabled-cursor);
+    opacity: var(--btn-disabled-opacity);
+}
+
+
+.btn-secondary {
+    width: 100%;
+    border: var(--border-width) solid var(--btn-secondary-border);
+    color: var(--btn-secondary-text);
+    background-color: var(--btn-secondary-bg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-all-base);
+}
+
+.btn-secondary:hover {
+    background-color: var(--btn-secondary-bg-hover);
+    border-color: var(--btn-secondary-border-hover);
+    color: var(--btn-secondary-text-hover);
+}
+
+.btn-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--btn-primary-shadow);
+}
+
+.btn-secondary:active {
+    background-color: var(--btn-secondary-bg-active);
 }
 
 .btn-success {
@@ -836,23 +1003,33 @@ button:disabled,
     background-color: var(--color-hover);
 }
 
-/* ================================================================
-   COMPONENTES DE GRADE/GRID
-   ================================================================ */
-
-.grid-base {
-    background-color: var(--color-background-dark);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
+.btn-link {
     width: 100%;
-    display: grid;
-    gap: var(--spacing-lg);
+    color: var(--btn-primary-bg);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-base);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
 }
 
-/* ================================================================
-   UTILITÁRIOS DE TEXTO
-   ================================================================ */
+.btn-link:hover {
+    color: var(--btn-primary-bg-hover);
+    text-decoration: underline;
+}
 
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   UTILITÁRIOS - Texto, Fundo, Espaçamento, etc.          ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Utilitários de Texto
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Cores de Texto */
 .text-primary {
     color: var(--color-text-primary);
 }
@@ -885,6 +1062,7 @@ button:disabled,
     color: var(--color-info);
 }
 
+/* Tamanhos de Texto */
 .text-xs {
     font-size: var(--font-size-xs);
 }
@@ -913,6 +1091,7 @@ button:disabled,
     font-size: var(--font-size-3xl);
 }
 
+/* Pesos de Fonte */
 .font-normal {
     font-weight: var(--font-weight-normal);
 }
@@ -929,9 +1108,9 @@ button:disabled,
     font-weight: var(--font-weight-bold);
 }
 
-/* ================================================================
-   UTILITÁRIOS DE FUNDO
-   ================================================================ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Utilitários de Fundo
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .bg-primary {
     background-color: var(--color-primary);
@@ -989,10 +1168,11 @@ button:disabled,
     background-color: var(--color-info-light);
 }
 
-/* ================================================================
-   UTILITÁRIOS DE ESPAÇAMENTO
-   ================================================================ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Utilitários de Espaçamento
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+/* Padding */
 .p-xs {
     padding: var(--spacing-xs);
 }
@@ -1017,6 +1197,7 @@ button:disabled,
     padding: var(--spacing-2xl);
 }
 
+/* Margin */
 .m-xs {
     margin: var(--spacing-xs);
 }
@@ -1041,6 +1222,7 @@ button:disabled,
     margin: var(--spacing-2xl);
 }
 
+/* Gap */
 .gap-xs {
     gap: var(--spacing-xs);
 }
@@ -1061,10 +1243,11 @@ button:disabled,
     gap: var(--spacing-xl);
 }
 
-/* ================================================================
-   UTILITÁRIOS DE BORDAS
-   ================================================================ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Utilitários de Bordas
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+/* Border Radius */
 .rounded-none {
     border-radius: var(--border-radius-none);
 }
@@ -1093,6 +1276,7 @@ button:disabled,
     border-radius: var(--border-radius-full);
 }
 
+/* Border Width */
 .border {
     border: var(--border-width) solid var(--color-border);
 }
@@ -1105,6 +1289,7 @@ button:disabled,
     border: var(--border-width-4) solid var(--color-border);
 }
 
+/* Border Color */
 .border-light {
     border-color: var(--color-border-light);
 }
@@ -1113,9 +1298,9 @@ button:disabled,
     border-color: var(--color-border-accent);
 }
 
-/* ================================================================
-   UTILITÁRIOS DE SOMBRA
-   ================================================================ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Utilitários de Sombra
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .shadow-sm {
     box-shadow: var(--shadow-sm);
@@ -1145,9 +1330,9 @@ button:disabled,
     box-shadow: none;
 }
 
-/* ================================================================
-   UTILITÁRIOS DE TRANSIÇÃO
-   ================================================================ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Utilitários de Transição
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .transition-fast {
     transition: var(--transition-all-fast);
@@ -1159,4 +1344,28 @@ button:disabled,
 
 .transition-slow {
     transition: var(--transition-all-slow);
+}
+
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   RESPONSIVIDADE                                          ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
+
+@media (max-width: 767px) {
+    .std-container {
+        padding: var(--spacing-md);
+    }
+
+    .std-card {
+        padding: var(--spacing-xl);
+    }
+
+    .std-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .std-subtitle {
+        font-size: var(--font-size-sm);
+    }
 }

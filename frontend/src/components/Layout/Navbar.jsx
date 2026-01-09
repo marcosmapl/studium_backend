@@ -37,7 +37,7 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
 
                     {/* Mensagem de Boas-vindas */}
                     <span className="text-white flex-1">
-                        Bem-vindo, <span className="font-semibold">{usuario?.nome || "Visitante"}</span>
+                        Bem-vindo, <span className="font-semibold text-accent">{usuario?.nome || "Visitante"}</span>
                     </span>
 
                     <div className="flex items-center gap-4">
@@ -128,7 +128,7 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
                                     setShowProfileMenu(!showProfileMenu);
                                     setShowNotifications(false);
                                 }}
-                                className="flex items-center gap-2 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition"
+                                className="flex items-center gap-2 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-600 rounded-full transition"
                                 aria-label="Menu do perfil"
                             >
                                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
@@ -138,10 +138,10 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
 
                             {/* Dropdown do Perfil */}
                             {showProfileMenu && (
-                                <div className="dropdown-base right-0 mt-2 w-56">
+                                <div className="dropdown-base right-0 mt-0 w-56">
                                     <div className="dropdown-header">
-                                        <p className="font-semibold text-gray-800">{usuario?.nome || usuario?.nomeUsuario}</p>
-                                        <p className="text-xs text-gray-600">{usuario?.email}</p>
+                                        <p className="font-semibold">{usuario?.nome || usuario?.nomeUsuario}</p>
+                                        <p className="text-xs">{usuario?.email}</p>
                                     </div>
                                     <div className="py-2">
                                         <button className="dropdown-item">

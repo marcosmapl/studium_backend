@@ -5,133 +5,19 @@
    ================================================================ */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CONTAINER PRINCIPAL
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-primary);
-    padding: var(--spacing-2xl) var(--spacing-md);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CARD DE LOGIN
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.login-card {
-    background-color: var(--color-secondary);
-    padding: var(--spacing-2xl);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-2xl);
-    width: 100%;
-    max-width: 28rem;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   HEADER DO LOGIN
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.login-header {
-    text-align: center;
-    margin-bottom: var(--spacing-2xl);
-}
-
-.login-title {
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-accent);
-    margin-bottom: var(--spacing-sm);
-}
-
-.login-subtitle {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-base);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   FORMULÁRIO
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-}
-
-
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BOTÕES
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.btn-primary {
-    width: 100%;
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-lg);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-all-base);
-    margin-top: var(--spacing-md);
-}
-
-.btn-primary:hover {
-    background-color: var(--btn-primary-bg-hover);
-}
-
-.btn-primary:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px var(--btn-primary-shadow);
-}
-
-.btn-primary:active {
-    background-color: var(--btn-primary-bg-active);
-}
-
-.btn-primary:disabled {
-    background-color: var(--btn-disabled-bg);
-    color: var(--btn-disabled-text);
-    cursor: var(--btn-disabled-cursor);
-    opacity: var(--btn-disabled-opacity);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FOOTER DO LOGIN
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .login-footer {
-    margin-top: var(--spacing-xl);
+    margin-top: var(--spacing-sm);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
 }
 
-.btn-link {
-    width: 100%;
-    color: var(--btn-primary-bg);
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-base);
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-}
-
-.btn-link:hover {
-    color: var(--btn-primary-bg-hover);
-    text-decoration: underline;
-}
-
 /* Divisor entre opções */
 .divider {
     position: relative;
-    margin: var(--spacing-md) 0;
 }
 
 .divider::before {
@@ -154,54 +40,4 @@
     padding: 0 var(--spacing-sm);
     background-color: var(--color-secondary);
     color: var(--color-text-secondary);
-}
-
-.btn-secondary {
-    width: 100%;
-    border: var(--border-width) solid var(--btn-secondary-border);
-    color: var(--btn-secondary-text);
-    background-color: var(--btn-secondary-bg);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-lg);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: var(--transition-all-base);
-}
-
-.btn-secondary:hover {
-    background-color: var(--btn-secondary-bg-hover);
-    border-color: var(--btn-secondary-border-hover);
-    color: var(--btn-secondary-text-hover);
-}
-
-.btn-secondary:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px var(--btn-primary-shadow);
-}
-
-.btn-secondary:active {
-    background-color: var(--btn-secondary-bg-active);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   RESPONSIVIDADE
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-@media (max-width: 767px) {
-    .login-container {
-        padding: var(--spacing-md);
-    }
-
-    .login-card {
-        padding: var(--spacing-xl);
-    }
-
-    .login-title {
-        font-size: var(--font-size-2xl);
-    }
-
-    .login-subtitle {
-        font-size: var(--font-size-sm);
-    }
 }

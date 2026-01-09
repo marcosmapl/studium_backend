@@ -59,16 +59,16 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
-            <div className="login-card">
-                <div className="login-header">
-                    <h1 className="login-title">Studium</h1>
-                    <p className="login-subtitle">Sistema de Gestão de Estudos</p>
+        <div className="std-container">
+            <div className="std-card">
+                <div className="std-header">
+                    <h1 className="std-title">Studium</h1>
+                    <p className="std-subtitle">Sistema de Gestão de Estudos</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="login-form">
-                    <div className="form-group">
-                        <label htmlFor="usuario" className="form-label">
+                <form onSubmit={handleSubmit} className="std-form">
+                    <div className="std-form-group">
+                        <label htmlFor="usuario" className="std-form-label">
                             Usuário
                         </label>
                         <input
@@ -76,14 +76,14 @@ const Login = () => {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="form-input"
+                            className="std-form-input"
                             placeholder="Digite seu usuário"
                             disabled={loading}
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="password" className="form-label">
+                    <div className="std-form-group">
+                        <label htmlFor="password" className="std-form-label">
                             Senha
                         </label>
                         <div className="password-field">
@@ -92,7 +92,7 @@ const Login = () => {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="form-input"
+                                className="std-form-input"
                                 placeholder="Digite sua senha"
                                 disabled={loading}
                             />

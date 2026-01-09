@@ -182,18 +182,18 @@ const Cadastro = () => {
     };
 
     const getInputClassName = (fieldName) => {
-        return errors[fieldName] ? "form-input error" : "form-input";
+        return errors[fieldName] ? "std-form-input error" : "std-form-input";
     };
 
     // Desabilita o formulário enquanto carrega dados iniciais
     const isFormDisabled = loadingData || loading;
 
     return (
-        <div className="cadastro-container">
-            <div className="cadastro-card">
-                <div className="cadastro-header">
-                    <h1 className="cadastro-title">Criar Conta</h1>
-                    <p className="cadastro-subtitle">Preencha os dados para se cadastrar no Studium</p>
+        <div className="std-container">
+            <div className="std-card">
+                <div className="std-header">
+                    <h1 className="std-title">Criar Conta</h1>
+                    <p className="std-subtitle">Preencha os dados para se cadastrar no Studium</p>
                 </div>
 
                 {loadingData ? (
@@ -201,11 +201,11 @@ const Cadastro = () => {
                         <p style={{ color: '#6b7280' }}>Carregando formulário...</p>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="cadastro-form">
-                        <div className="form-grid">
+                    <form onSubmit={handleSubmit} className="std-form">
+                        <div className="std-form-grid">
                             {/* Nome */}
-                            <div className="form-group">
-                                <label htmlFor="nome" className="form-label">
+                            <div className="std-form-group">
+                                <label htmlFor="nome" className="std-form-label">
                                     Nome *
                                 </label>
                                 <input
@@ -224,8 +224,8 @@ const Cadastro = () => {
                             </div>
 
                             {/* Sobrenome */}
-                            <div className="form-group">
-                                <label htmlFor="sobrenome" className="form-label">
+                            <div className="std-form-group">
+                                <label htmlFor="sobrenome" className="std-form-label">
                                     Sobrenome *
                                 </label>
                                 <input
@@ -245,8 +245,8 @@ const Cadastro = () => {
                         </div>
 
                         {/* Username */}
-                        <div className="form-group">
-                            <label htmlFor="username" className="form-label">
+                        <div className="std-form-group">
+                            <label htmlFor="username" className="std-form-label">
                                 Nome de Usuário *
                             </label>
                             <input
@@ -265,8 +265,8 @@ const Cadastro = () => {
                         </div>
 
                         {/* E-mail */}
-                        <div className="form-group">
-                            <label htmlFor="email" className="form-label">
+                        <div className="std-form-group">
+                            <label htmlFor="email" className="std-form-label">
                                 E-mail *
                             </label>
                             <input
@@ -285,8 +285,8 @@ const Cadastro = () => {
                         </div>
 
                         {/* Data de Nascimento */}
-                        <div className="form-group">
-                            <label htmlFor="dataNascimento" className="form-label">
+                        <div className="std-form-group">
+                            <label htmlFor="dataNascimento" className="std-form-label">
                                 Data de Nascimento (opcional)
                             </label>
                             <input
@@ -301,8 +301,8 @@ const Cadastro = () => {
                         </div>
 
                         {/* Gênero */}
-                        <div className="form-group">
-                            <label htmlFor="generoUsuarioId" className="form-label">
+                        <div className="std-form-group">
+                            <label htmlFor="generoUsuarioId" className="std-form-label">
                                 Gênero *
                             </label>
                             <select
@@ -325,10 +325,10 @@ const Cadastro = () => {
                             )}
                         </div>
 
-                        <div className="form-grid">
+                        <div className="std-form-grid">
                             {/* Senha */}
-                            <div className="form-group">
-                                <label htmlFor="password" className="form-label">
+                            <div className="std-form-group">
+                                <label htmlFor="password" className="std-form-label">
                                     Senha *
                                 </label>
                                 <div className="password-field">
@@ -357,8 +357,8 @@ const Cadastro = () => {
                             </div>
 
                             {/* Confirmar Senha */}
-                            <div className="form-group">
-                                <label htmlFor="confirmaSenha" className="form-label">
+                            <div className="std-form-group">
+                                <label htmlFor="confirmaSenha" className="std-form-label">
                                     Confirmar Senha *
                                 </label>
                                 <div className="password-field">
@@ -387,10 +387,10 @@ const Cadastro = () => {
                             </div>
                         </div>
 
-                        <div className="form-grid">
+                        <div className="std-form-grid">
                             {/* Unidade Federativa */}
-                            <div className="form-group">
-                                <label htmlFor="unidadeFederativaId" className="form-label">
+                            <div className="std-form-group">
+                                <label htmlFor="unidadeFederativaId" className="std-form-label">
                                     Estado (UF) *
                                 </label>
                                 <select
@@ -414,8 +414,8 @@ const Cadastro = () => {
                             </div>
 
                             {/* Cidade */}
-                            <div className="form-group">
-                                <label htmlFor="cidadeId" className="form-label">
+                            <div className="std-form-group">
+                                <label htmlFor="cidadeId" className="std-form-label">
                                     Cidade *
                                 </label>
                                 <select
@@ -446,7 +446,7 @@ const Cadastro = () => {
                         <button
                             type="submit"
                             disabled={isFormDisabled}
-                            className="btn-submit"
+                            className="btn-primary"
                         >
                             {loading ? 'Cadastrando...' : 'Cadastrar'}
                         </button>
