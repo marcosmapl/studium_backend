@@ -12,7 +12,7 @@ model UnidadeFederativa {
     descricao String @unique
     sigla     String @unique
 
-    cidades  Cidade[]
+    cidades Cidade[]
 
     @@index([descricao])
     @@map("unidade_federativa")
@@ -136,15 +136,15 @@ model SituacaoTopico {
 }
 
 model Topico {
-    id              Int      @id @default(autoincrement())
-    titulo          String
-    ordem           Int
-    concluido       Boolean  @default(false)
-    estabilidade    Float    @default(1.0)
-    dificuldade     Float    @default(5.0)
-    observacoes     String?
-    createdAt       DateTime @default(now()) @map("created_at")
-    updatedAt       DateTime @updatedAt @map("updated_at")
+    id           Int      @id @default(autoincrement())
+    titulo       String
+    ordem        Int
+    concluido    Boolean  @default(false)
+    estabilidade Float    @default(1.0)
+    dificuldade  Float    @default(5.0)
+    observacoes  String?
+    createdAt    DateTime @default(now()) @map("created_at")
+    updatedAt    DateTime @updatedAt @map("updated_at")
 
     disciplinaId Int        @map("disciplina_id")
     disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
@@ -293,17 +293,15 @@ model SituacaoPlano {
 }
 
 model PlanoEstudo {
-    id              Int      @id @default(autoincrement())
-    titulo          String
-    descricao       String?
-    questoesAcertos Int      @default(0) @map("questoes_acertos")
-    questoesErros   Int      @default(0) @map("questoes_erros")
-    tempoEstudo     Float    @default(0.0) @map("tempo_estudo")
-    paginasLidas    Int      @default(0) @map("paginas_lidas")
-    concluido       Boolean  @default(false)
-    observacoes     String?
-    createdAt       DateTime @default(now()) @map("created_at")
-    updatedAt       DateTime @updatedAt @map("updated_at")
+    id        Int       @id @default(autoincrement())
+    titulo    String
+    concurso  String?
+    cargo     String?
+    banca     String?
+    dataprova DateTime? @map("data_prova_at")
+    concluido Boolean   @default(false)
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
 
     usuarioId Int     @map("usuario_id")
     usuario   Usuario @relation(fields: [usuarioId], references: [id])
@@ -311,7 +309,7 @@ model PlanoEstudo {
     situacaoId Int           @map("situacao_id")
     situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id])
 
-    disciplinas Disciplina[]
+    disciplinas   Disciplina[]
     sessoesEstudo SessaoEstudo[]
     revisoes      Revisao[]
     planejamentos Planejamento[]
