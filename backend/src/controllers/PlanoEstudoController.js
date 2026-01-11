@@ -140,7 +140,7 @@ class PlanoEstudoController extends BaseController {
     }
 
     /**
-     * Busca plano de estudo por título (busca parcial)
+     * Busca planos de estudo por título (busca parcial)
      */
     async findManyByTitulo(req, res, next) {
         try {
@@ -157,18 +157,55 @@ class PlanoEstudoController extends BaseController {
             );
 
             if (!planos || planos.length === 0) {
-                logger.info(`Nenhum ${this.entityName} encontrado com esse padrão`, {
+                logger.info(`Não foram encontrados ${this.entityNamePlural} com esse padrão`, {
                     titulo: tituloDecodificado,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhum ${this.entityName} encontrado com esse padrão`
+                    error: `Não foram encontrados ${this.entityNamePlural} com esse padrão`
                 });
             }
 
             return res.json(planos);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por título parcial`, {
+                error: error.message,
+                stack: error.stack,
+            });
+
+            next(error);
+        }
+    }
+
+    /**
+     * Busca planos de estudo por ID de usuário
+     */
+    async findManyByUsuarioId(req, res, next) {
+        try {
+            const { usuarioId } = req.params;
+
+            logger.info(`Buscando ${this.entityNamePlural} por ID de usuário`, {
+                usuarioId: usuarioId,
+                route: req.originalUrl,
+            });
+
+            const planos = await this.repository.findManyByUsuarioId(
+                usuarioId
+            );
+
+            if (!planos || planos.length === 0) {
+                logger.info(`Não foram encontrados ${this.entityNamePlural} para esse ID de usuário`, {
+                    usuarioId: usuarioId,
+                    route: req.originalUrl,
+                });
+                return res.status(HttpStatus.NOT_FOUND).json({
+                    error: `Não foram encontrados ${this.entityNamePlural} para esse ID de usuário`
+                });
+            }
+
+            return res.json(planos);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por ID de usuário`, {
                 error: error.message,
                 stack: error.stack,
             });
@@ -186,6 +223,7 @@ module.exports = {
     findById: controller.findById.bind(controller),
     findUniqueByTitulo: controller.findUniqueByTitulo.bind(controller),
     findManyByTitulo: controller.findManyByTitulo.bind(controller),
+    findManyByUsuarioId: controller.findManyByUsuarioId.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

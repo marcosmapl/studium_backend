@@ -49,6 +49,33 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
         });
     }
 
+    /**
+     * Busca todos os planos de estudo de um usuário específico
+     * @param {number} usuarioId - ID do usuário
+     * @returns {Promise<Array>} Lista de planos de estudo do usuário
+     */
+    async findManyByUsuarioId(usuarioId) {
+        const query = {
+            where: { usuarioId },
+            orderBy: { [this.defaultOrderBy]: this.orderDirection },
+        };
+
+        if (this.includeRelations) {
+            query.include = this.includeRelations;
+        }
+
+        try {
+            return await this.model.findMany(query);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.modelName} por usuarioId`, {
+                error: error.message,
+                usuarioId,
+                file: this.repositoryName,
+            });
+            throw error;
+        }
+    }
+
 }
 
 module.exports = new PrismaPlanoEstudoRepository();

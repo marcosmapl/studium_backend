@@ -25,11 +25,24 @@ const { verifyToken } = require("../middleware/auth");
  *               titulo:
  *                 type: string
  *                 description: Título do plano de estudo
- *                 example: "Concurso PCDF 2025"
- *               descricao:
+ *                 example: "Plano TCU - Auditor Federal"
+ *               concurso:
  *                 type: string
- *                 description: Descrição do plano de estudo
- *                 example: "Plano de estudos para o concurso da Polícia Civil do DF"
+ *                 description: Nome do concurso metaa do plano de estudo
+ *                 example: "Concurso do Tribunal de Contas da União - 2026"
+ *               cargo:
+ *                 type: string
+ *                 description: Cargo principal pretendido
+ *                 example: "Auditor Federal de Controle Externo"
+ *               banca:
+ *                 type: string
+ *                 description: Banca realizadora do concurso
+ *                 example: "CESPE/CEBRASPE"
+ *               dataProva:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data da prova
+ *                 example: "2026-01-01"
  *               usuarioId:
  *                 type: integer
  *                 description: ID do usuário proprietário do plano
@@ -38,10 +51,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: integer
  *                 description: ID da situação do plano
  *                 example: 1
- *               observacoes:
- *                 type: string
- *                 description: Observações adicionais sobre o plano
- *                 example: "Focar em direito constitucional"
  *     responses:
  *       201:
  *         description: Plano de estudo criado com sucesso
@@ -55,39 +64,39 @@ const { verifyToken } = require("../middleware/auth");
  *                   example: 1
  *                 titulo:
  *                   type: string
- *                   example: "Concurso PCDF 2025"
- *                 descricao:
+ *                   example: "Plano TCU - Auditor Federal"
+ *                 concurso:
  *                   type: string
- *                   example: "Plano de estudos para o concurso da Polícia Civil do DF"
+ *                   example: "Concurso do Tribunal de Contas da União - 2026"
+ *                 cargo:
+ *                   type: string
+ *                   example: "Auditor Federal de Controle Externo"
+ *                 banca:
+ *                   type: string
+ *                   example: "CESPE/CEBRASPE"
+ *                 dataProva:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2026-01-01"
  *                 usuarioId:
  *                   type: integer
  *                   example: 1
  *                 situacaoId:
  *                   type: integer
  *                   example: 1
- *                 questoesAcertos:
- *                   type: integer
- *                   example: 0
- *                 questoesErros:
- *                   type: integer
- *                   example: 0
- *                 tempoEstudo:
- *                   type: number
- *                   example: 0.0
- *                 paginasLidas:
- *                   type: integer
- *                   example: 0
  *                 concluido:
  *                   type: boolean
  *                   example: false
  *                 createdAt:
  *                   type: string
  *                   format: date-time
+ *                   example: "2026-01-01"
  *                 updatedAt:
  *                   type: string
  *                   format: date-time
+ *                   example: "2026-01-01"
  *       400:
- *         description: Dados inválidos ou campos obrigatórios ausentes
+ *         description: Campos obrigatórios ausentes ao criar PlanoEstudo
  *         content:
  *           application/json:
  *             schema:
@@ -116,47 +125,29 @@ const { verifyToken } = require("../middleware/auth");
  *                     example: 1
  *                   titulo:
  *                     type: string
- *                     example: "Concurso PCDF 2025"
- *                   descricao:
+ *                     example: "Projeto Polícial do DF 2026"
+ *                   concurso:
  *                     type: string
- *                     example: "Plano de estudos para o concurso da Polícia Civil do DF"
+ *                     example: "Concurso da Polícia Civil do Distrito Federal - 2026"
+ *                   cargo:
+ *                     type: string
+ *                     example: "Delegado de Polícia"
+ *                   banca:
+ *                     type: string
+ *                     example: "Fundação Carlos Chagas (FCC)"
+ *                   dataProva:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-02"
  *                   usuarioId:
  *                     type: integer
  *                     example: 1
  *                   situacaoId:
  *                     type: integer
  *                     example: 1
- *                   questoesAcertos:
- *                     type: integer
- *                     example: 150
- *                   questoesErros:
- *                     type: integer
- *                     example: 50
- *                   tempoEstudo:
- *                     type: number
- *                     example: 120.5
- *                   paginasLidas:
- *                     type: integer
- *                     example: 350
  *                   concluido:
  *                     type: boolean
  *                     example: false
- *                   usuario:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                       nome:
- *                         type: string
- *                       sobrenome:
- *                         type: string
- *                   situacao:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                       descricao:
- *                         type: string
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -185,8 +176,8 @@ router.get("/", verifyToken, controller.findAll);
  *         required: true
  *         schema:
  *           type: string
- *         description: Título exato do plano de estudo
- *         example: "Concurso PCDF 2025"
+ *           description: Título exato do plano de estudo
+ *           example: "Concurso PCDF 2026"
  *     responses:
  *       200:
  *         description: Plano de estudo encontrado
@@ -197,28 +188,44 @@ router.get("/", verifyToken, controller.findAll);
  *               properties:
  *                 id:
  *                   type: integer
+ *                   example: 1
  *                 titulo:
  *                   type: string
- *                 descricao:
+ *                   example: "Projeto Polícial do DF 2026"
+ *                 concurso:
  *                   type: string
+ *                   example: "Concurso da Polícia Civil do Distrito Federal - 2026"
+ *                 cargo:
+ *                   type: string
+ *                   example: "Delegado de Polícia"
+ *                 banca:
+ *                   type: string
+ *                   example: "Fundação Carlos Chagas (FCC)"
+ *                 dataProva:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2026-01-02"
  *                 usuarioId:
  *                   type: integer
+ *                   example: 1
  *                 situacaoId:
  *                   type: integer
- *                 questoesAcertos:
- *                   type: integer
- *                 questoesErros:
- *                   type: integer
- *                 tempoEstudo:
- *                   type: number
- *                 paginasLidas:
- *                   type: integer
+ *                   example: 1
  *                 concluido:
  *                   type: boolean
+ *                   example: false
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2026-01-01 00:00:00"
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2026-01-01 00:00:00"
  *       404:
- *         description: Nenhum plano de estudo encontrado
+ *         description: Nenhum plano de estudo encontrado com esse título
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
@@ -239,7 +246,7 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *         schema:
  *           type: string
  *         description: Título do plano de estudo (busca parcial)
- *         example: "Concurso"
+ *         example: "Concurso Infraero"
  *     responses:
  *       200:
  *         description: Planos de estudo encontrados
@@ -251,25 +258,122 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                 type: object
  *                 properties:
  *                   id:
- *                     type: integer
- *                   titulo:
- *                     type: string
- *                   descricao:
- *                     type: string
- *                   usuarioId:
- *                     type: integer
- *                   situacaoId:
- *                     type: integer
- *                   concluido:
- *                     type: boolean
+*                      type: integer
+*                      example: 1
+*                    titulo:
+*                      type: string
+*                      example: "Projeto Polícial do DF 2026"
+*                    concurso:
+*                      type: string
+*                      example: "Concurso da Polícia Civil do Distrito Federal - 2026"
+*                    cargo:
+*                      type: string
+*                      example: "Delegado de Polícia"
+*                    banca:
+*                      type: string
+*                      example: "Fundação Carlos Chagas (FCC)"
+*                    dataProva:
+*                      type: string
+*                      format: date-time
+*                      example: "2026-01-02"
+*                    usuarioId:
+*                      type: integer
+*                      example: 1
+*                    situacaoId:
+*                      type: integer
+*                      example: 1
+*                    concluido:
+*                      type: boolean
+*                      example: false
+*                    createdAt:
+*                      type: string
+*                      format: date-time
+*                      example: "2026-01-01 00:00:00"
+*                    updatedAt:
+*                      type: string
+*                      format: date-time
+*                      example: "2026-01-01 00:00:00"
  *       404:
- *         description: Nenhum plano de estudo encontrado
+ *         description: Não foram encontrados planos de estudo com esse padrão
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
 router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
+
+
+/**
+ * @swagger
+ * /api/planoEstudo/usuario/{usuarioId}:
+ *   get:
+ *     summary: Busca todos os planos de estudo por ID de usuário
+ *     tags: [Plano de Estudo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: usuarioId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: O Identificador único do usuário
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Planos de estudo encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+*                      type: integer
+*                      example: 1
+*                    titulo:
+*                      type: string
+*                      example: "Projeto Polícial do DF 2026"
+*                    concurso:
+*                      type: string
+*                      example: "Concurso da Polícia Civil do Distrito Federal - 2026"
+*                    cargo:
+*                      type: string
+*                      example: "Delegado de Polícia"
+*                    banca:
+*                      type: string
+*                      example: "Fundação Carlos Chagas (FCC)"
+*                    dataProva:
+*                      type: string
+*                      format: date-time
+*                      example: "2026-01-02"
+*                    usuarioId:
+*                      type: integer
+*                      example: 1
+*                    situacaoId:
+*                      type: integer
+*                      example: 1
+*                    concluido:
+*                      type: boolean
+*                      example: false
+*                    createdAt:
+*                      type: string
+*                      format: date-time
+*                      example: "2026-01-01 00:00:00"
+*                    updatedAt:
+*                      type: string
+*                      format: date-time
+*                      example: "2026-01-01 00:00:00"
+ *       404:
+ *         description: Não foram encontrados planos de estudo para esse ID de usuário
+ *       401:
+ *         description: Não autorizado - Token inválido ou ausente
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/usuario/:usuarioId", verifyToken, controller.findManyByUsuarioId);
+
 
 /**
  * @swagger
@@ -296,37 +400,45 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *               type: object
  *               properties:
  *                 id:
- *                   type: integer
- *                 titulo:
- *                   type: string
- *                 descricao:
- *                   type: string
- *                 usuarioId:
- *                   type: integer
- *                 situacaoId:
- *                   type: integer
- *                 questoesAcertos:
- *                   type: integer
- *                 questoesErros:
- *                   type: integer
- *                 tempoEstudo:
- *                   type: number
- *                 paginasLidas:
- *                   type: integer
- *                 concluido:
- *                   type: boolean
- *                 observacoes:
- *                   type: string
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
+*                   type: integer
+*                   example: 1
+*                 titulo:
+*                   type: string
+*                   example: "Plano TCU - Auditor Federal"
+*                 concurso:
+*                   type: string
+*                   example: "Concurso do Tribunal de Contas da União - 2026"
+*                 cargo:
+*                   type: string
+*                   example: "Auditor Federal de Controle Externo"
+*                 banca:
+*                   type: string
+*                   example: "CESPE/CEBRASPE"
+*                 dataProva:
+*                   type: string
+*                   format: date-time
+*                   example: "2026-01-01"
+*                 usuarioId:
+*                   type: integer
+*                   example: 1
+*                 situacaoId:
+*                   type: integer
+*                   example: 1
+*                 concluido:
+*                   type: boolean
+*                   example: false
+*                 createdAt:
+*                   type: string
+*                   format: date-time
+*                   example: "2026-01-01"
+*                 updatedAt:
+*                   type: string
+*                   format: date-time
+*                   example: "2026-01-01"
  *       404:
- *         description: Plano de estudo não encontrado
+ *         description: Erro ao buscar Plano de estudo por ID
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  *   put:
@@ -352,33 +464,31 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *               titulo:
  *                 type: string
  *                 description: Novo título do plano
- *                 example: "Concurso PCDF 2026"
- *               descricao:
+ *                 example: "Plano Auditor Federal 2026"
+ *               concurso:
  *                 type: string
- *                 description: Nova descrição do plano
- *                 example: "Atualização do plano de estudos"
+ *                 description: Nova descrição do concurso
+ *                 example: "Receita Federal do Brasil - 2026"
+ *               cargo:
+ *                 type: string
+ *                 description: Nova descrição do cargo
+ *                 example: "Auditor-Fiscal da Receita Federal do Brasil"
+ *               banca:
+ *                 type: string
+ *                 description: Nova descrição da banca realizadora
+ *                 example: "Fundação Getúlio Vargas"
+ *               dataProva:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Nova data de prova
+ *                 example: "2026-01-01"
  *               situacaoId:
  *                 type: integer
  *                 description: Novo ID da situação
  *                 example: 2
- *               questoesAcertos:
- *                 type: integer
- *                 example: 200
- *               questoesErros:
- *                 type: integer
- *                 example: 75
- *               tempoEstudo:
- *                 type: number
- *                 example: 150.5
- *               paginasLidas:
- *                 type: integer
- *                 example: 500
  *               concluido:
  *                 type: boolean
  *                 example: false
- *               observacoes:
- *                 type: string
- *                 example: "Revisar matérias de direito penal"
  *     responses:
  *       200:
  *         description: Plano de estudo atualizado com sucesso
@@ -389,20 +499,48 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *               properties:
  *                 id:
  *                   type: integer
+ *                   example: 2
  *                 titulo:
  *                   type: string
- *                 descricao:
+ *                   example: "Plano Auditor Federal 2026"
+ *                 concurso:
  *                   type: string
+ *                   example: "Receita Federal do Brasil - 2026"
+ *                 cargo:
+ *                   type: string
+ *                   example: "Auditor-Fiscal da Receita Federal do Brasil"
+ *                 banca:
+ *                   type: string
+ *                   example: "Fundação Getúlio Vargas"
+ *                 dataProva:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2026-01-01"
+ *                 usuarioId:
+ *                   type: integer
+ *                   description: ID do usuário criador do plano de estudo
+ *                   example: 1
  *                 situacaoId:
  *                   type: integer
+ *                   description: Novo ID da situação
+ *                   example: 2
  *                 concluido:
  *                   type: boolean
+ *                   example: false
+*                 createdAt:
+*                   type: string
+*                   format: date-time
+*                   example: "2026-01-01"
+*                 updatedAt:
+*                   type: string
+*                   format: date-time
+*                   example: "2026-01-01"
  *       400:
  *         description: Dados inválidos
  *       404:
- *         description: Plano de estudo não encontrado
+ *         description: Erro ao atualizar Plano de estudo
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  *   delete:
@@ -430,9 +568,9 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                   type: string
  *                   example: "Plano de estudo excluído com sucesso"
  *       404:
- *         description: Plano de estudo não encontrado
+ *         description: Erro ao encontrar Plano de estudo
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
