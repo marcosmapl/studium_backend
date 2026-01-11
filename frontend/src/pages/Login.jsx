@@ -59,16 +59,16 @@ const Login = () => {
     };
 
     return (
-        <div className="std-container">
-            <div className="std-card">
-                <div className="std-header">
-                    <h1 className="std-title">Studium</h1>
-                    <p className="std-subtitle">Sistema de Gestão de Estudos</p>
+        <div className="studium-container">
+            <div className="studium-main-card">
+                <div className="studium-form-header">
+                    <h1 className="studium-form-title">Studium</h1>
+                    <p className="studium-form-subtitle">Sistema de Gestão de Estudos</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="std-form">
-                    <div className="std-form-group">
-                        <label htmlFor="usuario" className="std-form-label">
+                <form onSubmit={handleSubmit} className="studium-form">
+                    <div className="studium-form-group">
+                        <label htmlFor="usuario" className="studium-form-label">
                             Usuário
                         </label>
                         <input
@@ -76,30 +76,30 @@ const Login = () => {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="std-form-input"
+                            className="studium-form-input"
                             placeholder="Digite seu usuário"
                             disabled={loading}
                         />
                     </div>
 
-                    <div className="std-form-group">
-                        <label htmlFor="password" className="std-form-label">
+                    <div className="studium-form-group">
+                        <label htmlFor="password" className="studium-form-label">
                             Senha
                         </label>
-                        <div className="password-field">
+                        <div className="studium-pwd-field">
                             <input
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="std-form-input"
+                                className="studium-form-input"
                                 placeholder="Digite sua senha"
                                 disabled={loading}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="password-toggle"
+                                className="studium-pwd-toggle"
                                 disabled={loading}
                                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                             >

@@ -1,0 +1,396 @@
+/* ================================================================
+   NAVBAR - BARRA DE NAVEGAÇÃO SUPERIOR
+   ================================================================
+   Estilos da barra superior usando variáveis globais do index.css
+   ================================================================ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTAINER PRINCIPAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav {
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+    height: var(--navbar-height);
+}
+
+.studium-nav-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.studium-nav-content {
+    display: flex;
+    height: var(--navbar-height);
+    align-items: center;
+    gap: var(--spacing-2xl);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEÇÃO ESQUERDA (Logo e Toggle)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    width: 15rem;
+}
+
+.studium-nav-toggle {
+    color: var(--color-text-secondary);
+    padding: var(--spacing-sm);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--border-radius-full);
+    transition: var(--transition-all-fast);
+}
+
+.studium-nav-toggle:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-accent);
+}
+
+.studium-nav-toggle svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.studium-nav-logo {
+    font-family: 'Montserrat', 'IBM Plex Sans', sans-serif;
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
+
+    /* text-transform: uppercase; */
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MENSAGEM DE BOAS-VINDAS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-welcome {
+    color: var(--color-white);
+    flex: 1;
+    font-size: var(--font-size-base);
+}
+
+.studium-nav-welcome-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEÇÃO DIREITA (Ações e Perfil)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BOTÕES DE AÇÃO (Notificações, Tema)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-action-wrapper {
+    position: relative;
+}
+
+.studium-nav-action-btn {
+    position: relative;
+    padding: var(--spacing-sm);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--border-radius-full);
+    transition: var(--transition-all-fast);
+}
+
+.studium-nav-action-btn:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-accent);
+}
+
+.studium-nav-action-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Badge de notificação */
+.studium-nav-notif-badge {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: var(--color-error);
+    border-radius: var(--border-radius-full);
+    border: 2px solid var(--color-primary);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   AVATAR DO PERFIL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--border-radius-full);
+    transition: var(--transition-all-fast);
+}
+
+.studium-nav-profile-btn:hover {
+    background-color: var(--color-hover);
+}
+
+.studium-nav-avatar {
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--color-info);
+    border-radius: var(--border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DROPDOWN - BASE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-dropdown {
+    position: absolute;
+    right: 0;
+    margin-top: var(--spacing-sm);
+    background-color: var(--color-primary-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-xl);
+    border: var(--border-width) solid var(--color-border);
+    z-index: var(--z-index-dropdown);
+    min-width: 14rem;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DROPDOWN - NOTIFICAÇÕES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-dropdown-notif {
+    width: 20rem;
+}
+
+.studium-nav-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.studium-nav-dropdown-title {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+}
+
+.studium-nav-dropdown-clear {
+    font-size: var(--font-size-xs);
+    color: var(--color-info);
+    font-weight: var(--font-weight-medium);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+}
+
+.studium-nav-dropdown-clear:hover {
+    color: var(--color-info-dark);
+}
+
+.studium-nav-dropdown-content {
+    padding: var(--spacing-sm) 0;
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+/* Item de Notificação */
+.studium-nav-notif-item {
+    padding: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    transition: var(--transition-all-fast);
+    cursor: pointer;
+}
+
+.studium-nav-notif-item:hover {
+    background-color: var(--color-hover);
+}
+
+.studium-nav-notif-item:last-child {
+    border-bottom: none;
+}
+
+.studium-nav-notif-content {
+    flex: 1;
+}
+
+.studium-nav-notif-title {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.studium-nav-notif-desc {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+}
+
+.studium-nav-notif-delete {
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    opacity: 0;
+    transition: var(--transition-all-fast);
+}
+
+.studium-nav-notif-item:hover .studium-nav-notif-delete {
+    opacity: 1;
+}
+
+.studium-nav-notif-delete:hover {
+    color: var(--color-error);
+}
+
+.studium-nav-notif-delete svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.studium-nav-notif-empty {
+    padding: var(--spacing-md);
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DROPDOWN - PERFIL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-profile-info {
+    padding: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.studium-nav-profile-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+}
+
+.studium-nav-profile-email {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+.studium-nav-profile-menu {
+    padding: var(--spacing-sm) 0;
+}
+
+.studium-nav-profile-item {
+    width: 100%;
+    text-align: left;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Ícones FontAwesome nos itens do menu de perfil */
+.studium-nav-profile-item svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.studium-nav-profile-item:hover {
+    background-color: var(--color-hover);
+}
+
+.studium-nav-profile-divider {
+    height: 1px;
+    background-color: var(--color-border);
+    margin: var(--spacing-sm) 0;
+}
+
+.studium-nav-profile-item-danger {
+    color: var(--color-error);
+}
+
+.studium-nav-profile-item-danger:hover {
+    background-color: var(--color-error-light);
+    color: var(--color-error-dark);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVIDADE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 1024px) {
+    .studium-nav-content {
+        gap: var(--spacing-md);
+    }
+
+    .studium-nav-welcome {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .studium-nav-container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .studium-nav-left {
+        gap: var(--spacing-sm);
+    }
+
+    .studium-nav-logo {
+        font-size: var(--font-size-xl);
+    }
+
+    .studium-nav-actions {
+        gap: var(--spacing-sm);
+    }
+
+    .studium-nav-dropdown-notif {
+        width: calc(100vw - 2rem);
+        right: 50%;
+        transform: translateX(50%);
+    }
+}

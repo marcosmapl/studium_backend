@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Dashboard from './pages/Dashboard';
+import PlanosEstudo from './pages/PlanosEstudo';
+import Disciplinas from './pages/Disciplinas';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -19,6 +21,22 @@ function App() {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/planos" 
+            element={
+              <PrivateRoute>
+                <PlanosEstudo />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/disciplinas" 
+            element={
+              <PrivateRoute>
+                <Disciplinas />
               </PrivateRoute>
             } 
           />

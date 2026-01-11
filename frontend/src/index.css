@@ -326,8 +326,7 @@
     --line-height-relaxed: 1.75;
 
     /* Família de Fontes */
-    --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    --font-family-base: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      BORDAS E RAIOS
@@ -439,7 +438,7 @@ body {
    ████████████████████████████████████████████████████████████████ */
 
 /* Container Principal */
-.std-container {
+.studium-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -449,7 +448,7 @@ body {
 }
 
 /* Card de Cadastro/Login */
-.std-card {
+.studium-main-card {
     background-color: var(--color-secondary);
     padding: var(--spacing-2xl);
     border-radius: var(--border-radius-lg);
@@ -458,51 +457,51 @@ body {
     max-width: 42rem;
 }
 
+/* ████████████████████████████████████████████████████████████████
+██                                                            ██
+██   COMPONENTES DE FORMULÁRIO                               ██
+██                                                            ██
+████████████████████████████████████████████████████████████████ */
+
 /* Header do Formulário */
-.std-header {
+.studium-form-header {
     text-align: center;
     margin-bottom: var(--spacing-2xl);
 }
 
-.std-title {
+.studium-form-title {
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-title);
     margin-bottom: var(--spacing-sm);
 }
 
-.std-subtitle {
+.studium-form-subtitle {
     color: var(--color-text-subtitle);
     font-size: var(--font-size-base);
 }
 
-/* ████████████████████████████████████████████████████████████████
-   ██                                                            ██
-   ██   COMPONENTES DE FORMULÁRIO                               ██
-   ██                                                            ██
-   ████████████████████████████████████████████████████████████████ */
-
 /* Estrutura do Formulário */
-.std-form {
+.studium-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
 }
 
-.std-form-grid {
+.studium-form-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
 }
 
 /* Grupo de Campo */
-.std-form-group {
+.studium-form-group {
     display: flex;
     flex-direction: column;
 }
 
 /* Label */
-.std-form-label {
+.studium-form-label {
     display: block;
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
@@ -511,7 +510,7 @@ body {
 }
 
 /* Input */
-.std-form-input {
+.studium-form-input {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     border: var(--border-width) solid var(--color-border-light);
@@ -523,41 +522,41 @@ body {
     outline: none;
 }
 
-.std-form-input:focus {
+.studium-form-input:focus {
     border-color: var(--color-info);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.std-form-input:disabled {
+.studium-form-input:disabled {
     background-color: var(--color-gray-100);
     color: var(--color-text-secondary-light);
     cursor: not-allowed;
     opacity: 0.6;
 }
 
-.std-form-input::placeholder {
+.studium-form-input::placeholder {
     color: var(--color-text-secondary-light);
     opacity: 0.5;
 }
 
 /* Estado de Erro */
-.std-form-input.error {
+.studium-form-input.error {
     border-color: var(--color-error);
 }
 
-.std-form-input.error:focus {
+.studium-form-input.error:focus {
     border-color: var(--color-error);
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 /* Campo de Senha com Ícone */
-.password-field {
+.studium-pwd-field {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.password-toggle {
+.studium-pwd-toggle {
     position: absolute;
     right: var(--spacing-sm);
     top: 50%;
@@ -575,11 +574,11 @@ body {
     margin-bottom: 0;
 }
 
-.password-toggle:hover {
+.studium-pwd-toggle:hover {
     color: var(--color-text-primary-light);
 }
 
-.password-toggle:disabled {
+.studium-pwd-toggle:disabled {
     cursor: not-allowed;
     opacity: 0.5;
 }
@@ -594,135 +593,77 @@ body {
 
 /* ████████████████████████████████████████████████████████████████
    ██                                                            ██
-   ██   COMPONENTES DE NAVEGAÇÃO                                ██
-   ██                                                            ██
-   ████████████████████████████████████████████████████████████████ */
-
-/* Navbar */
-.nav-base {
-    background-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
-    height: var(--navbar-height);
-}
-
-.nav-container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 var(--spacing-md);
-}
-
-/* Sidebar */
-.sidebar-base {
-    background-color: var(--color-primary);
-    box-shadow: var(--shadow-lg);
-    width: var(--sidebar-width);
-    transition: var(--transition-all-base);
-    overflow: hidden;
-}
-
-.sidebar-collapsed {
-    width: var(--sidebar-width-collapsed);
-}
-
-.sidebar-menu-item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    text-align: left;
-    color: var(--color-text-secondary);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-}
-
-.sidebar-menu-item:hover {
-    background-color: var(--color-hover);
-    color: var(--color-text-primary);
-}
-
-.sidebar-menu-item-active {
-    background-color: var(--color-active);
-    color: var(--color-text-primary);
-    border-right: var(--border-width-4) solid var(--color-border-accent);
-}
-
-/* ████████████████████████████████████████████████████████████████
-   ██                                                            ██
    ██   COMPONENTES DE CARD                                     ██
    ██                                                            ██
    ████████████████████████████████████████████████████████████████ */
 
-.std-card-base {
-    background-color: var(--color-primary);
-    border: var(--border-width-2) solid var(--color-border);
-    border-radius: var(--border-radius-lg);
+.studium-card-base {
+    background-color: var(--color-primary-light);
+    border: var(--border-width-2) solid var(--color-background-dark);
+    border-radius: var(--border-radius-2xl);
     padding: var(--spacing-md);
     box-shadow: var(--shadow-sm);
     transition: box-shadow var(--transition-fast);
 }
 
-.std-card-base:hover {
+.studium-card-base:hover {
+    /* background-color: var(--color-background); */
     box-shadow: var(--shadow-md);
 }
 
-.std-card-header {
+.studium-card-header {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
 }
 
-.std-card-icon {
+.studium-card-icon {
     font-size: var(--font-size-3xl);
 }
 
-.std-card-title {
+.studium-card-title {
     color: var(--color-text-primary);
     font-weight: var(--font-weight-semibold);
     font-size: var(--font-size-xl);
-    margin: 0;
+    margin-bottom: var(--spacing-sm);
 }
 
-.std-card-subtitle {
+.studium-card-subtitle {
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     margin-top: var(--spacing-xs);
 }
 
-.std-card-content {
+.studium-card-content {
     flex: 1;
 }
 
-.std-card-footer {
+.studium-card-footer {
     margin-top: auto;
     text-align: right;
 }
 
-.std-card-value {
-    color: var(--color-text-secondary);
+.studium-card-value {
+    color: var(--color-text-primary);
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-3xl);
 }
 
-.std-card-value-success {
+.studium-card-value-success {
     color: var(--color-success);
 }
 
-.std-card-value-error {
+.studium-card-value-error {
     color: var(--color-error);
 }
 
-.std-card-value-warning {
+.studium-card-value-warning {
     color: var(--color-warning);
 }
 
-.std-card-value-info {
+.studium-card-value-info {
     color: var(--color-info);
 }
 
@@ -746,20 +687,20 @@ body {
 }
 
 .section-title {
-    color: var(--color-text-primary);
+    color: var(--color-text-dark);
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-xl);
     margin: 0 0 var(--spacing-sm) 0;
 }
 
 .section-subtitle {
-    color: var(--color-text-secondary);
+    color: var(--color-text-secondary-light);
     font-size: var(--font-size-sm);
     margin: 0;
 }
 
 .section-content {
-    color: var(--color-text-secondary);
+    color: var(--color-text-dark);
     font-size: var(--font-size-sm);
     line-height: var(--line-height-normal);
 }
@@ -1353,19 +1294,19 @@ button:disabled,
    ████████████████████████████████████████████████████████████████ */
 
 @media (max-width: 767px) {
-    .std-container {
+    .studium-container {
         padding: var(--spacing-md);
     }
 
-    .std-card {
+    .studium-main-card {
         padding: var(--spacing-xl);
     }
 
-    .std-title {
+    .studium-form-title {
         font-size: var(--font-size-2xl);
     }
 
-    .std-subtitle {
+    .studium-form-subtitle {
         font-size: var(--font-size-sm);
     }
 }

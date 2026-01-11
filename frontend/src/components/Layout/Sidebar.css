@@ -8,20 +8,20 @@
    CONTAINER PRINCIPAL
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.sidebar {
-    background-color: var(--color-primary);
+.studium-sbar {
+    background-color: var(--color-primary-light);
     box-shadow: var(--shadow-lg);
     transition: var(--transition-all-base);
     overflow: hidden;
     min-height: calc(100vh - 3.5rem);
 }
 
-.sidebar-open {
+.studium-sbar-open {
     width: 15rem;
     /* 240px */
 }
 
-.sidebar-closed {
+.studium-sbar-closed {
     width: 0;
 }
 
@@ -29,7 +29,7 @@
    NAVEGAÇÃO
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.sidebar-nav {
+.studium-sbar-nav {
     padding-top: var(--spacing-md);
     padding-bottom: var(--spacing-md);
     display: flex;
@@ -41,49 +41,56 @@
    ITENS DO MENU
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.sidebar-menu-item {
-    width: 100%;
-    display: flex;
+.studium-sbar-menu-item {
     align-items: center;
-    justify-content: flex-start;
+    background: transparent;
+    /* background: none; */
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     gap: var(--spacing-sm);
+    height: var(--spacing-2xl);
+    justify-content: flex-start;
+    margin: var(--spacing-sm) 0 var(--spacing-sm) var(--spacing-xs);
     padding: var(--spacing-sm) var(--spacing-xl);
     text-align: left;
-    background: none;
-    border: none;
-    color: var(--color-text-secondary-dark);
-    cursor: pointer;
     transition: var(--transition-all-fast);
+    width: auto;
 }
 
-.sidebar-menu-item:hover {
-    background-color: var(--color-hover);
-    color: var(--color-text-primary-dark);
+.studium-sbar-menu-item:hover {
+    background-color: var(--color-accent);
+    color: var(--color-text-primary);
 }
 
-.sidebar-menu-item-active {
-    width: 100%;
-    display: flex;
+.studium-sbar-menu-item-active {
     align-items: center;
-    justify-content: flex-start;
+    background-color: var(--color-accent);
+    border: none;
+    border-right: var(--border-width-4) solid var(--color-text-primary);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    display: flex;
     gap: var(--spacing-sm);
+    height: var(--spacing-2xl);
+    justify-content: flex-start;
+    margin-left: var(--spacing-sm);
     padding: var(--spacing-sm) var(--spacing-xl);
     text-align: left;
-    background-color: var(--color-active);
-    border: none;
-    border-right: var(--border-width-4) solid var(--color-border-accent);
-    color: var(--color-text-primary-dark);
-    cursor: pointer;
     transition: var(--transition-all-fast);
+    width: auto;
 }
 
 /* Ícone do item */
-.sidebar-item-icon {
-    font-size: var(--font-size-2xl);
+.studium-sbar-item-icon {
+    font-size: var(--font-size-xl);
 }
 
 /* Label do item */
-.sidebar-item-label {
+.studium-sbar-item-label {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
 }
@@ -93,14 +100,14 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @media (max-width: 767px) {
-    .sidebar-open {
+    .studium-sbar-open {
         width: 100%;
         position: absolute;
         z-index: 50;
     }
 
-    .sidebar-menu-item,
-    .sidebar-menu-item-active {
+    .studium-sbar-menu-item,
+    .studium-sbar-menu-item-active {
         padding: var(--spacing-md) var(--spacing-lg);
     }
 }

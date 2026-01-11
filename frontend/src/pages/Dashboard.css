@@ -9,16 +9,16 @@
    CONTAINER PRINCIPAL DO DASHBOARD
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.dashboard-container {
-    background-color: var(--color-background-dark);
+.studium-dashboard-container {
+    background-color: var(--color-background-light);
     min-height: 100vh;
     padding: var(--spacing-xl) var(--spacing-2xl);
 }
 
-.dashboard-title {
+.studium-dashboard-title {
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
+    color: var(--color-text-accent);
     margin-bottom: var(--spacing-xl);
     text-align: left;
 }
@@ -27,21 +27,21 @@
    GRID DE MÉTRICAS (KPI)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.dashboard-metrics-grid {
-    margin-top: var(--spacing-2xl);
+.studium-dashboard-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
 }
 
 @media (min-width: 768px) {
-    .dashboard-metrics-grid {
+    .studium-dashboard-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (min-width: 1024px) {
-    .dashboard-metrics-grid {
+    .studium-dashboard-grid {
         grid-template-columns: repeat(4, 1fr);
     }
 }
@@ -50,15 +50,69 @@
    KPI CARDS (Indicadores)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.kpi-card {
+.studium-dashboard-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-lg);
+    transition: var(--transition-all-fast);
+    border: var(--border-width) solid var(--color-border-light);
     display: flex;
     flex-direction: column;
-    background-color: var(--color-primary-light);
+    justify-content: space-between;
+}
+
+.studium-dashboard-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+/* Cabeçalho do Card */
+.studium-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: var(--border-width-2) solid var(--color-gray-200);
+}
+
+/* Estilo para ícones FontAwesome nos cards */
+.studium-card-icon {
+    font-size: var(--font-size-2xl);
+    color: var(--color-accent);
+}
+
+.studium-card-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-dark);
+    margin: 0;
+}
+
+/* Layout flex para alinhar kpi-details e valor na mesma linha */
+.studium-card-content-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-lg);
 }
 
 .kpi-details {
-    margin-left: var(--spacing-xl);
-    margin-bottom: var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    text-align: left;
+    flex: 1;
+}
+
+.studium-card-value {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -66,13 +120,21 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .study-consistency-section {
-    margin-top: var(--spacing-xl);
-    background-color: var(--color-primary-light);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-xl);
+    transition: var(--transition-all-fast);
+    border: var(--border-width) solid var(--color-border-light);
+}
+
+.study-consistency-section:hover {
+    box-shadow: var(--shadow-lg);
 }
 
 /* Grid de Dias de Estudo */
 .study-days-grid {
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-gray-50);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-lg);
     width: 100%;
@@ -116,11 +178,11 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @media (max-width: 767px) {
-    .dashboard-container {
+    .studium-dashboard-container {
         padding: var(--spacing-lg) var(--spacing-md);
     }
     
-    .dashboard-title {
+    .studium-dashboard-title {
         font-size: var(--font-size-2xl);
         margin-bottom: var(--spacing-lg);
     }

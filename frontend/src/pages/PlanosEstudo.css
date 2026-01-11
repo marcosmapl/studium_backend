@@ -1,0 +1,428 @@
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   PLANOS DE ESTUDO - PÁGINA DE GERENCIAMENTO              ██
+   ██   Estilos personalizados usando variáveis do index.css    ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CONTAINER PRINCIPAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planos-container {
+    background-color: var(--color-background-light);
+    min-height: 100vh;
+    padding: var(--spacing-xl) var(--spacing-2xl);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CABEÇALHO DA PÁGINA
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-gray-200);
+}
+
+.planos-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-accent);
+}
+
+.btn-novo-plano {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    border: none;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-novo-plano:hover {
+    background-color: var(--btn-primary-bg-hover);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn-novo-plano:active {
+    background-color: var(--btn-primary-bg-active);
+    transform: translateY(0);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LISTA DE PLANOS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD DO PLANO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.plano-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-xl);
+    transition: var(--transition-all-fast);
+    border: var(--border-width) solid var(--color-border-light);
+}
+
+.plano-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+/* Cabeçalho do Card */
+.plano-card-header {
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: var(--border-width-2) solid var(--color-gray-200);
+}
+
+.plano-titulo-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.plano-titulo {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-dark);
+    margin: 0;
+}
+
+.plano-situacao {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.situacao-andamento {
+    background-color: var(--color-info-light);
+    color: var(--color-info-dark);
+}
+
+.situacao-concluido {
+    background-color: var(--color-success-light);
+    color: var(--color-success-dark);
+}
+
+.situacao-pausado {
+    background-color: var(--color-warning-light);
+    color: var(--color-warning-dark);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INFORMAÇÕES DO CONCURSO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.plano-info-concurso {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-lg);
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.info-icon {
+    font-size: var(--font-size-xl);
+    color: var(--color-accent);
+    margin-top: var(--spacing-xs);
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.info-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.info-value {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-dark);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEÇÃO DE PROGRESSO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.plano-progresso-section {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-lg);
+}
+
+.progresso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.progresso-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-dark);
+}
+
+.progresso-percentual {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+}
+
+.progresso-barra-container {
+    width: 100%;
+    height: 1rem;
+    background-color: var(--color-gray-200);
+    border-radius: var(--border-radius-full);
+    overflow: hidden;
+    position: relative;
+}
+
+.progresso-barra-preenchida {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-success) 100%);
+    border-radius: var(--border-radius-full);
+    transition: width var(--transition-slow);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ESTATÍSTICAS DO PLANO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.plano-estatisticas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.estatistica-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition-all-fast);
+}
+
+.estatistica-item:hover {
+    background-color: var(--color-gray-100);
+    transform: translateY(-2px);
+}
+
+.estatistica-icon {
+    font-size: var(--font-size-2xl);
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-sm);
+}
+
+.estatistica-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.estatistica-valor {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-dark);
+}
+
+.estatistica-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RODAPÉ DO CARD
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.plano-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-md);
+    border-top: var(--border-width) solid var(--color-gray-200);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.plano-data-criacao {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary-light);
+}
+
+.plano-acoes {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn-plano-acao {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: var(--transition-all-fast);
+    border: none;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-plano-acao:hover {
+    background-color: var(--color-success-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-plano-acao-secondary {
+    background-color: transparent;
+    color: var(--color-accent);
+    border: var(--border-width-2) solid var(--color-accent);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-plano-acao-secondary:hover {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+}
+
+.btn-plano-acao-danger {
+    background-color: transparent;
+    color: var(--color-error);
+    border: var(--border-width-2) solid var(--color-error);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-plano-acao-danger:hover {
+    background-color: var(--color-error);
+    color: var(--color-white);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVIDADE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 1024px) {
+    .plano-info-concurso {
+        grid-template-columns: 1fr;
+    }
+
+    .plano-estatisticas {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .planos-container {
+        padding: var(--spacing-md);
+    }
+
+    .planos-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-novo-plano {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .plano-card {
+        padding: var(--spacing-md);
+    }
+
+    .plano-titulo {
+        font-size: var(--font-size-xl);
+    }
+
+    .plano-titulo-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .plano-estatisticas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .plano-card-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .plano-acoes {
+        width: 100%;
+    }
+
+    .btn-plano-acao {
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .planos-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .plano-estatisticas {
+        grid-template-columns: 1fr;
+    }
+}
