@@ -168,10 +168,10 @@ class DisciplinaController extends BaseController {
                 route: req.originalUrl,
             });
 
-            const disciplinas = await this.repository.findManyByPlanoId(planoId);
+            const disciplinas = await this.repository.findManyByPlanoId(parseInt(planoId));
 
             if (!disciplinas || disciplinas.length === 0) {
-                logger.info(`Nenhuma ${this.entityName} encontrada para este plano`, {
+                logger.info(`Nenhuma ${this.entityName} encontrada para este plano de estudo`, {
                     planoId: parseInt(planoId),
                     route: req.originalUrl,
                 });
@@ -182,7 +182,7 @@ class DisciplinaController extends BaseController {
 
             return res.json(disciplinas);
         } catch (error) {
-            logger.error(`Erro ao buscar ${this.entityNamePlural} por plano`, {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por plano de estudo`, {
                 error: error.message,
                 stack: error.stack,
             });

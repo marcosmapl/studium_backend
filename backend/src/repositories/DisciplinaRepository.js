@@ -42,11 +42,26 @@ class PrismaDisciplinaRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de disciplinas encontradas
      */
     async findManyByTitulo(titulo) {
-        return await this.findMany({
+        const query = {
             titulo: {
                 contains: titulo,
             },
-        });
+        };
+
+        if (this.includeRelations) {
+            query.include = this.includeRelations;
+        }
+
+        try {
+            return await this.findMany(query);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.modelName} por titulo`, {
+                error: error.message,
+                titulo,
+                file: this.repositoryName,
+            });
+            throw error;
+        }
     }
 
     /**
@@ -55,11 +70,17 @@ class PrismaDisciplinaRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de disciplinas do plano
      */
     async findManyByPlanoId(planoId) {
-        return await this.findMany({
-            planoId: parseInt(planoId),
-        });
+        try {
+            return await this.findMany({ planoId });
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.modelName} por planoId`, {
+                error: error.message,
+                planoId,
+                file: this.repositoryName,
+            });
+            throw error;
+        }
     }
 
 }
-
 module.exports = new PrismaDisciplinaRepository();

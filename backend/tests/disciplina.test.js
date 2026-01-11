@@ -34,7 +34,8 @@ describe("Disciplina - /api/disciplina", () => {
     it("deve criar uma nova disciplina", async () => {
       const disciplinaData = {
         titulo: "Direito Constitucional",
-        descricao: "Estudo dos princípios constitucionais",
+        peso: 3,
+        familiaridade: 2,
         cor: "#FF5733",
         planoId: seedData.planoEstudo.id,
       };
@@ -46,7 +47,8 @@ describe("Disciplina - /api/disciplina", () => {
 
       expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body.titulo).toBe("Direito Constitucional");
-      expect(response.body.descricao).toBe("Estudo dos princípios constitucionais");
+      expect(response.body.peso).toBe(3);
+      expect(response.body.familiaridade).toBe(2);
       expect(response.body.cor).toBe("#FF5733");
       expect(response.body.planoId).toBe(seedData.planoEstudo.id);
       
@@ -57,7 +59,8 @@ describe("Disciplina - /api/disciplina", () => {
     it("deve rejeitar criação de disciplina duplicada no mesmo plano", async () => {
       const disciplinaData = {
         titulo: "Direito Constitucional",
-        descricao: "Outra descrição",
+        peso: 2,
+        familiaridade: 1,
         cor: "#00FF00",
         planoId: seedData.planoEstudo.id,
       };
@@ -83,7 +86,8 @@ describe("Disciplina - /api/disciplina", () => {
 
       const disciplinaData = {
         titulo: "Direito Constitucional",
-        descricao: "Mesma disciplina em plano diferente",
+        peso: 3,
+        familiaridade: 3,
         cor: "#0000FF",
         planoId: outroPlano.id,
       };
@@ -114,7 +118,8 @@ describe("Disciplina - /api/disciplina", () => {
         .post("/api/disciplina")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          descricao: "Teste",
+          peso: 1,
+          familiaridade: 1,
           cor: "#000000",
           planoId: seedData.planoEstudo.id,
         });
@@ -224,12 +229,14 @@ describe("Disciplina - /api/disciplina", () => {
         .set("Authorization", `Bearer ${token}`)
         .send({
           titulo: "Direito Constitucional Avançado",
-          descricao: "Aprofundamento em controle de constitucionalidade",
+          peso: 5,
+          familiaridade: 4,
         });
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.titulo).toBe("Direito Constitucional Avançado");
-      expect(response.body.descricao).toBe("Aprofundamento em controle de constitucionalidade");
+      expect(response.body.peso).toBe(5);
+      expect(response.body.familiaridade).toBe(4);
       
       // Atualizar a referência local
       disciplinaTeste = response.body;

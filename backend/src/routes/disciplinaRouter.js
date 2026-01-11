@@ -19,6 +19,8 @@ const { verifyToken } = require("../middleware/auth");
  *             type: object
  *             required:
  *               - titulo
+ *               - peso
+ *               - familiaridade
  *               - cor
  *               - planoId
  *             properties:
@@ -26,10 +28,14 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: string
  *                 description: Título da disciplina
  *                 example: "Direito Constitucional"
- *               descricao:
- *                 type: string
- *                 description: Descrição da disciplina
- *                 example: "Estudo dos princípios constitucionais"
+ *               peso:
+ *                 type: integer
+ *                 description: Peso da disciplina no edital
+ *                 example: 3
+ *               familiaridade:
+ *                 type: integer
+ *                 description: Familiaridade do usuário com a disciplina (1 - 5)
+ *                 example: 1
  *               cor:
  *                 type: string
  *                 description: Cor da disciplina em formato hexadecimal
@@ -38,22 +44,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: integer
  *                 description: ID do plano de estudo
  *                 example: 1
- *               importancia:
- *                 type: number
- *                 description: Importância da disciplina (0-10)
- *                 example: 8.5
- *               conhecimento:
- *                 type: number
- *                 description: Nível de conhecimento (0-10)
- *                 example: 6.0
- *               prioridade:
- *                 type: number
- *                 description: Prioridade de estudo calculada
- *                 example: 7.5
- *               observacoes:
- *                 type: string
- *                 description: Observações sobre a disciplina
- *                 example: "Focar em direitos fundamentais"
  *     responses:
  *       201:
  *         description: Disciplina criada com sucesso
@@ -68,36 +58,18 @@ const { verifyToken } = require("../middleware/auth");
  *                 titulo:
  *                   type: string
  *                   example: "Direito Constitucional"
- *                 descricao:
- *                   type: string
- *                   example: "Estudo dos princípios constitucionais"
+ *                 peso:
+ *                   type: integer
+ *                   example: 3
+ *                 familiaridade:
+ *                   type: integer
+ *                   example: 1
  *                 cor:
  *                   type: string
  *                   example: "#FF5733"
  *                 planoId:
  *                   type: integer
  *                   example: 1
- *                 importancia:
- *                   type: number
- *                   example: 8.5
- *                 conhecimento:
- *                   type: number
- *                   example: 6.0
- *                 prioridade:
- *                   type: number
- *                   example: 7.5
- *                 questoesAcertos:
- *                   type: integer
- *                   example: 0
- *                 questoesErros:
- *                   type: integer
- *                   example: 0
- *                 tempoEstudo:
- *                   type: number
- *                   example: 0.0
- *                 paginasLidas:
- *                   type: integer
- *                   example: 0
  *                 concluido:
  *                   type: boolean
  *                   example: false
@@ -138,24 +110,18 @@ const { verifyToken } = require("../middleware/auth");
  *                   titulo:
  *                     type: string
  *                     example: "Direito Constitucional"
- *                   descricao:
- *                     type: string
- *                     example: "Estudo dos princípios constitucionais"
+ *                   peso:
+ *                     type: integer
+ *                     example: 3
+ *                   familiaridade:
+ *                     type: integer
+ *                     example: 1
  *                   cor:
  *                     type: string
  *                     example: "#FF5733"
  *                   planoId:
  *                     type: integer
  *                     example: 1
- *                   importancia:
- *                     type: number
- *                     example: 8.5
- *                   conhecimento:
- *                     type: number
- *                     example: 6.0
- *                   prioridade:
- *                     type: number
- *                     example: 7.5
  *                   concluido:
  *                     type: boolean
  *                     example: false
@@ -208,24 +174,26 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: integer
  *                 titulo:
  *                   type: string
- *                 descricao:
- *                   type: string
+ *                 peso:
+ *                   type: integer
+ *                 familiaridade:
+ *                   type: integer
  *                 cor:
  *                   type: string
  *                 planoId:
  *                   type: integer
- *                 importancia:
- *                   type: number
- *                 conhecimento:
- *                   type: number
- *                 prioridade:
- *                   type: number
  *                 concluido:
  *                   type: boolean
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
  *       404:
- *         description: Nenhuma disciplina encontrada
+ *         description: Nenhuma disciplina encontrada com esse título
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
@@ -261,18 +229,26 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                     type: integer
  *                   titulo:
  *                     type: string
- *                   descricao:
- *                     type: string
+ *                   peso:
+ *                     type: integer
+ *                   familiaridade:
+ *                     type: integer
  *                   cor:
  *                     type: string
  *                   planoId:
  *                     type: integer
  *                   concluido:
  *                     type: boolean
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
  *       404:
- *         description: Nenhuma disciplina encontrada
+ *         description: Nenhuma disciplina encontrada com esse padrão
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
@@ -308,24 +284,26 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                     type: integer
  *                   titulo:
  *                     type: string
- *                   descricao:
- *                     type: string
+ *                   peso:
+ *                     type: integer
+ *                   familiaridade:
+ *                     type: integer
  *                   cor:
  *                     type: string
  *                   planoId:
  *                     type: integer
- *                   importancia:
- *                     type: number
- *                   conhecimento:
- *                     type: number
- *                   prioridade:
- *                     type: number
  *                   concluido:
  *                     type: boolean
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
  *       404:
- *         description: Nenhuma disciplina encontrada para este plano
+ *         description: Nenhuma disciplina encontrada para este plano de estudo
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */
@@ -359,30 +337,16 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                   type: integer
  *                 titulo:
  *                   type: string
- *                 descricao:
- *                   type: string
+ *                 peso:
+ *                   type: integer
+ *                 familiaridade:
+ *                   type: integer
  *                 cor:
  *                   type: string
  *                 planoId:
  *                   type: integer
- *                 importancia:
- *                   type: number
- *                 conhecimento:
- *                   type: number
- *                 prioridade:
- *                   type: number
- *                 questoesAcertos:
- *                   type: integer
- *                 questoesErros:
- *                   type: integer
- *                 tempoEstudo:
- *                   type: number
- *                 paginasLidas:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
- *                 observacoes:
- *                   type: string
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -392,7 +356,7 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *       404:
  *         description: Disciplina não encontrada
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  *   put:
@@ -419,41 +383,18 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                 type: string
  *                 description: Novo título da disciplina
  *                 example: "Direito Constitucional Avançado"
- *               descricao:
+ *               peso:
  *                 type: string
- *                 description: Nova descrição
- *                 example: "Aprofundamento em controle de constitucionalidade"
+ *                 description: Novo peso da disciplina
+ *                 example: 2
+ *               familiaridade:
+ *                 type: string
+ *                 description: Novo nível de familiaridade
+ *                 example: 2
  *               cor:
  *                 type: string
  *                 description: Nova cor
  *                 example: "#3498DB"
- *               importancia:
- *                 type: number
- *                 example: 9.0
- *               conhecimento:
- *                 type: number
- *                 example: 7.5
- *               prioridade:
- *                 type: number
- *                 example: 8.5
- *               questoesAcertos:
- *                 type: integer
- *                 example: 150
- *               questoesErros:
- *                 type: integer
- *                 example: 50
- *               tempoEstudo:
- *                 type: number
- *                 example: 45.5
- *               paginasLidas:
- *                 type: integer
- *                 example: 280
- *               concluido:
- *                 type: boolean
- *                 example: false
- *               observacoes:
- *                 type: string
- *                 example: "Revisar jurisprudência do STF"
  *     responses:
  *       200:
  *         description: Disciplina atualizada com sucesso
@@ -466,18 +407,28 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                   type: integer
  *                 titulo:
  *                   type: string
- *                 descricao:
- *                   type: string
+ *                 peso:
+ *                   type: integer
+ *                 familiaridade:
+ *                   type: integer
  *                 cor:
  *                   type: string
+ *                 planoId:
+ *                   type: integer
  *                 concluido:
  *                   type: boolean
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
  *       400:
  *         description: Dados inválidos
  *       404:
  *         description: Disciplina não encontrada
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  *   delete:
@@ -507,7 +458,7 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *       404:
  *         description: Disciplina não encontrada
  *       401:
- *         description: Não autorizado
+ *         description: Não autorizado - Token inválido ou ausente
  *       500:
  *         description: Erro interno do servidor
  */

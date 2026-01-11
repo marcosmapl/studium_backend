@@ -107,14 +107,14 @@ const seedBasicData = async () => {
         data: { descricao: "Ativo" },
     });
 
-    // Criar usuário admin para testes
+    // Criar plano de estudo para testes
     const planoEstudo = await prisma.planoEstudo.create({
         data: {
             titulo: "Plano Teste",
             concurso: "Plano para Concurso Teste",
             banca: "Banca Realizadora Teste",
             cargo: "Cargo de Concurso Teste",
-            dataProva: new Date("2026-01-06T00:00:00.000Z"),
+            dataprova: new Date("2026-01-06T00:00:00.000Z"),
             usuarioId: usuario.id,
             situacaoId: situacaoPlano.id,
             concluido: false,

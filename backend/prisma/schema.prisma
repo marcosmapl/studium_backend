@@ -98,7 +98,6 @@ model Usuario {
 model Disciplina {
     id            Int      @id @default(autoincrement())
     titulo        String
-    descricao     String?
     peso          Int      @default(1)
     familiaridade Int      @default(0)
     cor           String   @default("#FFFFFF")
@@ -295,7 +294,7 @@ model PlanoEstudo {
     concurso  String?
     cargo     String?
     banca     String?
-    dataprova DateTime? @map("data_prova_at")
+    dataprova DateTime? @map("data_prova")
     concluido Boolean   @default(false)
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime  @updatedAt @map("updated_at")

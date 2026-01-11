@@ -180,6 +180,53 @@ describe("Situação de Plano de Estudo - /api/planoEstudo", () => {
     });
   });
 
+  describe("GET /api/planoEstudo/usuario/:usuarioId", () => {
+    it("deve buscar todos os planos de estudo de um usuário específico", async () => {
+      const response = await request(app)
+        .get(`/api/planoEstudo/usuario/${seedData.usuario.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0);
+      expect(response.body.every(p => p.usuarioId === seedData.usuario.id)).toBe(true);
+    });
+
+    it("deve retornar array vazio quando usuário não tem planos de estudo", async () => {
+      // Criar usuário sem planos
+      const usuarioSemPlanos = await prisma.usuario.create({
+        data: {
+          nome: "Usuario",
+          sobrenome: "Sem Planos",
+          username: "sem_planos",
+          password: await bcrypt.hash("senha123", 10),
+          email: "sem_planos@example.com",
+          generoUsuarioId: seedData.generoUsuario.id,
+          situacaoUsuarioId: seedData.situacaoUsuario.id,
+          cidadeId: seedData.cidade.id,
+          grupoUsuarioId: seedData.grupoUsuario.id,
+        },
+      });
+
+      const response = await request(app)
+        .get(`/api/planoEstudo/usuario/${usuarioSemPlanos.id}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBe(0);
+    });
+
+    it("deve validar ID de usuário inválido", async () => {
+      const response = await request(app)
+        .get("/api/planoEstudo/usuario/abc")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+      expect(response.body.error).toMatch(/ID de usuário inválido/i);
+    });
+  });
+
   describe("PUT /api/planoEstudo/:id", () => {
     it("deve atualizar um plano de estudo existente", async () => {
       const response = await request(app)

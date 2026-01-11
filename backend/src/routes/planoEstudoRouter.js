@@ -258,41 +258,41 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                 type: object
  *                 properties:
  *                   id:
-*                      type: integer
-*                      example: 1
-*                    titulo:
-*                      type: string
-*                      example: "Projeto Polícial do DF 2026"
-*                    concurso:
-*                      type: string
-*                      example: "Concurso da Polícia Civil do Distrito Federal - 2026"
-*                    cargo:
-*                      type: string
-*                      example: "Delegado de Polícia"
-*                    banca:
-*                      type: string
-*                      example: "Fundação Carlos Chagas (FCC)"
-*                    dataProva:
-*                      type: string
-*                      format: date-time
-*                      example: "2026-01-02"
-*                    usuarioId:
-*                      type: integer
-*                      example: 1
-*                    situacaoId:
-*                      type: integer
-*                      example: 1
-*                    concluido:
-*                      type: boolean
-*                      example: false
-*                    createdAt:
-*                      type: string
-*                      format: date-time
-*                      example: "2026-01-01 00:00:00"
-*                    updatedAt:
-*                      type: string
-*                      format: date-time
-*                      example: "2026-01-01 00:00:00"
+ *                     type: integer
+ *                     example: 1
+ *                   titulo:
+ *                     type: string
+ *                     example: "Projeto Polícial do DF 2026"
+ *                   concurso:
+ *                     type: string
+ *                     example: "Concurso da Polícia Civil do Distrito Federal - 2026"
+ *                   cargo:
+ *                     type: string
+ *                     example: "Delegado de Polícia"
+ *                   banca:
+ *                     type: string
+ *                     example: "Fundação Carlos Chagas (FCC)"
+ *                   dataProva:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-02"
+ *                   usuarioId:
+ *                     type: integer
+ *                     example: 1
+ *                   situacaoId:
+ *                     type: integer
+ *                     example: 1
+ *                   concluido:
+ *                     type: boolean
+ *                     example: false
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-01 00:00:00"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-01 00:00:00"
  *       404:
  *         description: Não foram encontrados planos de estudo com esse padrão
  *       401:
@@ -330,41 +330,41 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                 type: object
  *                 properties:
  *                   id:
-*                      type: integer
-*                      example: 1
-*                    titulo:
-*                      type: string
-*                      example: "Projeto Polícial do DF 2026"
-*                    concurso:
-*                      type: string
-*                      example: "Concurso da Polícia Civil do Distrito Federal - 2026"
-*                    cargo:
-*                      type: string
-*                      example: "Delegado de Polícia"
-*                    banca:
-*                      type: string
-*                      example: "Fundação Carlos Chagas (FCC)"
-*                    dataProva:
-*                      type: string
-*                      format: date-time
-*                      example: "2026-01-02"
-*                    usuarioId:
-*                      type: integer
-*                      example: 1
-*                    situacaoId:
-*                      type: integer
-*                      example: 1
-*                    concluido:
-*                      type: boolean
-*                      example: false
-*                    createdAt:
-*                      type: string
-*                      format: date-time
-*                      example: "2026-01-01 00:00:00"
-*                    updatedAt:
-*                      type: string
-*                      format: date-time
-*                      example: "2026-01-01 00:00:00"
+ *                     type: integer
+ *                     example: 1
+ *                   titulo:
+ *                     type: string
+ *                     example: "Projeto Polícial do DF 2026"
+ *                   concurso:
+ *                     type: string
+ *                     example: "Concurso da Polícia Civil do Distrito Federal - 2026"
+ *                   cargo:
+ *                     type: string
+ *                     example: "Delegado de Polícia"
+ *                   banca:
+ *                     type: string
+ *                     example: "Fundação Carlos Chagas (FCC)"
+ *                   dataProva:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-02"
+ *                   usuarioId:
+ *                     type: integer
+ *                     example: 1
+ *                   situacaoId:
+ *                     type: integer
+ *                     example: 1
+ *                   concluido:
+ *                     type: boolean
+ *                     example: false
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-01 00:00:00"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2026-01-01 00:00:00"
  *       404:
  *         description: Não foram encontrados planos de estudo para esse ID de usuário
  *       401:

@@ -42,11 +42,26 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de planos de estudo encontrados
      */
     async findManyByTitulo(titulo) {
-        return await this.findMany({
+        const query = {
             titulo: {
                 contains: titulo,
             },
-        });
+        };
+
+        if (this.includeRelations) {
+            query.include = this.includeRelations;
+        }
+
+        try {
+            return await this.findMany(query);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.modelName} por titulo`, {
+                error: error.message,
+                titulo,
+                file: this.repositoryName,
+            });
+            throw error;
+        }
     }
 
     /**

@@ -183,26 +183,29 @@ class PlanoEstudoController extends BaseController {
     async findManyByUsuarioId(req, res, next) {
         try {
             const { usuarioId } = req.params;
+            const usuarioIdInt = parseInt(usuarioId, 10);
+
+            // Validar se o ID é um número válido
+            if (isNaN(usuarioIdInt)) {
+                logger.warn(`ID de usuário inválido fornecido`, {
+                    usuarioId: usuarioId,
+                    route: req.originalUrl,
+                });
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: `ID de usuário inválido`
+                });
+            }
 
             logger.info(`Buscando ${this.entityNamePlural} por ID de usuário`, {
-                usuarioId: usuarioId,
+                usuarioId: usuarioIdInt,
                 route: req.originalUrl,
             });
 
             const planos = await this.repository.findManyByUsuarioId(
-                usuarioId
+                usuarioIdInt
             );
 
-            if (!planos || planos.length === 0) {
-                logger.info(`Não foram encontrados ${this.entityNamePlural} para esse ID de usuário`, {
-                    usuarioId: usuarioId,
-                    route: req.originalUrl,
-                });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Não foram encontrados ${this.entityNamePlural} para esse ID de usuário`
-                });
-            }
-
+            // Retornar array vazio se não houver planos (não é erro 404)
             return res.json(planos);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por ID de usuário`, {

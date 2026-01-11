@@ -273,6 +273,152 @@ async function main() {
     });
     logger.info(`Created Admin User and Basic User`);
 
+    // Buscar o usuário básico criado
+    const usuarioBasico = await prisma.usuario.findUnique({
+        where: { username: "usuario_basico" },
+    });
+
+    // Seed SituacaoPlano
+    await prisma.situacaoPlano.createMany({
+        data: [
+            { descricao: "Em Andamento" },
+            { descricao: "Pausado" },
+            { descricao: "Concluído" },
+            { descricao: "Cancelado" },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 4 SituacaoPlano");
+
+    const situacaoEmAndamento = await prisma.situacaoPlano.findUnique({
+        where: { descricao: "Em Andamento" },
+    });
+
+    // Seed 3 Planos de Estudo para o usuário básico
+    const plano1 = await prisma.planoEstudo.create({
+        data: {
+            titulo: "Preparação TRF 2024",
+            concurso: "Concurso Tribunal Regional Federal da 1ª Região",
+            cargo: "Técnico Judiciário - Área Administrativa",
+            banca: "CESPE/CEBRASPE",
+            dataprova: new Date("2024-06-15"),
+            usuarioId: usuarioBasico.id,
+            situacaoId: situacaoEmAndamento.id,
+        },
+    });
+
+    const plano2 = await prisma.planoEstudo.create({
+        data: {
+            titulo: "Concurso Polícia Federal 2024",
+            concurso: "Concurso Nacional Unificado da Polícia Federal",
+            cargo: "Agente de Polícia Federal",
+            banca: "Fundação Carlos Chagas (FCC)",
+            dataprova: new Date("2024-09-20"),
+            usuarioId: usuarioBasico.id,
+            situacaoId: situacaoEmAndamento.id,
+        },
+    });
+
+    const plano3 = await prisma.planoEstudo.create({
+        data: {
+            titulo: "Preparação TCU 2024",
+            concurso: "Tribunal de Contas da União",
+            cargo: "Auditor Federal de Controle Externo",
+            banca: "CESPE/CEBRASPE",
+            dataprova: new Date("2024-12-10"),
+            usuarioId: usuarioBasico.id,
+            situacaoId: situacaoEmAndamento.id,
+        },
+    });
+    logger.info("Created 3 PlanoEstudo for usuario_basico");
+
+    // Seed Disciplinas para o Plano 1 (TRF)
+    await prisma.disciplina.createMany({
+        data: [
+            {
+                titulo: "Direito Constitucional",
+                peso: 4,
+                familiaridade: 3,
+                cor: "#3498db",
+                planoId: plano1.id,
+            },
+            {
+                titulo: "Direito Administrativo",
+                peso: 5,
+                familiaridade: 4,
+                cor: "#2ecc71",
+                planoId: plano1.id,
+            },
+            {
+                titulo: "Língua Portuguesa",
+                peso: 3,
+                familiaridade: 5,
+                cor: "#e74c3c",
+                planoId: plano1.id,
+            },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 3 Disciplinas for Plano 1 (TRF)");
+
+    // Seed Disciplinas para o Plano 2 (Polícia Federal)
+    await prisma.disciplina.createMany({
+        data: [
+            {
+                titulo: "Direito Penal",
+                peso: 5,
+                familiaridade: 3,
+                cor: "#9b59b6",
+                planoId: plano2.id,
+            },
+            {
+                titulo: "Direito Processual Penal",
+                peso: 4,
+                familiaridade: 2,
+                cor: "#f39c12",
+                planoId: plano2.id,
+            },
+            {
+                titulo: "Legislação Especial",
+                peso: 4,
+                familiaridade: 2,
+                cor: "#1abc9c",
+                planoId: plano2.id,
+            },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 3 Disciplinas for Plano 2 (Polícia Federal)");
+
+    // Seed Disciplinas para o Plano 3 (TCU)
+    await prisma.disciplina.createMany({
+        data: [
+            {
+                titulo: "Controle Externo",
+                peso: 5,
+                familiaridade: 2,
+                cor: "#34495e",
+                planoId: plano3.id,
+            },
+            {
+                titulo: "Auditoria Governamental",
+                peso: 5,
+                familiaridade: 1,
+                cor: "#e67e22",
+                planoId: plano3.id,
+            },
+            {
+                titulo: "Direito Constitucional",
+                peso: 4,
+                familiaridade: 3,
+                cor: "#3498db",
+                planoId: plano3.id,
+            },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 3 Disciplinas for Plano 3 (TCU)");
+
     logger.info("Seed finished.");
 }
 
