@@ -36,7 +36,6 @@ describe("Disciplina - /api/disciplina", () => {
         titulo: "Direito Constitucional",
         peso: 3,
         familiaridade: 2,
-        cor: "#FF5733",
         planoId: seedData.planoEstudo.id,
       };
 
@@ -49,7 +48,6 @@ describe("Disciplina - /api/disciplina", () => {
       expect(response.body.titulo).toBe("Direito Constitucional");
       expect(response.body.peso).toBe(3);
       expect(response.body.familiaridade).toBe(2);
-      expect(response.body.cor).toBe("#FF5733");
       expect(response.body.planoId).toBe(seedData.planoEstudo.id);
       
       // Salvar a disciplina criada para usar nos demais testes
@@ -61,7 +59,6 @@ describe("Disciplina - /api/disciplina", () => {
         titulo: "Direito Constitucional",
         peso: 2,
         familiaridade: 1,
-        cor: "#00FF00",
         planoId: seedData.planoEstudo.id,
       };
 
@@ -88,7 +85,6 @@ describe("Disciplina - /api/disciplina", () => {
         titulo: "Direito Constitucional",
         peso: 3,
         familiaridade: 3,
-        cor: "#0000FF",
         planoId: outroPlano.id,
       };
 
@@ -120,7 +116,6 @@ describe("Disciplina - /api/disciplina", () => {
         .send({
           peso: 1,
           familiaridade: 1,
-          cor: "#000000",
           planoId: seedData.planoEstudo.id,
         });
 

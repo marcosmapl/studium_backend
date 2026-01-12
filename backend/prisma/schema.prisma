@@ -100,7 +100,6 @@ model Disciplina {
     titulo        String
     peso          Int      @default(1)
     familiaridade Int      @default(0)
-    cor           String   @default("#FFFFFF")
     concluido     Boolean  @default(false)
     createdAt     DateTime @default(now()) @map("created_at")
     updatedAt     DateTime @updatedAt @map("updated_at")
