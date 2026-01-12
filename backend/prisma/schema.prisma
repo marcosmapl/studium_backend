@@ -23,7 +23,7 @@ model Cidade {
     descricao String
 
     unidadeFederativaId Int               @map("unidade_federativa_id")
-    unidadeFederativa   UnidadeFederativa @relation(fields: [unidadeFederativaId], references: [id])
+    unidadeFederativa   UnidadeFederativa @relation(fields: [unidadeFederativaId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     usuarios Usuario[]
 
@@ -72,16 +72,16 @@ model Usuario {
     createdAt      DateTime  @default(now()) @map("created_at")
     updatedAt      DateTime  @updatedAt @map("updated_at")
 
-    generoUsuario   GeneroUsuario @relation(fields: [generoUsuarioId], references: [id])
+    generoUsuario   GeneroUsuario @relation(fields: [generoUsuarioId], references: [id], onDelete: Restrict, onUpdate: Cascade)
     generoUsuarioId Int           @map("genero_id")
 
-    situacaoUsuario   SituacaoUsuario @relation(fields: [situacaoUsuarioId], references: [id])
+    situacaoUsuario   SituacaoUsuario @relation(fields: [situacaoUsuarioId], references: [id], onDelete: Restrict, onUpdate: Cascade)
     situacaoUsuarioId Int             @map("situacao_id")
 
-    cidade   Cidade @relation(fields: [cidadeId], references: [id])
+    cidade   Cidade @relation(fields: [cidadeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
     cidadeId Int    @map("cidade_id")
 
-    grupoUsuario   GrupoUsuario @relation(fields: [grupoUsuarioId], references: [id])
+    grupoUsuario   GrupoUsuario @relation(fields: [grupoUsuarioId], references: [id], onDelete: Restrict, onUpdate: Cascade)
     grupoUsuarioId Int          @map("grupo_usuario_id")
 
     planosEstudo PlanoEstudo[]
@@ -106,7 +106,7 @@ model Disciplina {
     updatedAt     DateTime @updatedAt @map("updated_at")
 
     planoId Int         @map("plano_id")
-    plano   PlanoEstudo @relation(fields: [planoId], references: [id])
+    plano   PlanoEstudo @relation(fields: [planoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     topicos Topico[]
 
@@ -143,10 +143,10 @@ model Topico {
     updatedAt    DateTime @updatedAt @map("updated_at")
 
     disciplinaId Int        @map("disciplina_id")
-    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     situacaoId Int            @map("situacao_id")
-    situacao   SituacaoTopico @relation(fields: [situacaoId], references: [id])
+    situacao   SituacaoTopico @relation(fields: [situacaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     sessoesEstudo SessaoEstudo[]
 
@@ -198,19 +198,19 @@ model SessaoEstudo {
     updatedAt        DateTime @updatedAt @map("updated_at")
 
     planoEstudoId Int         @map("plano_estudo_id")
-    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id])
+    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     disciplinaId Int        @map("disciplina_id")
-    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     topicoId Int    @map("topico_id")
-    topico   Topico @relation(fields: [topicoId], references: [id])
+    topico   Topico @relation(fields: [topicoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     categoriaSessaoId Int             @map("categoria_id")
-    categoriaSessao   CategoriaSessao @relation(fields: [categoriaSessaoId], references: [id])
+    categoriaSessao   CategoriaSessao @relation(fields: [categoriaSessaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     situacaoSessaoId Int            @map("situacao_id")
-    situacaoSessao   SituacaoSessao @relation(fields: [situacaoSessaoId], references: [id])
+    situacaoSessao   SituacaoSessao @relation(fields: [situacaoSessaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     @@index([dataInicio])
     @@index([dataTermino])
@@ -254,19 +254,19 @@ model Revisao {
     desempenho      Int       @default(0)
 
     categoriaRevisaoId Int              @map("categoria_id")
-    categoriaRevisao   CategoriaRevisao @relation(fields: [categoriaRevisaoId], references: [id])
+    categoriaRevisao   CategoriaRevisao @relation(fields: [categoriaRevisaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     situacaoRevisaoId Int             @map("situacao_id")
-    situacaoRevisao   SituacaoRevisao @relation(fields: [situacaoRevisaoId], references: [id])
+    situacaoRevisao   SituacaoRevisao @relation(fields: [situacaoRevisaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     planoEstudoId Int         @map("plano_estudo_id")
-    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id])
+    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     disciplinaId Int        @map("disciplina_id")
-    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     topicoId Int    @map("topico_id")
-    topico   Topico @relation(fields: [topicoId], references: [id])
+    topico   Topico @relation(fields: [topicoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@index([dataProgramada])
     @@index([dataRealizada])
@@ -294,16 +294,16 @@ model PlanoEstudo {
     concurso  String?
     cargo     String?
     banca     String?
-    dataprova DateTime? @map("data_prova")
+    dataProva DateTime? @map("data_prova")
     concluido Boolean   @default(false)
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime  @updatedAt @map("updated_at")
 
     usuarioId Int     @map("usuario_id")
-    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+    usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     situacaoId Int           @map("situacao_id")
-    situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id])
+    situacao   SituacaoPlano @relation(fields: [situacaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     disciplinas   Disciplina[]
     sessoesEstudo SessaoEstudo[]
@@ -327,10 +327,10 @@ model DisciplinaPlanejamento {
     updatedAt     DateTime @updatedAt @map("updated_at")
 
     planejamentoId Int          @map("planejamento_id")
-    planejamento   Planejamento @relation(fields: [planejamentoId], references: [id])
+    planejamento   Planejamento @relation(fields: [planejamentoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     disciplinaId Int        @map("disciplina_id")
-    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+    disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     alocacoes AlocacaoHorario[]
 
@@ -349,7 +349,7 @@ model DiaEstudo {
     updatedAt       DateTime @updatedAt @map("updated_at")
 
     planejamentoId Int          @map("planejamento_id")
-    planejamento   Planejamento @relation(fields: [planejamentoId], references: [id])
+    planejamento   Planejamento @relation(fields: [planejamentoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     alocacoes AlocacaoHorario[]
 
@@ -391,7 +391,7 @@ model Planejamento {
     updatedAt        DateTime  @updatedAt @map("updated_at")
 
     planoEstudoId Int         @map("plano_estudo_id")
-    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id])
+    planoEstudo   PlanoEstudo @relation(fields: [planoEstudoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     diasEstudo              DiaEstudo[]
     disciplinasPlanejamento DisciplinaPlanejamento[]

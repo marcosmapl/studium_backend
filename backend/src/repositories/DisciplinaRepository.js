@@ -6,7 +6,7 @@ class PrismaDisciplinaRepository extends BaseRepository {
     constructor() {
         super("disciplina", "DisciplinaRepository.js", {
             defaultOrderBy: "titulo",
-            orderDirection: "asc"
+            orderDirection: "asc",
         });
     }
 
@@ -42,18 +42,14 @@ class PrismaDisciplinaRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de disciplinas encontradas
      */
     async findManyByTitulo(titulo) {
-        const query = {
+        const whereClause = {
             titulo: {
                 contains: titulo,
             },
         };
 
-        if (this.includeRelations) {
-            query.include = this.includeRelations;
-        }
-
         try {
-            return await this.findMany(query);
+            return await this.findMany(whereClause);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.modelName} por titulo`, {
                 error: error.message,
@@ -70,8 +66,19 @@ class PrismaDisciplinaRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de disciplinas do plano
      */
     async findManyByPlanoId(planoId) {
+        const whereClause = { planoId };
+        const options = {
+            orderBy: { [this.defaultOrderBy]: this.orderDirection },
+            include: {
+                topicos: true,
+                sessoesEstudo: true,
+                revisoes: true,
+                disciplinaPlanejamentos: true
+            }
+        };
+
         try {
-            return await this.findMany({ planoId });
+            return await this.findMany(whereClause, options);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.modelName} por planoId`, {
                 error: error.message,

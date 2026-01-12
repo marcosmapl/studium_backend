@@ -1,5 +1,6 @@
 const BaseController = require("./BaseController");
 const repository = require("../repositories/PlanoEstudoRepository");
+const situacaoPlanoRepository = require("../repositories/SituacaoPlanoRepository");
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
 const { Prisma } = require("@prisma/client");
@@ -9,12 +10,13 @@ class PlanoEstudoController extends BaseController {
     constructor() {
         super(repository, "plano de estudo", {
             entityNamePlural: "planos de estudo",
-            requiredFields: ["titulo", "usuarioId", "situacaoId"]
+            requiredFields: ["titulo", "usuarioId"]
         });
     }
 
     /**
      * Cria um novo plano de estudo com validação de constraint única
+     * Sempre associa o plano à situação "Novo"
      */
     async create(req, res, next) {
         try {
@@ -41,6 +43,19 @@ class PlanoEstudoController extends BaseController {
                     });
                 }
             }
+
+            // Buscar situação "Novo" automaticamente
+            const situacaoNovo = await situacaoPlanoRepository.findUniqueByDescricao("Novo");
+            
+            if (!situacaoNovo) {
+                logger.error('Situação "Novo" não encontrada no banco de dados');
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                    error: 'Configuração do sistema incompleta: situação "Novo" não encontrada',
+                });
+            }
+
+            // Sobrescrever situacaoId com a situação "Novo"
+            data.situacaoId = situacaoNovo.id;
 
             const resultado = await this.repository.create(data);
 

@@ -282,16 +282,16 @@ async function main() {
     await prisma.situacaoPlano.createMany({
         data: [
             { descricao: "Em Andamento" },
+            { descricao: "Novo" },
             { descricao: "Pausado" },
             { descricao: "Concluído" },
-            { descricao: "Cancelado" },
         ],
         skipDuplicates: true,
     });
     logger.info("Created 4 SituacaoPlano");
 
-    const situacaoEmAndamento = await prisma.situacaoPlano.findUnique({
-        where: { descricao: "Em Andamento" },
+    const situacaoNovo = await prisma.situacaoPlano.findUnique({
+        where: { descricao: "Novo" },
     });
 
     // Seed 3 Planos de Estudo para o usuário básico
@@ -301,9 +301,9 @@ async function main() {
             concurso: "Concurso Tribunal Regional Federal da 1ª Região",
             cargo: "Técnico Judiciário - Área Administrativa",
             banca: "CESPE/CEBRASPE",
-            dataprova: new Date("2024-06-15"),
+            dataProva: new Date("2024-06-15"),
             usuarioId: usuarioBasico.id,
-            situacaoId: situacaoEmAndamento.id,
+            situacaoId: situacaoNovo.id,
         },
     });
 
@@ -313,9 +313,9 @@ async function main() {
             concurso: "Concurso Nacional Unificado da Polícia Federal",
             cargo: "Agente de Polícia Federal",
             banca: "Fundação Carlos Chagas (FCC)",
-            dataprova: new Date("2024-09-20"),
+            dataProva: new Date("2024-09-20"),
             usuarioId: usuarioBasico.id,
-            situacaoId: situacaoEmAndamento.id,
+            situacaoId: situacaoNovo.id,
         },
     });
 
@@ -325,9 +325,9 @@ async function main() {
             concurso: "Tribunal de Contas da União",
             cargo: "Auditor Federal de Controle Externo",
             banca: "CESPE/CEBRASPE",
-            dataprova: new Date("2024-12-10"),
+            dataProva: new Date("2024-12-10"),
             usuarioId: usuarioBasico.id,
-            situacaoId: situacaoEmAndamento.id,
+            situacaoId: situacaoNovo.id,
         },
     });
     logger.info("Created 3 PlanoEstudo for usuario_basico");

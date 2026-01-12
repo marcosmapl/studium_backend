@@ -114,7 +114,7 @@ const seedBasicData = async () => {
             concurso: "Plano para Concurso Teste",
             banca: "Banca Realizadora Teste",
             cargo: "Cargo de Concurso Teste",
-            dataprova: new Date("2026-01-06T00:00:00.000Z"),
+            dataProva: new Date("2026-01-06T00:00:00.000Z"),
             usuarioId: usuario.id,
             situacaoId: situacaoPlano.id,
             concluido: false,

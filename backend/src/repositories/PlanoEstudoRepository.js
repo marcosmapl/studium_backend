@@ -10,6 +10,8 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
         });
     }
 
+    
+
     /**
      * Busca plano de estudo por título (primeiro encontrado)
      * @param {string} titulo - Título do plano de estudo
@@ -73,11 +75,13 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
         const query = {
             where: { usuarioId },
             orderBy: { [this.defaultOrderBy]: this.orderDirection },
+            include: {
+                disciplinas: true,
+                sessoesEstudo: true,
+                revisoes: true,
+                situacao: true
+            }
         };
-
-        if (this.includeRelations) {
-            query.include = this.includeRelations;
-        }
 
         try {
             return await this.model.findMany(query);
