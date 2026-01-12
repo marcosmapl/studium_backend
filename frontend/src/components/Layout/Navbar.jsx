@@ -135,7 +135,7 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
                                 aria-label="Menu do perfil"
                             >
                                 <div className="studium-nav-avatar">
-                                    {(usuario?.nome || usuario?.nomeUsuario || 'U').charAt(0).toUpperCase()}
+                                    {(usuario?.username || 'U').charAt(0).toUpperCase()}
                                 </div>
                             </button>
 

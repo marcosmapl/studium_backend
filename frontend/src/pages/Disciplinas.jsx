@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import DisciplinaForm from '../components/DisciplinaForm';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData';
+import { useAuth } from '../contexts/AuthContext';
+import { getDisciplinasByPlanoId, createDisciplina, updateDisciplina, deleteDisciplina } from '../services/api';
+import { formatDateToLocaleString, calculateTotalHours, calculatePerformance, calculateTopicCoverage } from '../utils/utils';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faPlus,
@@ -14,11 +20,19 @@ import {
     faChartBar,
     faEdit,
     faTrash,
-    faStar
+    faStar,
+    faClone
 } from '@fortawesome/free-solid-svg-icons';
 import './Disciplinas.css';
 
 const Disciplinas = () => {
+    // Contexto de autenticação
+    const { usuario } = useAuth();
+    const location = useLocation();
+
+    // Hook customizado para carregar planos de estudo
+    const { loading: loadingPlanos, planosEstudo } = usePlanoEstudoData(usuario?.id);
+
     // Estado para controle do modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [disciplinaParaEditar, setDisciplinaParaEditar] = useState(null);
@@ -27,95 +41,46 @@ const Disciplinas = () => {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [disciplinaParaExcluir, setDisciplinaParaExcluir] = useState(null);
 
-    // Estado para o plano selecionado
-    const [planoSelecionado, setPlanoSelecionado] = useState('1');
+    // Estado para o plano selecionado - pega do state de navegação ou primeiro plano
+    const [planoSelecionado, setPlanoSelecionado] = useState(null);
+    const [disciplinas, setDisciplinas] = useState([]);
+    const [loadingDisciplinas, setLoadingDisciplinas] = useState(false);
 
-    // Dados mockados - Planos de Estudo
-    const planos = [
-        { id: '1', titulo: 'Plano Preparatório TRF 2024' },
-        { id: '2', titulo: 'Preparação Concurso Polícia Federal' },
-        { id: '3', titulo: 'Concurso Banco do Brasil 2024' },
-        { id: '4', titulo: 'Plano TCU - Auditor Federal' }
-    ];
-
-    // Dados mockados - Disciplinas
-    const [disciplinas, setDisciplinas] = useState([
-        {
-            id: 1,
-            planoId: '1',
-            nome: 'Direito Constitucional',
-            peso: 4,
-            nivelFamiliaridade: 4,
-            horasEstudadas: 85,
-            quantidadeTopicos: 45,
-            questoesAcertadas: 78,
-            questoesTotal: 100,
-            topicosConcluidos: 32,
-            topicosTotal: 45
-        },
-        {
-            id: 2,
-            planoId: '1',
-            nome: 'Direito Administrativo',
-            peso: 5,
-            nivelFamiliaridade: 5,
-            horasEstudadas: 92,
-            quantidadeTopicos: 38,
-            questoesAcertadas: 85,
-            questoesTotal: 95,
-            topicosConcluidos: 30,
-            topicosTotal: 38
-        },
-        {
-            id: 3,
-            planoId: '1',
-            nome: 'Língua Portuguesa',
-            peso: 3,
-            nivelFamiliaridade: 3,
-            horasEstudadas: 65,
-            quantidadeTopicos: 25,
-            questoesAcertadas: 92,
-            questoesTotal: 110,
-            topicosConcluidos: 25,
-            topicosTotal: 25
-        },
-        {
-            id: 4,
-            planoId: '1',
-            nome: 'Raciocínio Lógico',
-            peso: 3,
-            nivelFamiliaridade: 2,
-            horasEstudadas: 48,
-            quantidadeTopicos: 20,
-            questoesAcertadas: 55,
-            questoesTotal: 80,
-            topicosConcluidos: 12,
-            topicosTotal: 20
-        },
-        {
-            id: 5,
-            planoId: '2',
-            nome: 'Direito Penal',
-            peso: 5,
-            nivelFamiliaridade: 3,
-            horasEstudadas: 78,
-            quantidadeTopicos: 42,
-            questoesAcertadas: 70,
-            questoesTotal: 90,
-            topicosConcluidos: 28,
-            topicosTotal: 42
+    // Inicializa plano selecionado quando planos carregarem
+    useEffect(() => {
+        if (planosEstudo && planosEstudo.length > 0) {
+            // Se veio de navegação com planoId, usa ele, senão usa o primeiro
+            const planoIdFromNav = location.state?.planoId;
+            const planoInicial = planoIdFromNav
+                ? planosEstudo.find(p => p.id === planoIdFromNav)?.id || planosEstudo[0].id
+                : planosEstudo[0].id;
+            setPlanoSelecionado(planoInicial);
         }
-    ]);
+    }, [planosEstudo, location.state]);
 
-    const calcularDesempenho = (acertadas, total) => {
-        if (total === 0) return 0;
-        return Math.round((acertadas / total) * 100);
-    };
+    // Carregar disciplinas quando plano mudar
+    useEffect(() => {
+        const carregarDisciplinas = async () => {
+            if (!planoSelecionado) return;
 
-    const calcularCobertura = (concluidos, total) => {
-        if (total === 0) return 0;
-        return Math.round((concluidos / total) * 100);
-    };
+            setLoadingDisciplinas(true);
+            try {
+                const response = await getDisciplinasByPlanoId(planoSelecionado);
+                console.log('Disciplinas carregadas:', response.data);
+                setDisciplinas(response.data || []);
+            } catch (error) {
+                console.error('Erro ao carregar disciplinas:', error);
+                if (error.response?.status !== 404) {
+                    toast.error('Erro ao carregar disciplinas');
+                }
+                setDisciplinas([]);
+            } finally {
+                setLoadingDisciplinas(false);
+            }
+        };
+
+        carregarDisciplinas();
+    }, [planoSelecionado]);
 
     const handleNovaDisciplina = () => {
         setDisciplinaParaEditar(null);
@@ -132,28 +97,28 @@ const Disciplinas = () => {
         setDisciplinaParaEditar(null);
     };
 
-    const handleSaveDisciplina = (disciplinaData) => {
-        if (disciplinaParaEditar) {
-            // Editar disciplina existente
-            setDisciplinas(disciplinas.map(d => d.id === disciplinaData.id ? disciplinaData : d));
-            console.log('Disciplina atualizada:', disciplinaData);
-        } else {
-            // Adicionar nova disciplina
-            const novaDisciplina = {
-                ...disciplinaData,
-                id: Math.max(...disciplinas.map(d => d.id), 0) + 1,
-                planoId: planoSelecionado,
-                horasEstudadas: 0,
-                quantidadeTopicos: 0,
-                questoesAcertadas: 0,
-                questoesTotal: 0,
-                topicosConcluidos: 0,
-                topicosTotal: 0
-            };
-            setDisciplinas([...disciplinas, novaDisciplina]);
-            console.log('Nova disciplina criada:', novaDisciplina);
+    const handleSaveDisciplina = async (disciplinaData) => {
+        try {
+            if (disciplinaParaEditar) {
+                // Editar disciplina existente
+                await updateDisciplina(disciplinaData.id, disciplinaData);
+                setDisciplinas(disciplinas.map(d => d.id === disciplinaData.id ? { ...d, ...disciplinaData } : d));
+                toast.success('Disciplina atualizada com sucesso!');
+            } else {
+                // Adicionar nova disciplina
+                const novaDisciplinaData = {
+                    ...disciplinaData,
+                    planoId: planoSelecionado
+                };
+                const response = await createDisciplina(novaDisciplinaData);
+                setDisciplinas([...disciplinas, response.data]);
+                toast.success('Disciplina criada com sucesso!');
+            }
+            handleCloseModal();
+        } catch (error) {
+            console.error('Erro ao salvar disciplina:', error);
+            toast.error(error.response?.data?.error || 'Erro ao salvar disciplina');
         }
-        handleCloseModal();
     };
 
     const handleExcluirDisciplina = (disciplina) => {
@@ -161,10 +126,16 @@ const Disciplinas = () => {
         setIsConfirmOpen(true);
     };
 
-    const handleConfirmExclusao = () => {
+    const handleConfirmExclusao = async () => {
         if (disciplinaParaExcluir) {
-            setDisciplinas(disciplinas.filter(d => d.id !== disciplinaParaExcluir.id));
-            console.log('Disciplina excluída:', disciplinaParaExcluir.nome);
+            try {
+                await deleteDisciplina(disciplinaParaExcluir.id);
+                setDisciplinas(disciplinas.filter(d => d.id !== disciplinaParaExcluir.id));
+                toast.success('Disciplina excluída com sucesso!');
+            } catch (error) {
+                console.error('Erro ao excluir disciplina:', error);
+                toast.error(error.response?.data?.error || 'Erro ao excluir disciplina');
+            }
         }
         setIsConfirmOpen(false);
         setDisciplinaParaExcluir(null);
@@ -174,9 +145,6 @@ const Disciplinas = () => {
         setIsConfirmOpen(false);
         setDisciplinaParaExcluir(null);
     };
-
-    // Filtrar disciplinas do plano selecionado
-    const disciplinasFiltradas = disciplinas.filter(d => d.planoId === planoSelecionado);
 
     return (
         <Layout>
@@ -188,132 +156,154 @@ const Disciplinas = () => {
                             <label htmlFor="planoSelect" className="plano-selector-label">
                                 Plano de Estudo:
                             </label>
-                            <select
-                                id="planoSelect"
-                                value={planoSelecionado}
-                                onChange={(e) => setPlanoSelecionado(e.target.value)}
-                                className="plano-select"
-                            >
-                                {planos.map(plano => (
-                                    <option key={plano.id} value={plano.id}>
-                                        {plano.titulo}
-                                    </option>
-                                ))}
-                            </select>
+                            {loadingPlanos ? (
+                                <span>Carregando planos...</span>
+                            ) : (
+                                <select
+                                    id="planoSelect"
+                                    value={planoSelecionado || ''}
+                                    onChange={(e) => setPlanoSelecionado(Number(e.target.value))}
+                                    className="plano-select"
+                                    disabled={!planosEstudo || planosEstudo.length === 0}
+                                >
+                                    {planosEstudo && planosEstudo.length > 0 ? (
+                                        planosEstudo.map(plano => (
+                                            <option key={plano.id} value={plano.id}>
+                                                {plano.titulo}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value="">Nenhum plano disponível</option>
+                                    )}
+                                </select>
+                            )}
                         </div>
                     </div>
-                    <button className="btn-nova-disciplina" onClick={handleNovaDisciplina}>
+                    <div className="disciplinas-header-right">
+                    <button
+                        className="btn btn-primary"
+                        onClick={handleNovaDisciplina}
+                        disabled={!planoSelecionado}
+                    >
                         <FontAwesomeIcon icon={faPlus} />
                         Nova Disciplina
                     </button>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={handleNovaDisciplina}
+                        disabled={!planoSelecionado}
+                    >
+                        <FontAwesomeIcon icon={faClone} />
+                        Copiar Modelo
+                    </button>
+                    </div>
                 </div>
 
-                <div className="disciplinas-lista">
-                    {disciplinasFiltradas.length === 0 ? (
-                        <div className="disciplinas-vazio">
-                            <p>Nenhuma disciplina cadastrada para este plano.</p>
-                            <button className="btn-adicionar-primeira" onClick={handleNovaDisciplina}>
-                                <FontAwesomeIcon icon={faPlus} />
-                                Adicionar Primeira Disciplina
-                            </button>
-                        </div>
-                    ) : (
-                        disciplinasFiltradas.map((disciplina) => (
-                            <div key={disciplina.id} className="disciplina-card">
-                                {/* Cabeçalho do Card */}
-                                <div className="disciplina-card-header">
-                                    <h3 className="disciplina-nome">{disciplina.nome}</h3>
-                                </div>
-
-                                {/* Estatísticas da Disciplina */}
-                                <div className="disciplina-estatisticas">
-                                    <div className="disciplina-stat-item">
-                                        <FontAwesomeIcon icon={faWeightHanging} className="disciplina-stat-icon" />
-                                        <div className="disciplina-stat-content">
-                                            <span className="disciplina-stat-valor">{disciplina.peso}</span>
-                                            <span className="disciplina-stat-label">Peso</span>
-                                        </div>
-                                    </div>
-                                    <div className="disciplina-stat-item">
-                                        <FontAwesomeIcon icon={faStar} className="disciplina-stat-icon" />
-                                        <div className="disciplina-stat-content">
-                                            <div className="disciplina-stat-stars">
-                                                {[...Array(5)].map((_, index) => (
-                                                    <FontAwesomeIcon
-                                                        key={index}
-                                                        icon={faStar}
-                                                        className={`stat-star ${index < disciplina.nivelFamiliaridade ? 'filled' : 'empty'}`}
-                                                    />
-                                                ))}
-                                            </div>
-                                            <span className="disciplina-stat-label">Familiaridade</span>
-                                        </div>
-                                    </div>
-                                    <div className="disciplina-stat-item">
-                                        <FontAwesomeIcon icon={faClock} className="disciplina-stat-icon" />
-                                        <div className="disciplina-stat-content">
-                                            <span className="disciplina-stat-valor">{disciplina.horasEstudadas}h</span>
-                                            <span className="disciplina-stat-label">Horas Estudadas</span>
-                                        </div>
-                                    </div>
-                                    <div className="disciplina-stat-item">
-                                        <FontAwesomeIcon icon={faListCheck} className="disciplina-stat-icon" />
-                                        <div className="disciplina-stat-content">
-                                            <span className="disciplina-stat-valor">{disciplina.quantidadeTopicos}</span>
-                                            <span className="disciplina-stat-label">Tópicos</span>
-                                        </div>
-                                    </div>
-                                    <div className="disciplina-stat-item">
-                                        <FontAwesomeIcon icon={faBullseye} className="disciplina-stat-icon" />
-                                        <div className="disciplina-stat-content">
-                                            <span className="disciplina-stat-valor">
-                                                {calcularDesempenho(disciplina.questoesAcertadas, disciplina.questoesTotal)}%
-                                            </span>
-                                            <span className="disciplina-stat-label">Desempenho</span>
-                                        </div>
-                                    </div>
-                                    <div className="disciplina-stat-item">
-                                        <FontAwesomeIcon icon={faChartPie} className="disciplina-stat-icon" />
-                                        <div className="disciplina-stat-content">
-                                            <span className="disciplina-stat-valor">
-                                                {calcularCobertura(disciplina.topicosConcluidos, disciplina.topicosTotal)}%
-                                            </span>
-                                            <span className="disciplina-stat-label">Cobertura</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Rodapé do Card */}
-                                <div className="disciplina-card-footer">
-                                    <div className="disciplina-acoes">
-                                        <button className="btn-disciplina-acao-secondary">
-                                            <FontAwesomeIcon icon={faList} />
-                                            Ver Tópicos
-                                        </button>
-                                        <button className="btn-disciplina-acao-secondary">
-                                            <FontAwesomeIcon icon={faChartBar} />
-                                            Ver Estatísticas
-                                        </button>
-                                        <button
-                                            className="btn-disciplina-acao"
-                                            onClick={() => handleEditarDisciplina(disciplina)}
-                                        >
-                                            <FontAwesomeIcon icon={faEdit} />
-                                            Editar
-                                        </button>
-                                        <button
-                                            className="btn-disciplina-acao btn-disciplina-acao-danger"
-                                            onClick={() => handleExcluirDisciplina(disciplina)}
-                                        >
-                                            <FontAwesomeIcon icon={faTrash} />
-                                            Excluir
-                                        </button>
-                                    </div>
-                                </div>
+                {loadingDisciplinas ? (
+                    <div className="loading-message">Carregando disciplinas...</div>
+                ) : (
+                    <div className="disciplinas-lista">
+                        {disciplinas.length === 0 ? (
+                            <div className="disciplinas-vazio">
+                                <p>Nenhuma disciplina cadastrada para este plano.</p>
+                                <button className="btn-adicionar-primeira" onClick={handleNovaDisciplina}>
+                                    <FontAwesomeIcon icon={faPlus} />
+                                    Adicionar Primeira Disciplina
+                                </button>
                             </div>
-                        ))
-                    )}
-                </div>
+                        ) : (
+                            disciplinas.map((disciplina) => (
+                                <div key={disciplina.id} className="disciplina-card">
+                                    {/* Cabeçalho do Card */}
+                                    <div className="disciplina-card-header">
+                                        <h3 className="disciplina-nome">{disciplina.titulo}</h3>
+                                    </div>
+
+                                    {/* Estatísticas da Disciplina */}
+                                    <div className="disciplina-estatisticas">
+                                        <div className="disciplina-stat-item">
+                                            <FontAwesomeIcon icon={faWeightHanging} className="disciplina-stat-icon" />
+                                            <div className="disciplina-stat-content">
+                                                <span className="disciplina-stat-valor">{disciplina.peso}</span>
+                                                <span className="disciplina-stat-label">Peso</span>
+                                            </div>
+                                        </div>
+                                        <div className="disciplina-stat-item">
+                                            <FontAwesomeIcon icon={faStar} className="disciplina-stat-icon" />
+                                            <div className="disciplina-stat-content">
+                                                <span className="disciplina-stat-valor">{disciplina.familiaridade || 0}</span>
+                                                <span className="disciplina-stat-label">Familiaridade</span>
+                                            </div>
+                                        </div>
+                                        <div className="disciplina-stat-item">
+                                            <FontAwesomeIcon icon={faClock} className="disciplina-stat-icon" />
+                                            <div className="disciplina-stat-content">
+                                                <span className="disciplina-stat-valor">{calculateTotalHours(disciplina.sessoesEstudo)}h</span>
+                                                <span className="disciplina-stat-label">Horas Estudadas</span>
+                                            </div>
+                                        </div>
+                                        <div className="disciplina-stat-item">
+                                            <FontAwesomeIcon icon={faListCheck} className="disciplina-stat-icon" />
+                                            <div className="disciplina-stat-content">
+                                                <span className="disciplina-stat-valor">{disciplina.topicos?.length || 0}</span>
+                                                <span className="disciplina-stat-label">Tópicos</span>
+                                            </div>
+                                        </div>
+                                        <div className="disciplina-stat-item">
+                                            <FontAwesomeIcon icon={faBullseye} className="disciplina-stat-icon" />
+                                            <div className="disciplina-stat-content">
+                                                <span className="disciplina-stat-valor">
+                                                    {calculatePerformance(disciplina.sessoesEstudo)}%
+                                                </span>
+                                                <span className="disciplina-stat-label">Desempenho</span>
+                                            </div>
+                                        </div>
+                                        <div className="disciplina-stat-item">
+                                            <FontAwesomeIcon icon={faChartPie} className="disciplina-stat-icon" />
+                                            <div className="disciplina-stat-content">
+                                                <span className="disciplina-stat-valor">
+                                                    {calculateTopicCoverage(disciplina.topicos)}%
+                                                </span>
+                                                <span className="disciplina-stat-label">Cobertura</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Rodapé do Card */}
+                                    <div className="disciplina-card-footer">
+                                        <span className="disciplina-data-criacao">
+                                            Criado em {formatDateToLocaleString(disciplina.createdAt)}
+                                        </span>
+                                        <div className="disciplina-acoes">
+                                            <button className="btn btn-secondary">
+                                                <FontAwesomeIcon icon={faList} />
+                                                Ver Tópicos
+                                            </button>
+                                            <button className="btn btn-secondary">
+                                                <FontAwesomeIcon icon={faChartBar} />
+                                                Ver Estatísticas
+                                            </button>
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={() => handleEditarDisciplina(disciplina)}
+                                            >
+                                                <FontAwesomeIcon icon={faEdit} />
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="btn btn-danger"
+                                                onClick={() => handleExcluirDisciplina(disciplina)}
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                                Excluir
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )}
 
                 {/* Modal de Cadastro/Edição */}
                 <DisciplinaForm

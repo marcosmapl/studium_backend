@@ -446,7 +446,7 @@ const Cadastro = () => {
                         <button
                             type="submit"
                             disabled={isFormDisabled}
-                            className="btn-primary"
+                            className="btn-primary btn-cadastrar"
                         >
                             {loading ? 'Cadastrando...' : 'Cadastrar'}
                         </button>

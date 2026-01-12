@@ -36,33 +36,6 @@
     color: var(--color-text-accent);
 }
 
-.btn-novo-plano {
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border-radius: var(--border-radius-lg);
-    border: none;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-novo-plano:hover {
-    background-color: var(--btn-primary-bg-hover);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-.btn-novo-plano:active {
-    background-color: var(--btn-primary-bg-active);
-    transform: translateY(0);
-}
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    LISTA DE PLANOS
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -70,7 +43,7 @@
 .planos-lista {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -93,8 +66,8 @@
 
 /* Cabeçalho do Card */
 .plano-card-header {
-    margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     border-bottom: var(--border-width-2) solid var(--color-gray-200);
 }
 
@@ -114,7 +87,7 @@
 }
 
 .plano-situacao {
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--border-radius-full);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
@@ -124,18 +97,23 @@
 }
 
 .situacao-andamento {
-    background-color: var(--color-info-light);
-    color: var(--color-info-dark);
+    color: #047857;
+    background-color: #d1fae5;
 }
 
 .situacao-concluido {
-    background-color: var(--color-success-light);
-    color: var(--color-success-dark);
+    color: #065f46;
+    background-color: #ecfdf5;
 }
 
 .situacao-pausado {
-    background-color: var(--color-warning-light);
-    color: var(--color-warning-dark);
+    color: #92400e;
+    background-color: #fef3c7;
+}
+
+.situacao-novo {
+    color: #1d4ed8;
+    background-color: #dbeafe;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -146,7 +124,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
     padding: var(--spacing-md);
     background-color: var(--color-gray-50);
     border-radius: var(--border-radius-lg);
@@ -154,8 +132,8 @@
 
 .info-item {
     display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
+    align-items: flex-center;
+    gap: var(--spacing-md);
 }
 
 .info-icon {
@@ -189,8 +167,8 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .plano-progresso-section {
-    margin-bottom: var(--spacing-lg);
     padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     background-color: var(--color-gray-50);
     border-radius: var(--border-radius-lg);
 }
@@ -239,7 +217,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
 }
 
 .estatistica-item {
@@ -308,54 +286,6 @@
     gap: var(--spacing-sm);
 }
 
-.btn-plano-acao {
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-    border: none;
-    background-color: var(--color-accent);
-    color: var(--color-white);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.btn-plano-acao:hover {
-    background-color: var(--color-success-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-plano-acao-secondary {
-    background-color: transparent;
-    color: var(--color-accent);
-    border: var(--border-width-2) solid var(--color-accent);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.btn-plano-acao-secondary:hover {
-    background-color: var(--color-accent);
-    color: var(--color-white);
-}
-
-.btn-plano-acao-danger {
-    background-color: transparent;
-    color: var(--color-error);
-    border: var(--border-width-2) solid var(--color-error);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.btn-plano-acao-danger:hover {
-    background-color: var(--color-error);
-    color: var(--color-white);
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    RESPONSIVIDADE

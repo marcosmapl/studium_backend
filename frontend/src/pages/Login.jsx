@@ -62,7 +62,7 @@ const Login = () => {
         <div className="studium-container">
             <div className="studium-main-card">
                 <div className="studium-form-header">
-                    <h1 className="studium-form-title">Studium</h1>
+                    <h1 className="studium-form-title login-form-title">Studium</h1>
                     <p className="studium-form-subtitle">Sistema de Gestão de Estudos</p>
                 </div>
 
@@ -111,7 +111,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn-primary"
+                        className="btn-primary btn-login"
                     >
                         {loading ? 'Entrando...' : 'Entrar'}
                     </button>
@@ -135,7 +135,7 @@ const Login = () => {
                     <button
                         type="button"
                         onClick={handleCadastrar}
-                        className="btn-secondary"
+                        className="btn-secondary btn-login"
                     >
                         Criar uma conta
                     </button>

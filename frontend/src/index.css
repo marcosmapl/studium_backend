@@ -466,11 +466,11 @@ body {
 /* Header do Formulário */
 .studium-form-header {
     text-align: center;
-    margin-bottom: var(--spacing-2xl);
+    margin-bottom: var(--spacing-xl);
 }
 
 .studium-form-title {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-title);
     margin-bottom: var(--spacing-sm);
@@ -503,8 +503,8 @@ body {
 /* Label */
 .studium-form-label {
     display: block;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
     color: var(--color-text-subtitle);
     margin-bottom: var(--spacing-sm);
 }
@@ -512,6 +512,7 @@ body {
 /* Input */
 .studium-form-input {
     width: 100%;
+    height: var(--spacing-2xl);
     padding: var(--spacing-sm) var(--spacing-md);
     border: var(--border-width) solid var(--color-border-light);
     border-radius: var(--border-radius-lg);
@@ -779,23 +780,18 @@ body {
 button,
 .btn {
     font-family: var(--font-family-base);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-normal);
-    padding: var(--spacing-sm) var(--spacing-md);
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border-radius: var(--border-radius-md);
     cursor: pointer;
-    transition: var(--transition-all-base);
+    transition: var(--transition-all-fast);
     border: none;
-    outline: none;
     text-align: center;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 button:focus,
@@ -845,21 +841,14 @@ button:disabled,
 }
 
 .btn-primary {
-    width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-lg);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-all-base);
-    margin-top: var(--spacing-md);
-    background-color: var(--btn-primary-bg);
+    background-color: var(--color-accent);
     color: var(--btn-primary-text);
-}
+    }
 
 .btn-primary:hover {
-    background-color: var(--btn-primary-bg-hover);
+    background-color: var(--color-success-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:focus {
@@ -880,22 +869,16 @@ button:disabled,
 
 
 .btn-secondary {
-    width: 100%;
-    border: var(--border-width) solid var(--btn-secondary-border);
+    border: var(--border-width-2) solid var(--color-accent);
     color: var(--btn-secondary-text);
     background-color: var(--btn-secondary-bg);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-lg);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: var(--transition-all-base);
 }
 
 .btn-secondary:hover {
-    background-color: var(--btn-secondary-bg-hover);
-    border-color: var(--btn-secondary-border-hover);
-    color: var(--btn-secondary-text-hover);
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:focus {
@@ -923,6 +906,8 @@ button:disabled,
 
 .btn-danger:hover {
     background-color: var(--color-error-dark);
+    transform:  translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-warning {
@@ -935,13 +920,15 @@ button:disabled,
 }
 
 .btn-outline {
-    background-color: transparent;
-    border: var(--border-width-2) solid var(--color-border);
-    color: var(--color-text-primary);
+    background-color:transparent;
+    border: var(--border-width-2) solid var(--color-gray-300);
+    color: var(--color-text-secondary-light);
 }
 
 .btn-outline:hover {
-    background-color: var(--color-hover);
+    background-color: var(--color-gray-100);
+    color: var(--color-text-dark);
+    border-color: var(--color-gray-400);
 }
 
 .btn-link {

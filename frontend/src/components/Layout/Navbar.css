@@ -304,22 +304,23 @@
 .studium-nav-profile-name {
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-sm);
 }
 
 .studium-nav-profile-email {
     font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
-    margin-top: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
 }
 
 .studium-nav-profile-menu {
-    padding: var(--spacing-sm) 0;
+    padding: var(--spacing-xs) var(--spacing-xs);
 }
 
 .studium-nav-profile-item {
     width: 100%;
-    text-align: left;
+    align-self: center;
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
     color: var(--color-text-primary);
@@ -328,7 +329,6 @@
     cursor: pointer;
     transition: var(--transition-all-fast);
     display: flex;
-    align-items: center;
     gap: var(--spacing-sm);
 }
 
@@ -339,7 +339,7 @@
 }
 
 .studium-nav-profile-item:hover {
-    background-color: var(--color-hover);
+    background-color: var(--color-accent);
 }
 
 .studium-nav-profile-divider {

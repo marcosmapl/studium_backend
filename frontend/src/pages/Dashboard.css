@@ -84,10 +84,9 @@
 }
 
 .studium-card-title {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
     color: var(--color-text-dark);
-    margin: 0;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
 }
 
 /* Layout flex para alinhar kpi-details e valor na mesma linha */
@@ -110,7 +109,7 @@
 }
 
 .studium-card-value {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-accent);
 }
@@ -134,9 +133,9 @@
 
 /* Grid de Dias de Estudo */
 .study-days-grid {
-    background-color: var(--color-gray-50);
+    background-color: var(--color-gray-200);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
     width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));

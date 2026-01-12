@@ -5,6 +5,24 @@
    ================================================================ */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BUTTONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.btn-login {
+    width: 80%;
+    height: var(--spacing-2xl);
+    align-self: center;
+}
+
+.login-form-title {
+    font-family: 'Montserrat', 'IBM Plex Sans', sans-serif;
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FOOTER DO LOGIN
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 

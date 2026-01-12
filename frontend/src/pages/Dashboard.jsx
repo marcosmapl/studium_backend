@@ -15,7 +15,7 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faClock} className="studium-card-icon" />
-                            <h3 className="studium-card-title">Tempo de Estudo</h3>
+                            <h3 className="studium-card-title ml-2">Tempo de Estudo</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
@@ -28,12 +28,12 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faBullseye} className="studium-card-icon" />
-                            <h3 className="studium-card-title">Desempenho</h3>
+                            <h3 className="studium-card-title ml-2">Desempenho</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
-                                <p className="text-xs font-bold text-success ml-3">90 acertos</p>
-                                <p className="text-xs font-bold text-error ml-3">10 erros</p>
+                                <p className="text-md font-bold text-success ml-3">90 acertos</p>
+                                <p className="text-md font-bold text-error ml-3">10 erros</p>
                             </div>
                             <p className="studium-card-value">83%</p>
                         </div>
@@ -43,12 +43,12 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faChartBar} className="studium-card-icon" />
-                            <h3 className="studium-card-title">Progresso no Edital</h3>
+                            <h3 className="studium-card-title ml-2">Progresso no Edital</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
-                                <p className="text-xs font-bold text-success ml-3">85 Concluídos</p>
-                                <p className="text-xs font-bold text-error ml-3">64 Pendentes</p>
+                                <p className="text-md font-bold text-success ml-3">85 Concluídos</p>
+                                <p className="text-md font-bold text-error ml-3">64 Pendentes</p>
                             </div>
                             <p className="studium-card-value">57%</p>
                         </div>
@@ -58,12 +58,12 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faFire} className="studium-card-icon" />
-                            <h3 className="studium-card-title">Constância nos Estudos</h3>
+                            <h3 className="studium-card-title ml-2">Constância nos Estudos</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
-                                <p className="text-xs font-bold text-success ml-3">218 Estudados</p>
-                                <p className="text-xs font-bold text-error ml-3">32 Falhados</p>
+                                <p className="text-md font-bold text-success ml-3">218 Estudados</p>
+                                <p className="text-md font-bold text-error ml-3">32 Falhados</p>
                             </div>
                             <p className="studium-card-value">87%</p>
                         </div>
@@ -72,10 +72,10 @@ const Dashboard = () => {
 
                 {/* Seção de Constância nos Estudos */}
                 <div className="section-base study-consistency-section">
-                    <h3 className="section-title">Constância nos Estudos</h3>
-                    <p className="section-content m-md">
-                        Você está há <span className="font-bold text-success ml-3">5 dias</span> sem falhar!
-                        Seu recorde é de <span className="font-bold text-warning ml-3">18 dias</span>.
+                    <h3 className="section-title ml-2">Constância nos Estudos</h3>
+                    <p className="section-content text-lg m-md">
+                        Você está há<span className="font-bold text-success ml-1">5 dias</span> sem falhar!
+                        Seu recorde é de <span className="font-bold text-warning ml-1">18 dias</span>.
                     </p>
 
                     {/* Grid de 30 dias */}

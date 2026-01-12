@@ -15,6 +15,16 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
 
     const [errors, setErrors] = useState({});
 
+    // Função auxiliar para converter data ISO para formato do input date (YYYY-MM-DD)
+    const formatDateForInput = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     // Preencher o formulário quando receber um plano para edição
     useEffect(() => {
         if (plano) {
@@ -23,7 +33,7 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
                 concurso: plano.concurso || '',
                 cargo: plano.cargo || '',
                 banca: plano.banca || '',
-                dataProva: plano.dataProva || ''
+                dataProva: formatDateForInput(plano.dataProva)
             });
         } else {
             // Limpar formulário para novo plano
@@ -84,18 +94,31 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
         e.preventDefault();
 
         if (validateForm()) {
-            const planoData = {
-                ...formData,
-                id: plano?.id || Date.now(), // ID temporário para novos planos
-                situacao: plano?.situacao || 'Em Andamento',
-                progressoGeral: plano?.progressoGeral || 0,
-                dataCriacao: plano?.dataCriacao || new Date().toISOString().split('T')[0],
-                totalDisciplinas: plano?.totalDisciplinas || 0,
-                horasEstudadas: plano?.horasEstudadas || 0,
-                constancia: plano?.constancia || 0,
-                ritmoAtual: plano?.ritmoAtual || 0,
-                eficienciaGeral: plano?.eficienciaGeral || 0
-            };
+            // Converter data YYYY-MM-DD para ISO DateTime
+            const dataProvaISO = formData.dataProva 
+                ? new Date(formData.dataProva + 'T00:00:00.000Z').toISOString()
+                : null;
+
+            // Se está editando, envia apenas os campos editáveis + IDs necessários
+            const planoData = plano 
+                ? {
+                    id: plano.id,
+                    titulo: formData.titulo,
+                    concurso: formData.concurso,
+                    cargo: formData.cargo,
+                    banca: formData.banca,
+                    dataProva: dataProvaISO,
+                    // usuarioId: plano.usuarioId,
+                    situacaoId: plano.situacaoId
+                }
+                : {
+                    // Novo plano - apenas os dados do formulário
+                    titulo: formData.titulo,
+                    concurso: formData.concurso,
+                    cargo: formData.cargo,
+                    banca: formData.banca,
+                    dataProva: dataProvaISO
+                };
 
             onSave(planoData);
             onClose();
