@@ -444,7 +444,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: var(--color-primary);
-    padding: var(--spacing-2xl) var(--spacing-md);
+    padding: var(--spacing-xl) var(--spacing-md);
 }
 
 /* Card de Cadastro/Login */
@@ -454,7 +454,20 @@ body {
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-2xl);
     width: 100%;
-    max-width: 42rem;
+    max-width: 35rem;
+}
+
+.studium-page-header {
+    border-bottom: 2px solid var(--color-gray-200);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+}
+
+.studium-page-title {
+    color: var(--color-text-accent);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    text-align: left;
 }
 
 /* ████████████████████████████████████████████████████████████████
@@ -462,6 +475,14 @@ body {
 ██   COMPONENTES DE FORMULÁRIO                               ██
 ██                                                            ██
 ████████████████████████████████████████████████████████████████ */
+
+/* Estrutura do Formulário */
+.studium-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
 
 /* Header do Formulário */
 .studium-form-header {
@@ -472,20 +493,13 @@ body {
 .studium-form-title {
     font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-title);
+    color: var(--color-text-accent);
     margin-bottom: var(--spacing-sm);
 }
 
 .studium-form-subtitle {
     color: var(--color-text-subtitle);
     font-size: var(--font-size-base);
-}
-
-/* Estrutura do Formulário */
-.studium-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
 }
 
 .studium-form-grid {
@@ -497,30 +511,34 @@ body {
 /* Grupo de Campo */
 .studium-form-group {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
+    gap: var(--spacing-md);
 }
 
 /* Label */
 .studium-form-label {
     display: block;
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-bold);
+    text-align: right;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-subtitle);
     margin-bottom: var(--spacing-sm);
+    width: 22%;
 }
 
 /* Input */
 .studium-form-input {
-    width: 100%;
-    height: var(--spacing-2xl);
-    padding: var(--spacing-sm) var(--spacing-md);
     border: var(--border-width) solid var(--color-border-light);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--border-radius-md);
     background-color: var(--color-white);
     color: var(--color-text-primary-light);
-    font-size: var(--font-size-base);
-    transition: var(--transition-all-fast);
+    font-size: var(--font-size-sm);
+    height: var(--spacing-2xl);
     outline: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    transition: var(--transition-all-fast);
+    width: 100%;
 }
 
 .studium-form-input:focus {
@@ -552,6 +570,7 @@ body {
 
 /* Campo de Senha com Ícone */
 .studium-pwd-field {
+    width: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -599,24 +618,28 @@ body {
    ████████████████████████████████████████████████████████████████ */
 
 .studium-card-base {
-    background-color: var(--color-primary-light);
-    border: var(--border-width-2) solid var(--color-background-dark);
+    background-color: var(--color-background-light);
+    border: var(--border-width) solid var(--color-border-light);
     border-radius: var(--border-radius-2xl);
-    padding: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
     box-shadow: var(--shadow-sm);
     transition: box-shadow var(--transition-fast);
 }
 
 .studium-card-base:hover {
-    /* background-color: var(--color-background); */
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
 }
 
 .studium-card-header {
-    display: flex;
     align-items: center;
+    border-bottom: var(--border-width-2) solid var(--color-gray-200);
+    display: flex;
+    flex-direction: row;
     gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-sm);
+    width: 100%;
 }
 
 .studium-card-icon {
@@ -624,10 +647,9 @@ body {
 }
 
 .studium-card-title {
-    color: var(--color-text-primary);
+    color: var(--color-text-dark);
     font-weight: var(--font-weight-semibold);
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
 }
 
 .studium-card-subtitle {
@@ -642,14 +664,31 @@ body {
 }
 
 .studium-card-footer {
-    margin-top: auto;
-    text-align: right;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: var(--spacing-xs) var(--spacing-md);
+    padding-top: var(--spacing-sm);
+    border-top: var(--border-width) solid var(--color-gray-200);
+    gap: var(--spacing-md);
+}
+
+.studium-card-footer-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: space-between;
+    padding-top: var(--spacing-sm);
 }
 
 .studium-card-value {
-    color: var(--color-text-primary);
+    color: var(--color-text-primary-light);
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-3xl);
+    letter-spacing: 0.03em;
 }
 
 .studium-card-value-success {
@@ -668,6 +707,61 @@ body {
     color: var(--color-info);
 }
 
+.studium-stats-grid {
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-lg);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.studium-stats-item {
+    align-items: center;
+    background-color: var(--color-gray-50);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    transition: var(--transition-all-fast);
+}
+
+.studium-stats-item:hover {
+    background-color: var(--color-gray-100);
+    transform: translateY(-2px);
+}
+
+.studium-stats-icon {
+    font-size: var(--font-size-2xl);
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-sm);
+    justify-self: center;
+}
+
+.studium-stats-content {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    flex: 1;
+}
+
+.studium-stats-valor {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-dark);
+    /* text-align: right; */
+}
+
+.studium-stats-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 /* ████████████████████████████████████████████████████████████████
    ██                                                            ██
    ██   COMPONENTES DE SEÇÃO                                     ██
@@ -675,10 +769,10 @@ body {
    ████████████████████████████████████████████████████████████████ */
 
 .section-base {
-    background-color: var(--color-primary);
-    border: var(--border-width) solid var(--color-border);
+    background-color: var(--color-background-light);
+    border: var(--border-width) solid var(--color-border-light);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: var(--shadow-md);
     margin-top: var(--spacing-lg);
 }
@@ -690,8 +784,8 @@ body {
 .section-title {
     color: var(--color-text-dark);
     font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-xl);
-    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-lg);
+    margin: var(--spacing-sm) var(--spacing-sm);
 }
 
 .section-subtitle {
@@ -780,9 +874,9 @@ body {
 button,
 .btn {
     font-family: var(--font-family-base);
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    padding: var(--spacing-sm) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-md);
     cursor: pointer;
     transition: var(--transition-all-fast);
@@ -843,7 +937,7 @@ button:disabled,
 .btn-primary {
     background-color: var(--color-accent);
     color: var(--btn-primary-text);
-    }
+}
 
 .btn-primary:hover {
     background-color: var(--color-success-dark);
@@ -906,7 +1000,7 @@ button:disabled,
 
 .btn-danger:hover {
     background-color: var(--color-error-dark);
-    transform:  translateY(-1px);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
 }
 
@@ -920,7 +1014,7 @@ button:disabled,
 }
 
 .btn-outline {
-    background-color:transparent;
+    background-color: transparent;
     border: var(--border-width-2) solid var(--color-gray-300);
     color: var(--color-text-secondary-light);
 }
@@ -1280,7 +1374,8 @@ button:disabled,
    ██                                                            ██
    ████████████████████████████████████████████████████████████████ */
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
+
     .studium-container {
         padding: var(--spacing-md);
     }
@@ -1296,4 +1391,34 @@ button:disabled,
     .studium-form-subtitle {
         font-size: var(--font-size-sm);
     }
+
+    .studium-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .studium-card-footer {
+        padding-top: var(--spacing-md);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .studium-card-footer-actions {
+        flex-direction: column;
+        align-items: center;
+        min-width: 100%;
+    }
+
+    .studium-card-footer-actions button {
+        width: 80%;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .studium-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
 }

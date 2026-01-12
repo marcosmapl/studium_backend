@@ -4,22 +4,29 @@
    Estilos da tela de login usando variáveis globais do index.css
    ================================================================ */
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BUTTONS
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.btn-login {
-    width: 80%;
-    height: var(--spacing-2xl);
-    align-self: center;
-}
 
 .login-form-title {
     font-family: 'Montserrat', 'IBM Plex Sans', sans-serif;
     font-size: var(--font-size-4xl);
     font-weight: var(--font-weight-extrabold);
     color: var(--color-accent);
+    text-align: center;
     letter-spacing: 0.1em;
+}
+
+.login-form-label {
+    width: 15%;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BUTTONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.btn-login {
+    align-self: center;
+    height: var(--spacing-2xl);
+    width: 60%;
+    font-size: var(--font-size-md);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -27,31 +34,32 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .login-footer {
-    margin-top: var(--spacing-sm);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
 }
 
 /* Divisor entre opções */
-.divider {
+.divider-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     position: relative;
+    width: 100%;
+    margin-bottom: var(--spacing-md);
 }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    border-top: var(--border-width) solid var(--color-border-light);
+.divider {
+    margin-top: 12px;
+    width: 100%;
+    border-top: var(--border-width-2) solid var(--color-accent);
 }
 
 .divider-text {
     position: relative;
     display: flex;
     justify-content: center;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
 }
 
 .divider-text span {

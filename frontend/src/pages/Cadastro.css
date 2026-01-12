@@ -9,9 +9,11 @@
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .btn-cadastrar {
-    width: 80%;
-    height: var(--spacing-2xl);
     align-self: center;
+    font-size: var(--font-size-md);
+    height: var(--spacing-2xl);
+    margin-top: var(--spacing-md);
+    width: 80%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

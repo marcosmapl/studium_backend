@@ -66,10 +66,9 @@ const Disciplinas = () => {
             setLoadingDisciplinas(true);
             try {
                 const response = await getDisciplinasByPlanoId(planoSelecionado);
-                console.log('Disciplinas carregadas:', response.data);
+                // console.log('Disciplinas carregadas:', response.data);
                 setDisciplinas(response.data || []);
             } catch (error) {
-                console.error('Erro ao carregar disciplinas:', error);
                 if (error.response?.status !== 404) {
                     toast.error('Erro ao carregar disciplinas');
                 }
@@ -149,9 +148,9 @@ const Disciplinas = () => {
     return (
         <Layout>
             <div className="disciplinas-container">
-                <div className="disciplinas-header">
+                <div className="studium-page-header disciplinas-header">
                     <div className="disciplinas-header-left">
-                        <h2 className="disciplinas-title">Disciplinas</h2>
+                        <h2 className="studium-page-title disciplinas-title">Disciplinas</h2>
                         <div className="plano-selector">
                             <label htmlFor="planoSelect" className="plano-selector-label">
                                 Plano de Estudo:
@@ -180,22 +179,22 @@ const Disciplinas = () => {
                         </div>
                     </div>
                     <div className="disciplinas-header-right">
-                    <button
-                        className="btn btn-primary"
-                        onClick={handleNovaDisciplina}
-                        disabled={!planoSelecionado}
-                    >
-                        <FontAwesomeIcon icon={faPlus} />
-                        Nova Disciplina
-                    </button>
-                    <button
-                        className="btn btn-secondary"
-                        onClick={handleNovaDisciplina}
-                        disabled={!planoSelecionado}
-                    >
-                        <FontAwesomeIcon icon={faClone} />
-                        Copiar Modelo
-                    </button>
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleNovaDisciplina}
+                            disabled={!planoSelecionado}
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                            Nova Disciplina
+                        </button>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={handleNovaDisciplina}
+                            disabled={!planoSelecionado}
+                        >
+                            <FontAwesomeIcon icon={faClone} />
+                            Copiar Modelo
+                        </button>
                     </div>
                 </div>
 
@@ -206,75 +205,87 @@ const Disciplinas = () => {
                         {disciplinas.length === 0 ? (
                             <div className="disciplinas-vazio">
                                 <p>Nenhuma disciplina cadastrada para este plano.</p>
-                                <button className="btn-adicionar-primeira" onClick={handleNovaDisciplina}>
+                                <button className="btn btn btn-primary" onClick={handleNovaDisciplina}>
                                     <FontAwesomeIcon icon={faPlus} />
                                     Adicionar Primeira Disciplina
                                 </button>
                             </div>
                         ) : (
                             disciplinas.map((disciplina) => (
-                                <div key={disciplina.id} className="disciplina-card">
+                                <div key={disciplina.id} className="studium-card-base">
                                     {/* Cabeçalho do Card */}
-                                    <div className="disciplina-card-header">
+                                    <div className="studium-card-header disciplina-card-header">
                                         <h3 className="disciplina-nome">{disciplina.titulo}</h3>
                                     </div>
 
                                     {/* Estatísticas da Disciplina */}
-                                    <div className="disciplina-estatisticas">
-                                        <div className="disciplina-stat-item">
-                                            <FontAwesomeIcon icon={faWeightHanging} className="disciplina-stat-icon" />
-                                            <div className="disciplina-stat-content">
-                                                <span className="disciplina-stat-valor">{disciplina.peso}</span>
-                                                <span className="disciplina-stat-label">Peso</span>
+                                    <div className="studium-stats-grid">
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faWeightHanging} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Peso</span>
+                                                <span className="studium-stats-valor">{disciplina.peso}</span>
                                             </div>
                                         </div>
-                                        <div className="disciplina-stat-item">
-                                            <FontAwesomeIcon icon={faStar} className="disciplina-stat-icon" />
-                                            <div className="disciplina-stat-content">
-                                                <span className="disciplina-stat-valor">{disciplina.familiaridade || 0}</span>
-                                                <span className="disciplina-stat-label">Familiaridade</span>
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faStar} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Familiaridade</span>
+                                                <span className="studium-stats-valor">{disciplina.familiaridade || 0}</span>
                                             </div>
                                         </div>
-                                        <div className="disciplina-stat-item">
-                                            <FontAwesomeIcon icon={faClock} className="disciplina-stat-icon" />
-                                            <div className="disciplina-stat-content">
-                                                <span className="disciplina-stat-valor">{calculateTotalHours(disciplina.sessoesEstudo)}h</span>
-                                                <span className="disciplina-stat-label">Horas Estudadas</span>
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faClock} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Horas Estudadas</span>
+                                                <span className="studium-stats-valor">{calculateTotalHours(disciplina.sessoesEstudo)}h</span>
                                             </div>
                                         </div>
-                                        <div className="disciplina-stat-item">
-                                            <FontAwesomeIcon icon={faListCheck} className="disciplina-stat-icon" />
-                                            <div className="disciplina-stat-content">
-                                                <span className="disciplina-stat-valor">{disciplina.topicos?.length || 0}</span>
-                                                <span className="disciplina-stat-label">Tópicos</span>
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faListCheck} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Tópicos</span>
+                                                <span className="studium-stats-valor">{disciplina.topicos?.length || 0}</span>
                                             </div>
                                         </div>
-                                        <div className="disciplina-stat-item">
-                                            <FontAwesomeIcon icon={faBullseye} className="disciplina-stat-icon" />
-                                            <div className="disciplina-stat-content">
-                                                <span className="disciplina-stat-valor">
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faBullseye} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Desempenho</span>
+                                                <span className="studium-stats-valor">
                                                     {calculatePerformance(disciplina.sessoesEstudo)}%
                                                 </span>
-                                                <span className="disciplina-stat-label">Desempenho</span>
                                             </div>
                                         </div>
-                                        <div className="disciplina-stat-item">
-                                            <FontAwesomeIcon icon={faChartPie} className="disciplina-stat-icon" />
-                                            <div className="disciplina-stat-content">
-                                                <span className="disciplina-stat-valor">
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faChartPie} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Cobertura</span>
+                                                <span className="studium-stats-valor">
                                                     {calculateTopicCoverage(disciplina.topicos)}%
                                                 </span>
-                                                <span className="disciplina-stat-label">Cobertura</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Rodapé do Card */}
-                                    <div className="disciplina-card-footer">
+                                    <div className="studium-card-footer">
                                         <span className="disciplina-data-criacao">
                                             Criado em {formatDateToLocaleString(disciplina.createdAt)}
                                         </span>
-                                        <div className="disciplina-acoes">
+                                        <div className="studium-card-footer-actions">
                                             <button className="btn btn-secondary">
                                                 <FontAwesomeIcon icon={faList} />
                                                 Ver Tópicos

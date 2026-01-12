@@ -23,30 +23,23 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-lg);
-    border-bottom: 3px solid var(--color-info);
     flex-wrap: wrap;
-    gap: var(--spacing-md);
 }
 
 .disciplinas-header-left {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
 }
 
 .disciplinas-header-right {
     display: flex;
     flex-direction: row;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
 }
 
 .disciplinas-title {
     font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-accent);
-    margin: 0;
 }
 
 /* Seletor de Plano */
@@ -57,20 +50,18 @@
 }
 
 .plano-selector-label {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-dark);
 }
 
 .plano-select {
-    padding: 0 var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-md);
     border: var(--border-width-2) solid var(--color-gray-300);
-    border-radius: var(--border-radius-sm);
-    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
     color: var(--color-text-dark);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    font-family: var(--font-family-base);
     cursor: pointer;
     transition: var(--transition-all-fast);
     outline: none;
@@ -93,7 +84,7 @@
 .disciplinas-lista {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
 }
 
 /* Estado vazio */
@@ -101,222 +92,57 @@
     background-color: var(--color-white);
     border-radius: var(--border-radius-xl);
     box-shadow: var(--shadow-md);
-    padding: var(--spacing-3xl);
+    padding: var(--spacing-xl);
     text-align: center;
     border: var(--border-width-2) dashed var(--color-gray-300);
 }
 
 .disciplinas-vazio p {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
     color: var(--color-text-secondary-light);
     margin-bottom: var(--spacing-lg);
-}
-
-.btn-adicionar-primeira {
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    padding: var(--spacing-sm) var(--spacing-xl);
-    border-radius: var(--border-radius-lg);
-    border: none;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-adicionar-primeira:hover {
-    background-color: var(--btn-primary-bg-hover);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CARD DA DISCIPLINA
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.disciplina-card {
-    background-color: var(--color-white);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-xl);
-    transition: var(--transition-all-fast);
-    border: var(--border-width) solid var(--color-border-light);
-}
-
-.disciplina-card:hover {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-4px);
-}
-
-/* Cabeçalho do Card */
-.disciplina-card-header {
-    margin-bottom: var(--spacing-sm);
-    padding-bottom: var(--spacing-md);
-    border-bottom: var(--border-width-2) solid var(--color-gray-200);
-}
-
 .disciplina-nome {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-dark);
-    margin: 0;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ESTATÍSTICAS DA DISCIPLINA
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.disciplina-estatisticas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-xs);
-}
-
-.disciplina-stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: var(--spacing-md);
-    background-color: var(--color-gray-50);
-    border-radius: var(--border-radius-lg);
-    transition: var(--transition-all-fast);
-}
-
-.disciplina-stat-item:hover {
-    background-color: var(--color-gray-100);
-    transform: translateY(-2px);
-}
-
-.disciplina-stat-icon {
-    font-size: var(--font-size-2xl);
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-sm);
-}
-
-.disciplina-stat-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.disciplina-stat-valor {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-dark);
 }
 
-.disciplina-stat-label {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary-light);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* Estrelas de familiaridade no card */
-.disciplina-stat-stars {
-    display: flex;
-    gap: 2px;
-    margin-bottom: var(--spacing-xs);
-}
-
-.stat-star {
-    font-size: var(--font-size-sm);
-    transition: var(--transition-all-fast);
-}
-
-.stat-star.filled {
-    color: #FFB800;
-}
-
-.stat-star.empty {
-    color: var(--color-gray-300);
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    RODAPÉ DO CARD
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .disciplina-data-criacao {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary-light);
-}
-
-
-.disciplina-card-footer {
-    padding-top: var(--spacing-md);
-    border-top: var(--border-width) solid var(--color-gray-200);
-}
-
-.disciplina-acoes {
-    display: flex;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-    justify-content: flex-end;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    RESPONSIVIDADE
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-@media (max-width: 1024px) {
-    .disciplina-estatisticas {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    }
-}
-
 @media (max-width: 768px) {
+
     .disciplinas-container {
         padding: var(--spacing-md);
     }
 
-    .disciplinas-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
     .disciplinas-header-left {
-        width: 100%;
-    }
-
-    .plano-select {
-        min-width: 100%;
-    }
-
-    .disciplina-card {
-        padding: var(--spacing-xs);
-    }
-
-    .disciplina-nome {
-        font-size: var(--font-size-xl);
-    }
-
-    .disciplina-estatisticas {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .disciplina-acoes {
         flex-direction: column;
-    }
-
-}
-
-@media (max-width: 480px) {
-    .disciplinas-title {
-        font-size: var(--font-size-2xl);
-    }
-
-    .disciplina-estatisticas {
-        grid-template-columns: 1fr;
+        min-width: 100%;
     }
 
     .plano-selector {
         flex-direction: column;
         align-items: stretch;
+        min-width: 100%;
+        margin-bottom: var(--spacing-sm);
     }
+
 }

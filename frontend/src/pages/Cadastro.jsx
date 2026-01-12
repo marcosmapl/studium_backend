@@ -287,7 +287,7 @@ const Cadastro = () => {
                         {/* Data de Nascimento */}
                         <div className="studium-form-group">
                             <label htmlFor="dataNascimento" className="studium-form-label">
-                                Data de Nascimento (opcional)
+                                Data de Nascimento
                             </label>
                             <input
                                 id="dataNascimento"
@@ -391,7 +391,7 @@ const Cadastro = () => {
                             {/* Unidade Federativa */}
                             <div className="studium-form-group">
                                 <label htmlFor="unidadeFederativaId" className="studium-form-label">
-                                    Estado (UF) *
+                                    Estado *
                                 </label>
                                 <select
                                     id="unidadeFederativaId"

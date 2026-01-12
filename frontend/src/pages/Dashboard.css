@@ -15,14 +15,6 @@
     padding: var(--spacing-xl) var(--spacing-2xl);
 }
 
-.studium-dashboard-title {
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-accent);
-    margin-bottom: var(--spacing-xl);
-    text-align: left;
-}
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    GRID DE MÉTRICAS (KPI)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -54,7 +46,7 @@
     background-color: var(--color-white);
     border-radius: var(--border-radius-xl);
     box-shadow: var(--shadow-md);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
     transition: var(--transition-all-fast);
     border: var(--border-width) solid var(--color-border-light);
     display: flex;
@@ -67,37 +59,22 @@
     transform: translateY(-4px);
 }
 
-/* Cabeçalho do Card */
-.studium-card-header {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: var(--border-width-2) solid var(--color-gray-200);
-}
-
 /* Estilo para ícones FontAwesome nos cards */
 .studium-card-icon {
     font-size: var(--font-size-2xl);
     color: var(--color-accent);
 }
 
-.studium-card-title {
-    color: var(--color-text-dark);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-}
-
 /* Layout flex para alinhar kpi-details e valor na mesma linha */
 .studium-card-content-flex {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
     background-color: var(--color-gray-50);
     border-radius: var(--border-radius-lg);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    padding-left: var(--spacing-xl);
 }
 
 .kpi-details {
@@ -108,38 +85,27 @@
     flex: 1;
 }
 
-.studium-card-value {
-    font-size: var(--font-size-4xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-accent);
-}
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SEÇÃO DE CONSTÂNCIA DE ESTUDOS
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .study-consistency-section {
-    background-color: var(--color-white);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-xl);
     transition: var(--transition-all-fast);
-    border: var(--border-width) solid var(--color-border-light);
 }
 
 .study-consistency-section:hover {
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
 }
 
 /* Grid de Dias de Estudo */
 .study-days-grid {
-    background-color: var(--color-gray-200);
+    background-color: var(--color-gray-50);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md) var(--spacing-lg);
-    width: 100%;
+    padding: var(--spacing-sm);
+    margin: var(--spacing-md) var(--spacing-sm);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 .study-day-item {
@@ -152,7 +118,8 @@
 
 .study-day-item:hover {
     transform: scale(1.1);
-    transition: var(--transition-all-fast);
+    box-shadow: var(--shadow-4xl);
+    transition: var(--transition-base);
 }
 
 /* Ícones de Estudo */
@@ -179,11 +146,6 @@
 @media (max-width: 767px) {
     .studium-dashboard-container {
         padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .studium-dashboard-title {
-        font-size: var(--font-size-2xl);
-        margin-bottom: var(--spacing-lg);
     }
     
     .study-days-grid {

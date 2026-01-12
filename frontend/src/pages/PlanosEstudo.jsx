@@ -155,8 +155,8 @@ const PlanosEstudo = () => {
     return (
         <Layout>
             <div className="planos-container">
-                <div className="planos-header">
-                    <h2 className="planos-title">Planos de Estudo</h2>
+                <div className="studium-page-header planos-header">
+                    <h2 className="studium-page-title planos-title">Planos de Estudo</h2>
                     <button className="btn btn-primary" onClick={handleNovoPlano}>
                         <FontAwesomeIcon icon={faPlus} />
                         Novo Plano
@@ -170,11 +170,11 @@ const PlanosEstudo = () => {
                 ) : (
                     <div className="planos-lista">
                         {planos.map((plano) => (
-                            <div key={plano.id} className="plano-card">
+                            <div key={plano.id} className="studium-card-base">
                                 {/* Cabeçalho do Card */}
-                                <div className="plano-card-header">
+                                <div className="studium-card-header">
                                     <div className="plano-titulo-wrapper">
-                                        <h3 className="plano-titulo">{plano.titulo}</h3>
+                                        <h3 className="studium-card-title">{plano.titulo}</h3>
                                         <span className={`plano-situacao ${getSituacaoClass(plano.situacao.descricao)}`}>
                                             <FontAwesomeIcon icon={getSituacaoIcon(plano.situacao.descricao)} />
                                             {plano.situacao.descricao}
@@ -185,28 +185,36 @@ const PlanosEstudo = () => {
                                 {/* Informações do Concurso */}
                                 <div className="plano-info-concurso">
                                     <div className="info-item">
-                                        <FontAwesomeIcon icon={faBuilding} className="info-icon" />
+                                        <div className="info-icon">
+                                            <FontAwesomeIcon icon={faBuilding} />
+                                        </div>
                                         <div className="info-content">
                                             <span className="info-label">Concurso</span>
                                             <span className="info-value">{plano.concurso}</span>
                                         </div>
                                     </div>
                                     <div className="info-item">
-                                        <FontAwesomeIcon icon={faBriefcase} className="info-icon" />
+                                        <div className="info-icon">
+                                            <FontAwesomeIcon icon={faBriefcase} />
+                                        </div>
                                         <div className="info-content">
                                             <span className="info-label">Cargo</span>
                                             <span className="info-value">{plano.cargo}</span>
                                         </div>
                                     </div>
                                     <div className="info-item">
-                                        <FontAwesomeIcon icon={faUniversity} className="info-icon" />
+                                        <div className="info-icon">
+                                            <FontAwesomeIcon icon={faUniversity} />
+                                        </div>
                                         <div className="info-content">
                                             <span className="info-label">Banca</span>
                                             <span className="info-value">{plano.banca}</span>
                                         </div>
                                     </div>
                                     <div className="info-item">
-                                        <FontAwesomeIcon icon={faCalendar} className="info-icon" />
+                                        <div className="info-icon">
+                                            <FontAwesomeIcon icon={faCalendar} />
+                                        </div>
                                         <div className="info-content">
                                             <span className="info-label">Data da Prova</span>
                                             <span className="info-value">{formatDateToLocaleString(plano.dataProva)}</span>
@@ -229,52 +237,54 @@ const PlanosEstudo = () => {
                                 </div>
 
                                 {/* Estatísticas do Plano */}
-                                <div className="plano-estatisticas">
-                                    <div className="estatistica-item">
-                                        <FontAwesomeIcon icon={faClock} className="estatistica-icon" />
-                                        <div className="estatistica-content">
-                                            <span className="estatistica-valor">{calculateTotalHours(plano.sessoesEstudo)}h</span>
-                                            <span className="estatistica-label">Horas Estudadas</span>
+                                <div className="studium-stats-grid">
+                                    <div className="studium-stats-item">
+                                        <div className="studium-stats-icon">
+                                            <FontAwesomeIcon icon={faClock} />
+                                        </div>
+                                        <div className="studium-stats-content">
+                                            <span className="studium-stats-label">Horas Estudadas</span>
+                                            <span className="studium-stats-valor">{calculateTotalHours(plano.sessoesEstudo)}h</span>
                                         </div>
                                     </div>
-                                    <div className="estatistica-item">
-                                        <FontAwesomeIcon icon={faBook} className="estatistica-icon" />
-                                        <div className="estatistica-content">
-                                            <span className="estatistica-valor">{plano.disciplinas?.length | 0}</span>
-                                            <span className="estatistica-label">Disciplinas</span>
+                                    <div className="studium-stats-item">
+                                        <FontAwesomeIcon icon={faBook} className="studium-stats-icon" />
+                                        <div className="studium-stats-content">
+                                            <span className="studium-stats-label">Disciplinas</span>
+                                            <span className="studium-stats-valor">{plano.disciplinas?.length | 0}</span>
                                         </div>
                                     </div>
-                                    <div className="estatistica-item">
-                                        <FontAwesomeIcon icon={faFire} className="estatistica-icon" />
-                                        <div className="estatistica-content">
-                                            <span className="estatistica-valor">{plano.constancia}%</span>
-                                            <span className="estatistica-label">Constância</span>
+                                    <div className="studium-stats-item">
+                                        <FontAwesomeIcon icon={faFire} className="studium-stats-icon" />
+                                        <div className="studium-stats-content">
+                                            <span className="studium-stats-label">Constância</span>
+                                            <span className="studium-stats-valor">{plano.constancia}%</span>
                                         </div>
                                     </div>
-                                    <div className="estatistica-item">
-                                        <FontAwesomeIcon icon={faTachometerAlt} className="estatistica-icon" />
-                                        <div className="estatistica-content">
-                                            <span className="estatistica-valor">
+                                    <div className="studium-stats-item">
+                                        <FontAwesomeIcon icon={faTachometerAlt} className="studium-stats-icon" />
+                                        <div className="studium-stats-content">
+                                            <span className="studium-stats-label">Ritmo Atual</span>
+                                            <span className="studium-stats-valor">
                                                 {plano.ritmoAtual > 0 ? `${plano.ritmoAtual}h/dia` : '-'}
                                             </span>
-                                            <span className="estatistica-label">Ritmo Atual</span>
                                         </div>
                                     </div>
-                                    <div className="estatistica-item">
-                                        <FontAwesomeIcon icon={faBullseye} className="estatistica-icon" />
-                                        <div className="estatistica-content">
-                                            <span className="estatistica-valor">{calculatePerformance(plano.sessoesEstudo)}%</span>
-                                            <span className="estatistica-label">Desempenho</span>
+                                    <div className="studium-stats-item">
+                                        <FontAwesomeIcon icon={faBullseye} className="studium-stats-icon" />
+                                        <div className="studium-stats-content">
+                                            <span className="studium-stats-label">Desempenho</span>
+                                            <span className="studium-stats-valor">{calculatePerformance(plano.sessoesEstudo)}%</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Rodapé do Card */}
-                                <div className="plano-card-footer">
+                                <div className="studium-card-footer">
                                     <span className="plano-data-criacao">
                                         Criado em {formatDateToLocaleString(plano.createdAt)}
                                     </span>
-                                    <div className="plano-acoes">
+                                    <div className="studium-card-footer-actions">
                                         <button
                                             className="btn btn-secondary"
                                             onClick={() => handleVerDisciplinas(plano.id)}

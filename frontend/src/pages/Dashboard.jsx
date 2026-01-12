@@ -7,7 +7,9 @@ const Dashboard = () => {
     return (
         <Layout>
             <div className="studium-dashboard-container">
-                <h2 className="studium-dashboard-title">Dashboard</h2>
+                <div className="studium-page-header">
+                    <h2 className="studium-page-title">Dashboard</h2>
+                </div>
 
                 {/* Seção de Métricas */}
                 <div className="studium-dashboard-grid">
@@ -15,7 +17,7 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faClock} className="studium-card-icon" />
-                            <h3 className="studium-card-title ml-2">Tempo de Estudo</h3>
+                            <h3 className="studium-card-title">Tempo de Estudo</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
@@ -28,7 +30,7 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faBullseye} className="studium-card-icon" />
-                            <h3 className="studium-card-title ml-2">Desempenho</h3>
+                            <h3 className="studium-card-title">Desempenho</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
@@ -43,7 +45,7 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faChartBar} className="studium-card-icon" />
-                            <h3 className="studium-card-title ml-2">Progresso no Edital</h3>
+                            <h3 className="studium-card-title">Progresso no Edital</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
@@ -58,7 +60,7 @@ const Dashboard = () => {
                     <div className="studium-card-base studium-dashboard-card">
                         <div className="studium-card-header">
                             <FontAwesomeIcon icon={faFire} className="studium-card-icon" />
-                            <h3 className="studium-card-title ml-2">Constância nos Estudos</h3>
+                            <h3 className="studium-card-title">Constância nos Estudos</h3>
                         </div>
                         <div className="studium-card-content-flex">
                             <div className="kpi-details">
@@ -72,8 +74,8 @@ const Dashboard = () => {
 
                 {/* Seção de Constância nos Estudos */}
                 <div className="section-base study-consistency-section">
-                    <h3 className="section-title ml-2">Constância nos Estudos</h3>
-                    <p className="section-content text-lg m-md">
+                    <h3 className="section-title">Constância nos Estudos</h3>
+                    <p className="section-content m-md">
                         Você está há<span className="font-bold text-success ml-1">5 dias</span> sem falhar!
                         Seu recorde é de <span className="font-bold text-warning ml-1">18 dias</span>.
                     </p>

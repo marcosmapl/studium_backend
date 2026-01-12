@@ -61,14 +61,13 @@ const Login = () => {
     return (
         <div className="studium-container">
             <div className="studium-main-card">
-                <div className="studium-form-header">
+                <div className="studium-page-header">
                     <h1 className="studium-form-title login-form-title">Studium</h1>
-                    <p className="studium-form-subtitle">Sistema de Gestão de Estudos</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="studium-form">
                     <div className="studium-form-group">
-                        <label htmlFor="usuario" className="studium-form-label">
+                        <label htmlFor="usuario" className="studium-form-label login-form-label">
                             Usuário
                         </label>
                         <input
@@ -83,7 +82,7 @@ const Login = () => {
                     </div>
 
                     <div className="studium-form-group">
-                        <label htmlFor="password" className="studium-form-label">
+                        <label htmlFor="password" className="studium-form-label login-form-label">
                             Senha
                         </label>
                         <div className="studium-pwd-field">
@@ -126,10 +125,12 @@ const Login = () => {
                         Esqueci minha senha
                     </button>
 
-                    <div className="divider">
+                    <div className="divider-container">
+                        <div className="divider"></div>
                         <div className="divider-text">
                             <span>ou</span>
                         </div>
+                        <div className="divider"></div>
                     </div>
 
                     <button
