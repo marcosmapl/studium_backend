@@ -120,16 +120,6 @@ model Disciplina {
     @@map("disciplina")
 }
 
-model SituacaoTopico {
-    id        Int    @id @default(autoincrement())
-    descricao String @unique
-
-    topicos Topico[]
-
-    @@index([descricao])
-    @@map("situacao_topico")
-}
-
 model Topico {
     id           Int      @id @default(autoincrement())
     titulo       String
@@ -137,15 +127,11 @@ model Topico {
     concluido    Boolean  @default(false)
     estabilidade Float    @default(1.0)
     dificuldade  Float    @default(5.0)
-    observacoes  String?
     createdAt    DateTime @default(now()) @map("created_at")
     updatedAt    DateTime @updatedAt @map("updated_at")
 
     disciplinaId Int        @map("disciplina_id")
     disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-    situacaoId Int            @map("situacao_id")
-    situacao   SituacaoTopico @relation(fields: [situacaoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
     sessoesEstudo SessaoEstudo[]
 
@@ -154,7 +140,6 @@ model Topico {
     @@unique([titulo, disciplinaId])
     @@index([titulo])
     @@index([disciplinaId], map: "topico__disciplina_id_fkey")
-    @@index([situacaoId], map: "topico__situacao_id_fkey")
     @@map("topico")
 }
 

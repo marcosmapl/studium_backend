@@ -21,7 +21,6 @@ const { verifyToken } = require("../middleware/auth");
  *               - titulo
  *               - ordem
  *               - disciplinaId
- *               - situacaoId
  *             properties:
  *               titulo:
  *                 type: string
@@ -34,10 +33,6 @@ const { verifyToken } = require("../middleware/auth");
  *               disciplinaId:
  *                 type: integer
  *                 description: ID da disciplina
- *                 example: 1
- *               situacaoId:
- *                 type: integer
- *                 description: ID da situação do tópico
  *                 example: 1
  *               concluido:
  *                 type: boolean
@@ -73,9 +68,6 @@ const { verifyToken } = require("../middleware/auth");
  *                   type: integer
  *                   example: 1
  *                 disciplinaId:
- *                   type: integer
- *                   example: 1
- *                 situacaoId:
  *                   type: integer
  *                   example: 1
  *                 concluido:
@@ -130,22 +122,12 @@ const { verifyToken } = require("../middleware/auth");
  *                   disciplinaId:
  *                     type: integer
  *                     example: 1
- *                   situacaoId:
- *                     type: integer
- *                     example: 1
  *                   disciplina:
  *                     type: object
  *                     properties:
  *                       id:
  *                         type: integer
  *                       titulo:
- *                         type: string
- *                   situacao:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                       descricao:
  *                         type: string
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
@@ -187,11 +169,7 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: integer
  *                 disciplinaId:
  *                   type: integer
- *                 situacaoId:
- *                   type: integer
  *                 disciplina:
- *                   type: object
- *                 situacao:
  *                   type: object
  *       404:
  *         description: Nenhum tópico encontrado
@@ -236,11 +214,7 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                     type: integer
  *                   disciplinaId:
  *                     type: integer
- *                   situacaoId:
- *                     type: integer
  *                   disciplina:
- *                     type: object
- *                   situacao:
  *                     type: object
  *       404:
  *         description: Nenhum tópico encontrado
@@ -285,11 +259,7 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                     type: integer
  *                   disciplinaId:
  *                     type: integer
- *                   situacaoId:
- *                     type: integer
  *                   disciplina:
- *                     type: object
- *                   situacao:
  *                     type: object
  *       404:
  *         description: Nenhum tópico encontrado para esta disciplina
@@ -299,55 +269,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *         description: Erro interno do servidor
  */
 router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDisciplinaId);
-
-/**
- * @swagger
- * /api/topico/situacao/{situacaoId}:
- *   get:
- *     summary: Busca todos os tópicos por situação
- *     tags: [Tópico]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: situacaoId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da situação
- *         example: 1
- *     responses:
- *       200:
- *         description: Tópicos da situação encontrados
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   titulo:
- *                     type: string
- *                   ordem:
- *                     type: integer
- *                   disciplinaId:
- *                     type: integer
- *                   situacaoId:
- *                     type: integer
- *                   disciplina:
- *                     type: object
- *                   situacao:
- *                     type: object
- *       404:
- *         description: Nenhum tópico encontrado para esta situação
- *       401:
- *         description: Não autorizado
- *       500:
- *         description: Erro interno do servidor
- */
-router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId);
 
 /**
  * @swagger
@@ -381,8 +302,6 @@ router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId
  *                   type: integer
  *                 disciplinaId:
  *                   type: integer
- *                 situacaoId:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
  *                 estabilidade:
@@ -390,8 +309,6 @@ router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId
  *                 dificuldade:
  *                   type: number
  *                 disciplina:
- *                   type: object
- *                 situacao:
  *                   type: object
  *       404:
  *         description: Tópico não encontrado
@@ -427,10 +344,6 @@ router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId
  *                 type: integer
  *                 description: Nova ordem do tópico
  *                 example: 2
- *               situacaoId:
- *                 type: integer
- *                 description: Novo ID da situação
- *                 example: 2
  *               concluido:
  *                 type: boolean
  *                 description: Se o tópico foi concluído
@@ -462,8 +375,6 @@ router.get("/situacao/:situacaoId", verifyToken, controller.findManyBySituacaoId
  *                 ordem:
  *                   type: integer
  *                 disciplinaId:
- *                   type: integer
- *                 situacaoId:
  *                   type: integer
  *       400:
  *         description: Dados inválidos

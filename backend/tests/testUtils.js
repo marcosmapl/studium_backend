@@ -30,7 +30,6 @@ const cleanDatabase = async () => {
         await prisma.generoUsuario.deleteMany();
         await prisma.situacaoUsuario.deleteMany();
         await prisma.situacaoPlano.deleteMany();
-        await prisma.situacaoTopico.deleteMany();
         await prisma.categoriaSessao.deleteMany();
         await prisma.situacaoSessao.deleteMany();
         await prisma.categoriaRevisao.deleteMany();

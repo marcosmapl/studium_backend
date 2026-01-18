@@ -21,7 +21,6 @@ describe("Alocação Horário API", () => {
     disciplina = await prisma.disciplina.create({
       data: {
         titulo: "Matemática para Testes",
-        descricao: "Disciplina de teste",
         planoId: planoEstudo.id,
       },
     });
@@ -231,7 +230,6 @@ describe("Alocação Horário API", () => {
       const disciplina2 = await prisma.disciplina.create({
         data: {
           titulo: "Física para Testes",
-          descricao: "Disciplina de teste 2",
           planoId: planoEstudo.id,
         },
       });

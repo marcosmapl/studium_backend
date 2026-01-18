@@ -30,11 +30,6 @@ describe("Revisão - /api/revisao", () => {
     
     token = await getAuthToken(app);
 
-    // Criar situação de tópico
-    const situacaoTopico = await prisma.situacaoTopico.create({
-      data: { descricao: "Em andamento" },
-    });
-
     // Criar disciplina de teste
     disciplinaTeste = await prisma.disciplina.create({
       data: {
@@ -49,7 +44,6 @@ describe("Revisão - /api/revisao", () => {
         titulo: "Tópico Teste",
         ordem: 1,
         disciplinaId: disciplinaTeste.id,
-        situacaoId: situacaoTopico.id,
       },
     });
 

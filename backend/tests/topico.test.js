@@ -17,7 +17,6 @@ describe("Tópico - /api/topico", () => {
   let topicoTeste;
   let seedData;
   let disciplinaTeste;
-  let situacaoTopicoTeste;
 
   beforeAll(async () => {
     await cleanDatabase();
@@ -31,17 +30,10 @@ describe("Tópico - /api/topico", () => {
     disciplinaTeste = await prisma.disciplina.create({
       data: {
         titulo: "Disciplina Teste",
-        cor: "#FF5733",
         planoId: seedData.planoEstudo.id,
       },
     });
 
-    // Criar situação de tópico para os testes
-    situacaoTopicoTeste = await prisma.situacaoTopico.create({
-      data: {
-        descricao: "Pendente",
-      },
-    });
   });
 
   afterAll(async () => {
@@ -54,7 +46,6 @@ describe("Tópico - /api/topico", () => {
         titulo: "Teoria Geral dos Direitos Fundamentais",
         ordem: 1,
         disciplinaId: disciplinaTeste.id,
-        situacaoId: situacaoTopicoTeste.id,
       };
 
       const response = await request(app)
@@ -66,7 +57,6 @@ describe("Tópico - /api/topico", () => {
       expect(response.body.titulo).toBe("Teoria Geral dos Direitos Fundamentais");
       expect(response.body.ordem).toBe(1);
       expect(response.body.disciplinaId).toBe(disciplinaTeste.id);
-      expect(response.body.situacaoId).toBe(situacaoTopicoTeste.id);
 
       // Salvar o tópico criado para usar nos demais testes
       topicoTeste = response.body;
@@ -77,7 +67,6 @@ describe("Tópico - /api/topico", () => {
         titulo: "Teoria Geral dos Direitos Fundamentais",
         ordem: 2,
         disciplinaId: disciplinaTeste.id,
-        situacaoId: situacaoTopicoTeste.id,
       };
 
       const response = await request(app)
@@ -94,7 +83,6 @@ describe("Tópico - /api/topico", () => {
       const segundaDisciplina = await prisma.disciplina.create({
         data: {
           titulo: "Disciplina Teste 2",
-          cor: "#00FF00",
           planoId: seedData.planoEstudo.id,
         },
       });
@@ -103,7 +91,6 @@ describe("Tópico - /api/topico", () => {
         titulo: "Teoria Geral dos Direitos Fundamentais",
         ordem: 1,
         disciplinaId: segundaDisciplina.id,
-        situacaoId: situacaoTopicoTeste.id,
       };
 
       const response = await request(app)
@@ -135,7 +122,6 @@ describe("Tópico - /api/topico", () => {
         .send({
           ordem: 2,
           disciplinaId: disciplinaTeste.id,
-          situacaoId: situacaoTopicoTeste.id,
         });
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
@@ -230,27 +216,6 @@ describe("Tópico - /api/topico", () => {
     it("deve retornar 404 quando nenhum tópico for encontrado para disciplina", async () => {
       const response = await request(app)
         .get("/api/topico/disciplina/99999")
-        .set("Authorization", `Bearer ${token}`);
-
-      expect(response.status).toBe(HttpStatus.NOT_FOUND);
-    });
-  });
-
-  describe("GET /api/topico/situacao/:situacaoId", () => {
-    it("deve buscar tópicos por situação", async () => {
-      const response = await request(app)
-        .get(`/api/topico/situacao/${situacaoTopicoTeste.id}`)
-        .set("Authorization", `Bearer ${token}`);
-
-      expect(response.status).toBe(HttpStatus.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
-      expect(response.body.every(t => t.situacaoId === situacaoTopicoTeste.id)).toBe(true);
-    });
-
-    it("deve retornar 404 quando nenhum tópico for encontrado para situação", async () => {
-      const response = await request(app)
-        .get("/api/topico/situacao/99999")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(HttpStatus.NOT_FOUND);

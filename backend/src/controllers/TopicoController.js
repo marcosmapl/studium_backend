@@ -9,7 +9,7 @@ class TopicoController extends BaseController {
     constructor() {
         super(repository, "tópico", {
             entityNamePlural: "tópicos",
-            requiredFields: ["titulo", "ordem", "disciplinaId", "situacaoId"]
+            requiredFields: ["titulo", "ordem", "disciplinaId"]
         });
     }
 
@@ -82,10 +82,8 @@ class TopicoController extends BaseController {
                     let mensagem = "Registro relacionado não encontrado";
                     if (campo.includes("disciplina")) {
                         mensagem = "Disciplina não encontrada";
-                    } else if (campo.includes("situacao")) {
-                        mensagem = "Situação não encontrada";
                     }
-
+                    
                     return res.status(HttpStatus.BAD_REQUEST).json({
                         error: mensagem,
                     });
@@ -212,40 +210,7 @@ class TopicoController extends BaseController {
         }
     }
 
-    /**
-     * Busca todos os tópicos por situação
-     */
-    async findManyBySituacaoId(req, res, next) {
-        try {
-            const { situacaoId } = req.params;
 
-            logger.info(`Buscando ${this.entityNamePlural} por situação`, {
-                situacaoId: parseInt(situacaoId),
-                route: req.originalUrl,
-            });
-
-            const topicos = await this.repository.findManyBySituacaoId(situacaoId);
-
-            if (!topicos || topicos.length === 0) {
-                logger.info(`Nenhum ${this.entityName} encontrado para esta situação`, {
-                    situacaoId: parseInt(situacaoId),
-                    route: req.originalUrl,
-                });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhum ${this.entityName} encontrado para esta situação`
-                });
-            }
-
-            return res.json(topicos);
-        } catch (error) {
-            logger.error(`Erro ao buscar ${this.entityNamePlural} por situação`, {
-                error: error.message,
-                stack: error.stack,
-            });
-
-            next(error);
-        }
-    }
 }
 
 const controller = new TopicoController();
@@ -257,7 +222,6 @@ module.exports = {
     findUniqueByTitulo: controller.findUniqueByTitulo.bind(controller),
     findManyByTitulo: controller.findManyByTitulo.bind(controller),
     findManyByDisciplinaId: controller.findManyByDisciplinaId.bind(controller),
-    findManyBySituacaoId: controller.findManyBySituacaoId.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

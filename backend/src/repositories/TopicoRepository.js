@@ -9,7 +9,6 @@ class PrismaTopicoRepository extends BaseRepository {
             orderDirection: "asc",
             includeRelations: {
                 disciplina: true,
-                situacao: true,
             }
         });
     }
@@ -61,17 +60,6 @@ class PrismaTopicoRepository extends BaseRepository {
     async findManyByDisciplinaId(disciplinaId) {
         return await this.findMany({
             disciplinaId: parseInt(disciplinaId),
-        });
-    }
-
-    /**
-     * Busca todos os tópicos por situação
-     * @param {number} situacaoId - ID da situação
-     * @returns {Promise<Array>} Lista de tópicos da situação
-     */
-    async findManyBySituacaoId(situacaoId) {
-        return await this.findMany({
-            situacaoId: parseInt(situacaoId),
         });
     }
 
