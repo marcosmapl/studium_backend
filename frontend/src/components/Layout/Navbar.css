@@ -34,8 +34,8 @@
 .studium-nav-left {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xl);
-    width: 15rem;
+    gap: var(--spacing-lg);
+    width: 13rem;
 }
 
 .studium-nav-toggle {

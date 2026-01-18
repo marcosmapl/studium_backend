@@ -5,110 +5,49 @@
    ██                                                            ██
    ████████████████████████████████████████████████████████████████ */
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CONTAINER PRINCIPAL DO DASHBOARD
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.studium-dashboard-container {
-    background-color: var(--color-background-light);
-    min-height: 100vh;
-    padding: var(--spacing-xl) var(--spacing-2xl);
+.dashboard-kpi-section {
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-md);
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   GRID DE MÉTRICAS (KPI)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.studium-dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+.dashboard-consistency-section {
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-md);
 }
 
-@media (min-width: 768px) {
-    .studium-dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .studium-dashboard-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   KPI CARDS (Indicadores)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.studium-dashboard-card {
-    background-color: var(--color-white);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    transition: var(--transition-all-fast);
-    border: var(--border-width) solid var(--color-border-light);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.studium-dashboard-card:hover {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-4px);
-}
-
-/* Estilo para ícones FontAwesome nos cards */
-.studium-card-icon {
-    font-size: var(--font-size-2xl);
-    color: var(--color-accent);
-}
-
-/* Layout flex para alinhar kpi-details e valor na mesma linha */
-.studium-card-content-flex {
-    align-items: center;
-    background-color: var(--color-gray-50);
-    border-radius: var(--border-radius-lg);
-    display: flex;
-    justify-content: space-between;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-xs) var(--spacing-md);
-    padding-left: var(--spacing-xl);
-}
-
-.kpi-details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    text-align: left;
+.dashboard-kpi-card {
     flex: 1;
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SEÇÃO DE CONSTÂNCIA DE ESTUDOS
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.study-consistency-section {
-    transition: var(--transition-all-fast);
+.dashboard-kpi-card-content {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
-.study-consistency-section:hover {
-    box-shadow: var(--shadow-xl);
+.dashboard-kpi-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
 }
 
-/* Grid de Dias de Estudo */
-.study-days-grid {
-    background-color: var(--color-gray-50);
+.dashboard-days-grid {
+    background-color: var(--color-gray-100);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-sm);
-    margin: var(--spacing-md) var(--spacing-sm);
+    margin: 0 var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
     gap: var(--spacing-xs);
 }
 
-.study-day-item {
+.dashboard-day-item {
     position: relative;
     display: flex;
     align-items: center;
@@ -116,26 +55,26 @@
     cursor: pointer;
 }
 
-.study-day-item:hover {
+.dashboard-day-item:hover {
     transform: scale(1.1);
     box-shadow: var(--shadow-4xl);
     transition: var(--transition-base);
 }
 
 /* Ícones de Estudo */
-.study-icon-success {
+.dashboard-icon-success {
     width: 2rem;
     height: 2rem;
     color: var(--color-success);
 }
 
-.study-icon-error {
+.dashboard-icon-error {
     width: 1.75rem;
     height: 2rem;
     color: var(--color-error);
 }
 
-.study-icon-bg {
+.dashboard-icon-bg {
     opacity: 0.15;
 }
 
@@ -147,19 +86,19 @@
     .studium-dashboard-container {
         padding: var(--spacing-lg) var(--spacing-md);
     }
-    
-    .study-days-grid {
+
+    .dashboard-days-grid {
         grid-template-columns: repeat(auto-fit, minmax(24px, 1fr));
         gap: var(--spacing-md);
         padding: var(--spacing-md);
     }
-    
-    .study-icon-success {
+
+    .dashboard-icon-success {
         width: 1.5rem;
         height: 1.5rem;
     }
-    
-    .study-icon-error {
+
+    .dashboard-icon-error {
         width: 1.25rem;
         height: 1.5rem;
     }

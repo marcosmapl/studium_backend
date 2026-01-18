@@ -439,13 +439,14 @@ body {
 
 /* Container Principal */
 .studium-container {
-    min-height: 100vh;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: var(--color-primary);
-    padding: var(--spacing-xl) var(--spacing-md);
+    background-color: var(--color-background-light);
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-xl);
+    min-height: 100vh;
 }
+
 
 /* Card de Cadastro/Login */
 .studium-main-card {
@@ -461,6 +462,7 @@ body {
     border-bottom: 2px solid var(--color-gray-200);
     margin-bottom: var(--spacing-xl);
     padding-bottom: var(--spacing-md);
+    width: 100%;
 }
 
 .studium-page-title {
@@ -619,16 +621,17 @@ body {
 
 .studium-card-base {
     background-color: var(--color-background-light);
-    border: var(--border-width) solid var(--color-border-light);
+    border: var(--border-width-2) solid var(--color-border-light);
     border-radius: var(--border-radius-2xl);
     padding: var(--spacing-md) var(--spacing-lg);
     box-shadow: var(--shadow-sm);
     transition: box-shadow var(--transition-fast);
+    flex: 1;
 }
 
 .studium-card-base:hover {
     box-shadow: var(--shadow-xl);
-    transform: translateY(-4px);
+    transform: translateY(-2px);
 }
 
 .studium-card-header {
@@ -643,7 +646,8 @@ body {
 }
 
 .studium-card-icon {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-xl);
+    color: var(--color-accent);
 }
 
 .studium-card-title {
@@ -654,7 +658,7 @@ body {
 
 .studium-card-subtitle {
     color: var(--color-text-secondary);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     margin-top: var(--spacing-xs);
 }
@@ -768,36 +772,21 @@ body {
    ██                                                            ██
    ████████████████████████████████████████████████████████████████ */
 
-.section-base {
-    background-color: var(--color-background-light);
-    border: var(--border-width) solid var(--color-border-light);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-sm) var(--spacing-md);
-    box-shadow: var(--shadow-md);
-    margin-top: var(--spacing-lg);
+.studium-section-row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    width: 100%;
 }
 
-.section-header {
-    margin-bottom: var(--spacing-md);
-}
-
-.section-title {
-    color: var(--color-text-dark);
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-lg);
-    margin: var(--spacing-sm) var(--spacing-sm);
-}
-
-.section-subtitle {
-    color: var(--color-text-secondary-light);
-    font-size: var(--font-size-sm);
-    margin: 0;
-}
-
-.section-content {
-    color: var(--color-text-dark);
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-normal);
+.studium-section-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    width: 100%;
 }
 
 /* ████████████████████████████████████████████████████████████████
@@ -874,7 +863,7 @@ body {
 button,
 .btn {
     font-family: var(--font-family-base);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-md);

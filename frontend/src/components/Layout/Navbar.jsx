@@ -35,7 +35,7 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 className="studium-nav-logo">Studium</h1>
+                        <h1 className="studium-nav-logo">STUDIUM</h1>
                     </div>
 
                     {/* Mensagem de Boas-vindas */}
