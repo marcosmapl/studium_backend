@@ -8,7 +8,7 @@ class SessaoEstudoController extends BaseController {
     constructor() {
         super(repository, "sessão de estudo", {
             entityNamePlural: "sessões de estudo",
-            requiredFields: ["planoEstudoId", "disciplinaId", "topicoId", "categoriaSessaoId", "situacaoSessaoId"]
+            requiredFields: ["dataInicio", "planoEstudoId", "disciplinaId", "topicoId", "blocoEstudoId"]
         });
     }
 
@@ -120,30 +120,30 @@ class SessaoEstudoController extends BaseController {
     /**
      * Busca todas as sessões de estudo por categoria
      */
-    async findManyByCategoriaSessaoId(req, res, next) {
+    async findManyByBlocoEstudoId(req, res, next) {
         try {
-            const { categoriaSessaoId } = req.params;
+            const { blocoEstudoId } = req.params;
 
-            logger.info(`Buscando ${this.entityNamePlural} por categoria de sessão`, {
-                categoriaSessaoId: parseInt(categoriaSessaoId),
+            logger.info(`Buscando ${this.entityNamePlural} por bloco de estudo`, {
+                blocoEstudoId: parseInt(blocoEstudoId),
                 route: req.originalUrl,
             });
 
-            const sessoes = await this.repository.findManyByCategoriaSessaoId(categoriaSessaoId);
+            const sessoes = await this.repository.findManyByBlocoEstudoId(blocoEstudoId);
 
             if (!sessoes || sessoes.length === 0) {
-                logger.info(`Nenhuma ${this.entityName} encontrada para esta categoria`, {
-                    categoriaSessaoId: parseInt(categoriaSessaoId),
+                logger.info(`Nenhuma ${this.entityName} encontrada para este bloco de estudo`, {
+                    blocoEstudoId: parseInt(blocoEstudoId),
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta categoria`
+                    error: `Nenhuma ${this.entityName} encontrada para este bloco de estudo`
                 });
             }
 
             return res.json(sessoes);
         } catch (error) {
-            logger.error(`Erro ao buscar ${this.entityNamePlural} por categoria de sessão`, {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por bloco de estudo`, {
                 error: error.message,
                 stack: error.stack,
             });

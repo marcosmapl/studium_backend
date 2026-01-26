@@ -9,6 +9,8 @@ class PrismaTopicoRepository extends BaseRepository {
             orderDirection: "asc",
             includeRelations: {
                 disciplina: true,
+                sessoesEstudo: true,
+                revisoes: true,
             }
         });
     }

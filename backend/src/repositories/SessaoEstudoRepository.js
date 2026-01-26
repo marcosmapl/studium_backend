@@ -10,8 +10,7 @@ class PrismaSessaoEstudoRepository extends BaseRepository {
                 planoEstudo: true,
                 disciplina: true,
                 topico: true,
-                categoriaSessao: true,
-                situacaoSessao: true,
+                blocoEstudo: true,
             }
         });
     }
@@ -50,24 +49,13 @@ class PrismaSessaoEstudoRepository extends BaseRepository {
     }
 
     /**
-     * Busca todas as sessões de estudo por categoria
-     * @param {number} categoriaSessaoId - ID da categoria de sessão
-     * @returns {Promise<Array>} Lista de sessões de estudo da categoria
+     * Busca todas as sessões de estudo por bloco de estudo
+     * @param {number} blocoEstudoId - ID do bloco de estudo
+     * @returns {Promise<Array>} Lista de sessões de estudo do bloco de estudo
      */
-    async findManyByCategoriaSessaoId(categoriaSessaoId) {
+    async findManyByBlocoEstudoId(blocoEstudoId) {
         return await this.findMany({
-            categoriaSessaoId: parseInt(categoriaSessaoId),
-        });
-    }
-
-    /**
-     * Busca todas as sessões de estudo por situação
-     * @param {number} situacaoSessaoId - ID da situação de sessão
-     * @returns {Promise<Array>} Lista de sessões de estudo da situação
-     */
-    async findManyBySituacaoSessaoId(situacaoSessaoId) {
-        return await this.findMany({
-            situacaoSessaoId: parseInt(situacaoSessaoId),
+            blocoEstudoId: parseInt(blocoEstudoId),
         });
     }
 

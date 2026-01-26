@@ -8,78 +8,8 @@ class RevisaoController extends BaseController {
     constructor() {
         super(repository, "revisão", {
             entityNamePlural: "revisões",
-            requiredFields: ["numero", "dataProgramada", "desempenho", "categoriaRevisaoId", "situacaoRevisaoId", "planoEstudoId", "disciplinaId", "topicoId"]
+            requiredFields: ["numero", "dataProgramada", "planoEstudoId", "disciplinaId", "topicoId"]
         });
-    }
-
-    /**
-     * Busca todas as revisões por categoria
-     */
-    async findManyByCategoriaRevisaoId(req, res, next) {
-        try {
-            const { categoriaRevisaoId } = req.params;
-
-            logger.info(`Buscando ${this.entityNamePlural} por categoria de revisão`, {
-                categoriaRevisaoId: parseInt(categoriaRevisaoId),
-                route: req.originalUrl,
-            });
-
-            const revisoes = await this.repository.findManyByCategoriaRevisaoId(categoriaRevisaoId);
-
-            if (!revisoes || revisoes.length === 0) {
-                logger.info(`Nenhuma ${this.entityName} encontrada para esta categoria`, {
-                    categoriaRevisaoId: parseInt(categoriaRevisaoId),
-                    route: req.originalUrl,
-                });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta categoria`
-                });
-            }
-
-            return res.json(revisoes);
-        } catch (error) {
-            logger.error(`Erro ao buscar ${this.entityNamePlural} por categoria de revisão`, {
-                error: error.message,
-                stack: error.stack,
-            });
-
-            next(error);
-        }
-    }
-
-    /**
-     * Busca todas as revisões por situação
-     */
-    async findManyBySituacaoRevisaoId(req, res, next) {
-        try {
-            const { situacaoRevisaoId } = req.params;
-
-            logger.info(`Buscando ${this.entityNamePlural} por situação de revisão`, {
-                situacaoRevisaoId: parseInt(situacaoRevisaoId),
-                route: req.originalUrl,
-            });
-
-            const revisoes = await this.repository.findManyBySituacaoRevisaoId(situacaoRevisaoId);
-
-            if (!revisoes || revisoes.length === 0) {
-                logger.info(`Nenhuma ${this.entityName} encontrada para esta situação`, {
-                    situacaoRevisaoId: parseInt(situacaoRevisaoId),
-                    route: req.originalUrl,
-                });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta situação`
-                });
-            }
-
-            return res.json(revisoes);
-        } catch (error) {
-            logger.error(`Erro ao buscar ${this.entityNamePlural} por situação de revisão`, {
-                error: error.message,
-                stack: error.stack,
-            });
-
-            next(error);
-        }
     }
 
     /**
@@ -194,8 +124,6 @@ module.exports = {
     create: controller.create.bind(controller),
     findAll: controller.findAll.bind(controller),
     findById: controller.findById.bind(controller),
-    findManyByCategoriaRevisaoId: controller.findManyByCategoriaRevisaoId.bind(controller),
-    findManyBySituacaoRevisaoId: controller.findManyBySituacaoRevisaoId.bind(controller),
     findManyByPlanoEstudoId: controller.findManyByPlanoEstudoId.bind(controller),
     findManyByDisciplinaId: controller.findManyByDisciplinaId.bind(controller),
     findManyByTopicoId: controller.findManyByTopicoId.bind(controller),

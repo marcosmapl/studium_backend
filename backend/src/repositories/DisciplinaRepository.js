@@ -7,6 +7,9 @@ class PrismaDisciplinaRepository extends BaseRepository {
         super("disciplina", "DisciplinaRepository.js", {
             defaultOrderBy: "titulo",
             orderDirection: "asc",
+            includeRelations: {
+                plano: true,
+            }
         });
     }
 
@@ -73,7 +76,7 @@ class PrismaDisciplinaRepository extends BaseRepository {
                 topicos: true,
                 sessoesEstudo: true,
                 revisoes: true,
-                disciplinaPlanejamentos: true
+                blocoEstudos: true
             }
         };
 

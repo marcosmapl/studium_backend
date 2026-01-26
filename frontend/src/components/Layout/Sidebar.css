@@ -17,8 +17,8 @@
 }
 
 .studium-sbar-open {
-    width: 15rem;
-    /* 240px */
+    width: 14rem;
+    /* 224px */
 }
 
 .studium-sbar-closed {
@@ -34,7 +34,7 @@
     padding-bottom: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -44,44 +44,40 @@
 .studium-sbar-menu-item {
     align-items: center;
     background: transparent;
-    /* background: none; */
     border: none;
-    color: var(--color-text-secondary);
+    color: var(--color-secondary);
     cursor: pointer;
     display: flex;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
     gap: var(--spacing-sm);
-    height: var(--spacing-2xl);
     justify-content: flex-start;
-    margin: var(--spacing-sm) 0 var(--spacing-sm) var(--spacing-xs);
-    padding: var(--spacing-sm) var(--spacing-xl);
+    margin-left: var(--spacing-sm);
+    padding: var(--spacing-md);
     text-align: left;
     transition: var(--transition-all-fast);
-    width: auto;
 }
 
 .studium-sbar-menu-item:hover {
     background-color: var(--color-accent);
-    color: var(--color-text-primary);
+    color: var(--color-white);
 }
 
 .studium-sbar-menu-item-active {
     align-items: center;
     background-color: var(--color-accent);
     border: none;
-    border-right: var(--border-width-4) solid var(--color-text-primary);
-    color: var(--color-text-primary);
+    border-right: var(--border-width-4) solid var(--color-white);
+    color: var(--color-white);
     cursor: pointer;
     display: flex;
     gap: var(--spacing-sm);
-    height: var(--spacing-2xl);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
     justify-content: flex-start;
-    margin-left: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-xl);
+    padding: var(--spacing-md);
     text-align: left;
     transition: var(--transition-all-fast);
-    width: auto;
 }
 
 /* Ícone do item */

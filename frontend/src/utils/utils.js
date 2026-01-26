@@ -1,11 +1,57 @@
 /**
  * Formata uma data ISO para o formato brasileiro (DD/MM/AAAA)
- * @param {string} dataStr - String de data no formato ISO
+ * @param {string} dateString - String de data no formato ISO
  * @returns {string} Data formatada no padrão brasileiro
  */
-export const formatDateToLocaleString = (dataStr) => {
-    const data = new Date(dataStr);
+export const formatDateToLocaleString = (dateString) => {
+    const data = new Date(dateString);
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+};
+
+
+/**
+ * Formata uma data ISO para o formato do input (YYYY-MM-DD)
+ * @param {*} dateString  - String de data no formato ISO
+ * @returns {string} Data formatada no padrão brasileiro
+ */
+export const formatDateForInput = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+
+/**
+ * 
+ * @param {Array} sessoesEstudo 
+ * @returns 
+ */
+export const getMostRecentEstudoDate = (sessoesEstudo) => {
+    if (!sessoesEstudo || sessoesEstudo.length === 0) return null;
+
+    const sessoesOrdenadas = [...sessoesEstudo].sort((a, b) =>
+        new Date(b.dataTermino) - new Date(a.dataTermino)
+    );
+
+    return sessoesOrdenadas[0]?.dataTermino;
+};
+
+/**
+ * 
+ * @param {Array} revisoes 
+ * @returns 
+ */
+export const getNextRevisaoDate = (revisoes) => {
+    if (!revisoes || revisoes.length === 0) return null;
+
+    const revisoesAgendadas = revisoes
+        .filter(revisao => !revisao.dataRealizada)
+        .sort((a, b) => new Date(a.dataProgramada) - new Date(b.dataProgramada));
+
+    return revisoesAgendadas[0]?.dataProgramada;
 };
 
 /**

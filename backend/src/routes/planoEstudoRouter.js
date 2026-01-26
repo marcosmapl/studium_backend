@@ -47,10 +47,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: integer
  *                 description: ID do usuário proprietário do plano
  *                 example: 1
- *               situacaoId:
- *                 type: integer
- *                 description: ID da situação do plano
- *                 example: 1
  *     responses:
  *       201:
  *         description: Plano de estudo criado com sucesso

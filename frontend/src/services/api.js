@@ -55,5 +55,9 @@ export const getDisciplinasByPlanoId = (planoId) => api.get(`/disciplina/plano/$
 export const createDisciplina = (disciplinaData) => api.post('/disciplina', disciplinaData);
 export const updateDisciplina = (id, disciplinaData) => api.put(`/disciplina/${id}`, disciplinaData);
 export const deleteDisciplina = (id) => api.delete(`/disciplina/${id}`);
+export const getTopicosByDisciplinaId = (disciplinaId) => api.get(`/topico/disciplina/${disciplinaId}`);
+export const createTopico = (topicoData) => api.post('/topico', topicoData);
+export const updateTopico = (id, topicoData) => api.put(`/topico/${id}`, topicoData);
+export const deleteTopico = (id) => api.delete(`/topico/${id}`);
 
 export default api;

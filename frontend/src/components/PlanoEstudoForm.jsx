@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faSave, faClipboardList, faCancel } from '@fortawesome/free-solid-svg-icons';
 import './PlanoEstudoForm.css';
+import { formatDateForInput } from '../utils/utils';
 
-const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
+const PlanoEstudoForm = ({ plano, isOpen, onClose, onSubmit }) => {
+
     const [formData, setFormData] = useState({
         titulo: '',
         concurso: '',
@@ -14,16 +16,6 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
     });
 
     const [errors, setErrors] = useState({});
-
-    // Função auxiliar para converter data ISO para formato do input date (YYYY-MM-DD)
-    const formatDateForInput = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
 
     // Preencher o formulário quando receber um plano para edição
     useEffect(() => {
@@ -48,6 +40,34 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
         setErrors({});
     }, [plano, isOpen]);
 
+
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!formData.titulo.trim()) {
+            newErrors.titulo = 'O título do plano é obrigatório';
+        }
+
+        if (!formData.concurso.trim()) {
+            newErrors.concurso = 'O concurso alvo é obrigatório';
+        }
+
+        if (!formData.cargo.trim()) {
+            newErrors.cargo = 'O cargo pretendido é obrigatório';
+        }
+
+        if (!formData.banca.trim()) {
+            newErrors.banca = 'A banca organizadora é obrigatória';
+        }
+
+        if (!formData.dataProva) {
+            newErrors.dataProva = 'A data da prova é obrigatória';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -63,66 +83,29 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
         }
     };
 
-    const validateForm = () => {
-        const newErrors = {};
-
-        if (!formData.titulo.trim()) {
-            newErrors.titulo = 'Título é obrigatório';
-        }
-
-        if (!formData.concurso.trim()) {
-            newErrors.concurso = 'Concurso é obrigatório';
-        }
-
-        if (!formData.cargo.trim()) {
-            newErrors.cargo = 'Cargo é obrigatório';
-        }
-
-        if (!formData.banca.trim()) {
-            newErrors.banca = 'Banca é obrigatória';
-        }
-
-        if (!formData.dataProva) {
-            newErrors.dataProva = 'Data da prova é obrigatória';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (validateForm()) {
-            // Converter data YYYY-MM-DD para ISO DateTime
-            const dataProvaISO = formData.dataProva 
-                ? new Date(formData.dataProva + 'T00:00:00.000Z').toISOString()
-                : null;
-
-            // Se está editando, envia apenas os campos editáveis + IDs necessários
-            const planoData = plano 
-                ? {
-                    id: plano.id,
-                    titulo: formData.titulo,
-                    concurso: formData.concurso,
-                    cargo: formData.cargo,
-                    banca: formData.banca,
-                    dataProva: dataProvaISO,
-                    // usuarioId: plano.usuarioId,
-                    situacaoId: plano.situacaoId
-                }
-                : {
-                    // Novo plano - apenas os dados do formulário
-                    titulo: formData.titulo,
-                    concurso: formData.concurso,
-                    cargo: formData.cargo,
-                    banca: formData.banca,
-                    dataProva: dataProvaISO
-                };
-
-            onSave(planoData);
-            onClose();
+        if (!validateForm()) {
+            return;
         }
+        // Converter data YYYY-MM-DD para ISO DateTime
+        const dataProvaISO = formData.dataProva
+            ? new Date(formData.dataProva + 'T00:00:00.000Z').toISOString()
+            : null;
+
+        // Se está editando, envia apenas os campos editáveis + IDs necessários
+        const planoData = {
+            ...formData,
+            dataProva: dataProvaISO,
+        }
+        
+        if (plano) {
+            planoData.id = plano.id;
+        }
+
+        onSubmit(planoData);
+        onClose();
     };
 
     const handleCancel = () => {
@@ -142,20 +125,21 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
     return (
         <div className="modal-overlay" onClick={handleCancel}>
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2 className="modal-title">
+                <div className="studium-modal-header">
+                    <FontAwesomeIcon icon={faClipboardList} />
+                    <h2 className="studium-modal-title">
                         {plano ? 'Editar Plano de Estudo' : 'Novo Plano de Estudo'}
                     </h2>
-                    <button className="modal-close-btn" onClick={handleCancel} aria-label="Fechar">
+                    <button className="studium-modal-close-btn" onClick={handleCancel} aria-label="Fechar">
                         <FontAwesomeIcon icon={faTimes} />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="plano-form">
+                <form onSubmit={handleSubmit} className="studium-modal-form">
                     <div className="modal-content">
                         {/* Título do Plano */}
-                        <div className="form-group">
-                            <label htmlFor="titulo" className="form-label">
+                        <div className="studium-modal-form-group">
+                            <label htmlFor="titulo" className="studium-modal-form-label">
                                 Título do Plano de Estudo *
                             </label>
                             <input
@@ -164,15 +148,15 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
                                 name="titulo"
                                 value={formData.titulo}
                                 onChange={handleChange}
-                                className={`form-input ${errors.titulo ? 'input-error' : ''}`}
+                                className={`studium-form-input ${errors.titulo ? 'error' : ''}`}
                                 placeholder="Ex: Preparação para TRF 2024"
                             />
                             {errors.titulo && <span className="error-message">{errors.titulo}</span>}
                         </div>
 
                         {/* Concurso */}
-                        <div className="form-group">
-                            <label htmlFor="concurso" className="form-label">
+                        <div className="studium-modal-form-group">
+                            <label htmlFor="concurso" className="studium-modal-form-label">
                                 Concurso *
                             </label>
                             <input
@@ -181,15 +165,15 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
                                 name="concurso"
                                 value={formData.concurso}
                                 onChange={handleChange}
-                                className={`form-input ${errors.concurso ? 'input-error' : ''}`}
+                                className={`studium-form-input ${errors.concurso ? 'error' : ''}`}
                                 placeholder="Ex: Tribunal Regional Federal"
                             />
                             {errors.concurso && <span className="error-message">{errors.concurso}</span>}
                         </div>
 
                         {/* Cargo */}
-                        <div className="form-group">
-                            <label htmlFor="cargo" className="form-label">
+                        <div className="studium-modal-form-group">
+                            <label htmlFor="cargo" className="studium-modal-form-label">
                                 Cargo *
                             </label>
                             <input
@@ -198,15 +182,15 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
                                 name="cargo"
                                 value={formData.cargo}
                                 onChange={handleChange}
-                                className={`form-input ${errors.cargo ? 'input-error' : ''}`}
+                                className={`studium-form-input ${errors.cargo ? ' error' : ''}`}
                                 placeholder="Ex: Analista Judiciário"
                             />
                             {errors.cargo && <span className="error-message">{errors.cargo}</span>}
                         </div>
 
                         {/* Banca Organizadora */}
-                        <div className="form-group">
-                            <label htmlFor="banca" className="form-label">
+                        <div className="studium-modal-form-group">
+                            <label htmlFor="banca" className="studium-modal-form-label">
                                 Banca Organizadora *
                             </label>
                             <input
@@ -215,15 +199,15 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
                                 name="banca"
                                 value={formData.banca}
                                 onChange={handleChange}
-                                className={`form-input ${errors.banca ? 'input-error' : ''}`}
+                                className={`studium-form-input ${errors.banca ? 'error' : ''}`}
                                 placeholder="Ex: CESPE/CEBRASPE"
                             />
                             {errors.banca && <span className="error-message">{errors.banca}</span>}
                         </div>
 
                         {/* Data da Prova */}
-                        <div className="form-group">
-                            <label htmlFor="dataProva" className="form-label">
+                        <div className="studium-modal-form-group">
+                            <label htmlFor="dataProva" className="studium-modal-form-label">
                                 Data da Prova *
                             </label>
                             <input
@@ -232,19 +216,20 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSave }) => {
                                 name="dataProva"
                                 value={formData.dataProva}
                                 onChange={handleChange}
-                                className={`form-input ${errors.dataProva ? 'input-error' : ''}`}
+                                className={`studium-form-input ${errors.dataProva ? 'error' : ''}`}
                             />
                             {errors.dataProva && <span className="error-message">{errors.dataProva}</span>}
                         </div>
                     </div>
 
-                    <div className="modal-footer">
-                        <button type="button" className="btn-cancelar" onClick={handleCancel}>
+                    <div className="studium-modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+                            <FontAwesomeIcon icon={faCancel} />
                             Cancelar
                         </button>
-                        <button type="submit" className="btn-salvar">
+                        <button type="submit" className="btn btn-primary">
                             <FontAwesomeIcon icon={faSave} />
-                            {plano ? 'Atualizar' : 'Salvar'}
+                            {plano ? 'Atualizar Plano' : 'Criar Plano'}
                         </button>
                     </div>
                 </form>
@@ -257,7 +242,7 @@ PlanoEstudoForm.propTypes = {
     plano: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired
 };
 
 export default PlanoEstudoForm;

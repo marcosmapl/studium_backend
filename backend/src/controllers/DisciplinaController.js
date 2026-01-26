@@ -18,8 +18,6 @@ class DisciplinaController extends BaseController {
      */
     async create(req, res, next) {
         try {
-            const { titulo, descricao, peso, familiaridade, planoId, concluido } = req.body;
-
             // Validação de campos obrigatórios
             const missingFields = this.requiredFields.filter((field) => !req.body[field]);
 
@@ -35,13 +33,16 @@ class DisciplinaController extends BaseController {
                 });
             }
 
+            const { titulo, cor, concluido, importancia, conhecimento, horasSemanais, planoId } = req.body;
+
             const disciplina = await this.repository.create({
                 titulo,
-                descricao,
-                peso: peso !== undefined ? parseInt(peso) : 1,
-                familiaridade: familiaridade !== undefined ? parseInt(familiaridade) : 1,
-                planoId: parseInt(planoId),
+                cor,
                 concluido: concluido !== undefined ? concluido : false,
+                importancia: importancia !== undefined ? parseInt(importancia) : 1,
+                conhecimento: conhecimento !== undefined ? parseInt(conhecimento) : 0,
+                horasSemanais: horasSemanais !== undefined ? parseFloat(horasSemanais) : 0.0,
+                planoId: parseInt(planoId),
             });
 
             logger.info(`${this.entityName} criado(a) com sucesso`, {

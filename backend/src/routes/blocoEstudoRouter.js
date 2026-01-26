@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/DiaEstudoController");
+const controller = require("../controllers/BlocoEstudoController");
 const { verifyToken } = require("../middleware/auth");
 
 /**
  * @swagger
- * /api/diaEstudo:
+ * /api/bloco:
  *   post:
- *     summary: Cria um novo dia de estudo
- *     tags: [Dia Estudo]
+ *     summary: Cria um novo bloco
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -19,8 +19,9 @@ const { verifyToken } = require("../middleware/auth");
  *             type: object
  *             required:
  *               - diaSemana
+ *               - ordem
  *               - horasPlanejadas
- *               - planejamentoId
+ *               - disciplinaPlanejamentoId
  *             properties:
  *               diaSemana:
  *                 type: integer
@@ -28,13 +29,17 @@ const { verifyToken } = require("../middleware/auth");
  *                 minimum: 0
  *                 maximum: 6
  *                 example: 1
+ *               ordem:
+ *                 type: integer
+ *                 description: Ordem do bloco no dia da semana
+ *                 example: 1
  *               horasPlanejadas:
  *                 type: number
  *                 description: Horas planejadas para estudo no dia
  *                 example: 4.0
- *               planejamentoId:
+ *               disciplinaPlanejamentoId:
  *                 type: integer
- *                 description: ID do planejamento
+ *                 description: ID do relacionamento disciplina-planejamento
  *                 example: 1
  *     responses:
  *       201:
@@ -47,7 +52,7 @@ const { verifyToken } = require("../middleware/auth");
  *         description: Erro interno do servidor
  *   get:
  *     summary: Lista todos os dias de estudo
- *     tags: [Dia Estudo]
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -59,6 +64,7 @@ const { verifyToken } = require("../middleware/auth");
  *               type: array
  *               items:
  *                 type: object
+ * 
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
@@ -69,10 +75,10 @@ router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/diaEstudo/planejamento/{planejamentoId}:
+ * /api/bloco/planejamento/{planejamentoId}:
  *   get:
  *     summary: Busca todos os dias de estudo de um planejamento
- *     tags: [Dia Estudo]
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -93,20 +99,20 @@ router.get("/", verifyToken, controller.findAll);
  *               items:
  *                 type: object
  *       404:
- *         description: Nenhum dia de estudo encontrado para este planejamento
+ *         description: Nenhum bloco encontrado para este planejamento
  *       401:
  *         description: Não autorizado
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/planejamento/:planejamentoId", verifyToken, controller.findManyByPlanejamentoId);
+router.get("/disciplinaPlanejamento/:disciplinaPlanejamentoId", verifyToken, controller.findManyByDisciplinaPlanejamentoId);
 
 /**
  * @swagger
- * /api/diaEstudo/diaSemana/{diaSemana}:
+ * /api/bloco/diaSemana/{diaSemana}:
  *   get:
  *     summary: Busca dias de estudo por dia da semana
- *     tags: [Dia Estudo]
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -129,7 +135,7 @@ router.get("/planejamento/:planejamentoId", verifyToken, controller.findManyByPl
  *               items:
  *                 type: object
  *       404:
- *         description: Nenhum dia de estudo encontrado para este dia da semana
+ *         description: Nenhum bloco encontrado para este dia da semana
  *       401:
  *         description: Não autorizado
  *       500:
@@ -139,10 +145,10 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
 
 /**
  * @swagger
- * /api/diaEstudo/{id}:
+ * /api/bloco/{id}:
  *   get:
- *     summary: Busca um dia de estudo por ID
- *     tags: [Dia Estudo]
+ *     summary: Busca um bloco por ID
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -151,7 +157,7 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do dia de estudo
+ *         description: ID do bloco
  *         example: 1
  *     responses:
  *       200:
@@ -167,8 +173,8 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *       500:
  *         description: Erro interno do servidor
  *   put:
- *     summary: Atualiza um dia de estudo existente
- *     tags: [Dia Estudo]
+ *     summary: Atualiza um bloco existente
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -177,7 +183,7 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do dia de estudo
+ *         description: ID do bloco
  *         example: 1
  *     requestBody:
  *       required: true
@@ -211,8 +217,8 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *       500:
  *         description: Erro interno do servidor
  *   delete:
- *     summary: Remove um dia de estudo
- *     tags: [Dia Estudo]
+ *     summary: Remove um bloco
+ *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -221,7 +227,7 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do dia de estudo
+ *         description: ID do bloco
  *         example: 1
  *     responses:
  *       200:

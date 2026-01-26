@@ -9,20 +9,6 @@ class AuthRepository {
     async findByUsername(username) {
         return await prisma.usuario.findUnique({
             where: { username },
-            include: {
-                generoUsuario: {
-                    select: {
-                        id: true,
-                        descricao: true,
-                    },
-                },
-                situacaoUsuario: {
-                    select: {
-                        id: true,
-                        descricao: true,
-                    },
-                },
-            },
         });
     }
 

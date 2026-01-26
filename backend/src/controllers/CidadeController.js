@@ -9,7 +9,7 @@ class CidadeController extends BaseController {
     constructor() {
         super(repository, "cidade", {
             entityNamePlural: "cidades",
-            requiredFields: ["descricao", "unidadeFederativaId"]
+            requiredFields: ["descricao", "unidadeFederativa"]
         });
     }
 
@@ -18,7 +18,7 @@ class CidadeController extends BaseController {
      */
     async create(req, res, next) {
         try {
-            const { descricao, unidadeFederativaId } = req.body;
+            const { descricao, unidadeFederativa } = req.body;
 
             // Validação de campos obrigatórios
             const missingFields = this.requiredFields.filter((field) => !req.body[field]);
@@ -26,10 +26,7 @@ class CidadeController extends BaseController {
             if (missingFields.length > 0) {
                 logger.warn(`Campos obrigatórios ausentes ao criar ${this.entityName}`, {
                     route: req.originalUrl,
-                    method: "POST",
                     missingFields,
-                    file: "BaseController.js",
-                    line: 54,
                 });
                 return res.status(HttpStatus.BAD_REQUEST).json({
                     error: "Campos obrigatórios ausentes",
@@ -39,7 +36,7 @@ class CidadeController extends BaseController {
 
             const cidade = await this.repository.create({
                 descricao,
-                unidadeFederativaId: parseInt(unidadeFederativaId),
+                unidadeFederativa: parseInt(unidadeFederativa),
             });
 
             logger.info(`${this.entityName} criado(a) com sucesso`, {
@@ -54,19 +51,10 @@ class CidadeController extends BaseController {
                     logger.warn(`Tentativa de criar ${this.entityName} duplicada`, {
                         route: req.originalUrl,
                         descricao: req.body.descricao,
-                        unidadeFederativaId: req.body.unidadeFederativaId,
+                        unidadeFederativa: req.body.unidadeFederativa,
                     });
                     return res.status(HttpStatus.CONFLICT).json({
                         error: `Já existe uma cidade com o nome "${req.body.descricao}" nesta unidade federativa`,
-                    });
-                }
-                if (error.code === "P2003") {
-                    logger.warn("Unidade federativa não encontrada ao criar cidade", {
-                        route: req.originalUrl,
-                        unidadeFederativaId: req.body.unidadeFederativaId,
-                    });
-                    return res.status(HttpStatus.BAD_REQUEST).json({
-                        error: "Unidade federativa não encontrada",
                     });
                 }
             }
@@ -79,24 +67,24 @@ class CidadeController extends BaseController {
      */
     async findByDescricaoAndUF(req, res, next) {
         try {
-            const { descricao, unidadeFederativaId } = req.params;
+            const { descricao, unidadeFederativa } = req.params;
             const descricaoDecodificado = decodeURIComponent(descricao);
 
             logger.info(`Buscando ${this.entityName} por descrição e UF`, {
                 descricao: descricaoDecodificado,
-                unidadeFederativaId,
+                unidadeFederativa,
                 route: req.originalUrl,
             });
 
             const cidade = await this.repository.findByDescricaoAndUF(
                 descricaoDecodificado,
-                unidadeFederativaId
+                unidadeFederativa
             );
 
             if (!cidade) {
                 logger.info(`Nenhuma ${this.entityName} encontrada com essa descrição e UF`, {
                     descricao: descricaoDecodificado,
-                    unidadeFederativaId,
+                    unidadeFederativa,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
@@ -158,20 +146,20 @@ class CidadeController extends BaseController {
      */
     async findManyByUnidadeFederativa(req, res, next) {
         try {
-            const { unidadeFederativaId } = req.params;
+            const { unidadeFederativa } = req.params;
 
             logger.info(`Buscando ${this.entityNamePlural} por Unidade Federativa`, {
-                unidadeFederativaId,
+                unidadeFederativa,
                 route: req.originalUrl,
             });
 
             const cidades = await this.repository.findManyByUnidadeFederativa(
-                Number(unidadeFederativaId)
+                unidadeFederativa
             );
 
             if (!cidades || cidades.length === 0) {
                 logger.info(`Não foram encontradas ${this.entityName} para essa Unidade Federativa`, {
-                    unidadeFederativaId,
+                    unidadeFederativa,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({

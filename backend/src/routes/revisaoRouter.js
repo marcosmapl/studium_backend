@@ -138,41 +138,6 @@ router.get("/", verifyToken, controller.findAll);
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/categoria/:categoriaRevisaoId", verifyToken, controller.findManyByCategoriaRevisaoId);
-
-/**
- * @swagger
- * /api/revisao/situacao/{situacaoRevisaoId}:
- *   get:
- *     summary: Busca todas as revisões por situação
- *     tags: [Revisão]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: situacaoRevisaoId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da situação de revisão
- *         example: 1
- *     responses:
- *       200:
- *         description: Revisões encontradas
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *       404:
- *         description: Nenhuma revisão encontrada para esta situação
- *       401:
- *         description: Não autorizado
- *       500:
- *         description: Erro interno do servidor
- */
-router.get("/situacao/:situacaoRevisaoId", verifyToken, controller.findManyBySituacaoRevisaoId);
 
 /**
  * @swagger

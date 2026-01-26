@@ -4,7 +4,6 @@
  */
 const request = require("supertest");
 const app = require("../src/app");
-const bcrypt = require("bcryptjs");
 const HttpStatus = require("../src/utils/httpStatus");
 const {
     cleanDatabase,
@@ -30,7 +29,7 @@ describe("Cidade - /api/cidade", () => {
         it("deve criar uma nova cidade", async () => {
             const cidadeData = {
                 descricao: "Nova Cidade Teste",
-                unidadeFederativaId: unidadeFederativa.id,
+                unidadeFederativa: unidadeFederativa,
             };
 
             const response = await request(app)
@@ -40,7 +39,7 @@ describe("Cidade - /api/cidade", () => {
 
             expect(response.status).toBe(HttpStatus.CREATED);
             expect(response.body.descricao).toBe("Nova Cidade Teste");
-            expect(response.body.unidadeFederativaId).toBe(unidadeFederativa.id);
+            expect(response.body.unidadeFederativa).toBe(unidadeFederativa);
 
             // Salvar a cidade criada para usar nos demais testes
             cidadeTeste = response.body;
@@ -49,7 +48,7 @@ describe("Cidade - /api/cidade", () => {
         it("deve rejeitar criação de cidade duplicada na mesma UF", async () => {
             const cidadeData = {
                 descricao: "Nova Cidade Teste",
-                unidadeFederativaId: unidadeFederativa.id,
+                unidadeFederativa: unidadeFederativa,
             };
 
             const response = await request(app)
@@ -62,14 +61,9 @@ describe("Cidade - /api/cidade", () => {
         });
 
         it("deve permitir criar cidade com mesmo nome em UF diferente", async () => {
-            // Criar outra unidade federativa
-            const outraUF = await prisma.unidadeFederativa.create({
-                data: { descricao: "Bahia", sigla: "BA" },
-            });
-
             const cidadeData = {
                 descricao: "Nova Cidade Teste",
-                unidadeFederativaId: outraUF.id,
+                unidadeFederativa: 'TT',
             };
 
             const response = await request(app)
@@ -79,7 +73,7 @@ describe("Cidade - /api/cidade", () => {
 
             expect(response.status).toBe(HttpStatus.CREATED);
             expect(response.body.descricao).toBe("Nova Cidade Teste");
-            expect(response.body.unidadeFederativaId).toBe(outraUF.id);
+            expect(response.body.unidadeFederativa).toBe('TT');
         });
 
         it("deve validar ausência de campos obrigatórios", async () => {
@@ -126,53 +120,48 @@ describe("Cidade - /api/cidade", () => {
         });
     });
 
-    describe("GET /api/cidade/descricao/:descricao/uf/:unidadeFederativaId", () => {
+    describe("GET /api/cidade/descricao/:descricao/uf/:unidadeFederativa", () => {
         it("deve buscar cidade por descrição e UF", async () => {
             const response = await request(app)
                 .get(
-                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/${cidadeTeste.unidadeFederativaId}`
+                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/${cidadeTeste.unidadeFederativa}`
                 )
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(HttpStatus.OK);
             expect(response.body).toBeDefined();
             expect(response.body.descricao).toBe(cidadeTeste.descricao);
-            expect(response.body.unidadeFederativaId).toBe(cidadeTeste.unidadeFederativaId);
+            expect(response.body.unidadeFederativa).toBe(cidadeTeste.unidadeFederativa);
         });
 
         it("deve retornar 404 quando nenhuma cidade for encontrada", async () => {
             const response = await request(app)
-                .get(`/api/cidade/descricao/CidadeInexistente/uf/${unidadeFederativa.id}`)
+                .get(`/api/cidade/descricao/CidadeInexistente/uf/${unidadeFederativa}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(HttpStatus.NOT_FOUND);
         });
 
         it("deve permitir cidades com mesmo nome em UFs diferentes", async () => {
-            // Criar outra UF
-            const outraUF = await prisma.unidadeFederativa.create({
-                data: { descricao: "Outro Estado", sigla: "OE" }
-            });
-
             // Criar cidade com mesmo nome da cidadeTeste, mas em outra UF
             const cidadeMesmoNome = await prisma.cidade.create({
                 data: {
                     descricao: cidadeTeste.descricao,
-                    unidadeFederativaId: outraUF.id
+                    unidadeFederativa: 'OE'
                 }
             });
 
             // Buscar a cidade original
             const response1 = await request(app)
                 .get(
-                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/${cidadeTeste.unidadeFederativaId}`
+                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/${cidadeTeste.unidadeFederativa}`
                 )
                 .set("Authorization", `Bearer ${token}`);
 
             // Buscar a cidade na outra UF
             const response2 = await request(app)
                 .get(
-                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/${outraUF.id}`
+                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/OE`
                 )
                 .set("Authorization", `Bearer ${token}`);
 
@@ -205,10 +194,10 @@ describe("Cidade - /api/cidade", () => {
         });
     });
 
-    describe("GET /api/cidade/uf/:unidadeFederativaId", () => {
+    describe("GET /api/cidade/uf/:unidadeFederativa", () => {
         it("deve buscar cidades por Unidade Federativa", async () => {
             const response = await request(app)
-                .get(`/api/cidade/uf/${unidadeFederativa.id}`)
+                .get(`/api/cidade/uf/${unidadeFederativa}`)
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.status).toBe(HttpStatus.OK);
@@ -216,7 +205,7 @@ describe("Cidade - /api/cidade", () => {
             expect(response.body.length).toBeGreaterThan(0);
             expect(
                 response.body.every(
-                    (c) => c.unidadeFederativaId === unidadeFederativa.id
+                    (c) => c.unidadeFederativa === unidadeFederativa
                 )
             ).toBe(true);
         });
@@ -237,7 +226,7 @@ describe("Cidade - /api/cidade", () => {
                 .set("Authorization", `Bearer ${token}`)
                 .send({
                     descricao: "Cidade Teste Atualizada",
-                    unidadeFederativaId: unidadeFederativa.id,
+                    unidadeFederativa: unidadeFederativa,
                 });
 
             expect(response.status).toBe(HttpStatus.OK);
@@ -253,7 +242,7 @@ describe("Cidade - /api/cidade", () => {
                 .set("Authorization", `Bearer ${token}`)
                 .send({
                     descricao: "Teste",
-                    unidadeFederativaId: unidadeFederativa.id,
+                    unidadeFederativa: unidadeFederativa,
                 });
 
             expect(response.status).toBe(HttpStatus.NOT_FOUND);

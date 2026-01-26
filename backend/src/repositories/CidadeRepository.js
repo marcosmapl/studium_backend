@@ -15,15 +15,15 @@ class PrismaCidadeRepository extends BaseRepository {
     /**
      * Busca cidade por descrição e Unidade Federativa (constraint única composta)
      * @param {string} descricao - Descrição da cidade
-     * @param {number} unidadeFederativaId - ID da Unidade Federativa
+     * @param {number} unidadeFederativa - Unidade Federativa
      * @returns {Promise<object|null>} Cidade encontrada ou null
      */
-    async findByDescricaoAndUF(descricao, unidadeFederativaId) {
+    async findByDescricaoAndUF(descricao, unidadeFederativa) {
         try {
             return await this.model.findFirst({
                 where: {
                     descricao: descricao,
-                    unidadeFederativaId: parseInt(unidadeFederativaId)
+                    unidadeFederativa: unidadeFederativa
                 },
                 include: this.includeRelations
             });
@@ -47,12 +47,12 @@ class PrismaCidadeRepository extends BaseRepository {
 
     /**
      * Busca todas as cidades de uma Unidade Federativa
-     * @param {number} unidadeFederativaId - ID da Unidade Federativa
+     * @param {number} unidadeFederativa - Unidade Federativa
      * @returns {Promise<Array>} Lista de cidades da UF
      */
-    async findManyByUnidadeFederativa(unidadeFederativaId) {
+    async findManyByUnidadeFederativa(unidadeFederativa) {
         return await this.findMany({
-            unidadeFederativaId: unidadeFederativaId,
+            unidadeFederativa: unidadeFederativa,
         });
     }
 

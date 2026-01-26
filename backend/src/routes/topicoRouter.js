@@ -38,6 +38,10 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: boolean
  *                 description: Se o tópico foi concluído
  *                 example: false
+ *               edital:
+ *                 type: boolean
+ *                 description: Se o tópico conta no edital
+ *                 example: true
  *               estabilidade:
  *                 type: number
  *                 description: Estabilidade de memorização
@@ -46,10 +50,6 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: number
  *                 description: Dificuldade do tópico (0-10)
  *                 example: 5.0
- *               observacoes:
- *                 type: string
- *                 description: Observações sobre o tópico
- *                 example: "Tópico introdutório fundamental"
  *     responses:
  *       201:
  *         description: Tópico criado com sucesso
@@ -73,6 +73,9 @@ const { verifyToken } = require("../middleware/auth");
  *                 concluido:
  *                   type: boolean
  *                   example: false
+ *                 edital:
+ *                   type: boolean
+ *                   example: true
  *                 estabilidade:
  *                   type: number
  *                   example: 1.0
@@ -122,6 +125,24 @@ const { verifyToken } = require("../middleware/auth");
  *                   disciplinaId:
  *                     type: integer
  *                     example: 1
+ *                   concluido:
+ *                     type: boolean
+ *                     example: false
+ *                   edital:
+ *                     type: boolean
+ *                     example: true
+ *                   estabilidade:
+ *                     type: number
+ *                     example: 1.0
+ *                   dificuldade:
+ *                     type: number
+ *                     example: 5.0
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
  *                   disciplina:
  *                     type: object
  *                     properties:
@@ -163,14 +184,43 @@ router.get("/", verifyToken, controller.findAll);
  *               properties:
  *                 id:
  *                   type: integer
+ *                   example: 1
  *                 titulo:
  *                   type: string
+ *                   example: "Teoria Geral dos Direitos Fundamentais"
  *                 ordem:
  *                   type: integer
+ *                   example: 1
  *                 disciplinaId:
  *                   type: integer
+ *                   example: 1
+ *                 concluido:
+ *                   type: boolean
+ *                   example: false
+ *                 edital:
+ *                   type: boolean
+ *                   example: true
+ *                 estabilidade:
+ *                   type: number
+ *                   example: 1.0
+ *                 dificuldade:
+ *                   type: number
+ *                   example: 5.0
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
  *                 disciplina:
  *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     titulo:
+ *                       type: string
+ *                       example: "Contabilidade Geral"
  *       404:
  *         description: Nenhum tópico encontrado
  *       401:
@@ -208,14 +258,43 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                 properties:
  *                   id:
  *                     type: integer
+ *                     example: 1
  *                   titulo:
  *                     type: string
+ *                     example: "Teoria Geral dos Direitos Fundamentais"
  *                   ordem:
  *                     type: integer
+ *                     example: 1
  *                   disciplinaId:
  *                     type: integer
+ *                     example: 1
+ *                   concluido:
+ *                     type: boolean
+ *                     example: false
+ *                   edital:
+ *                     type: boolean
+ *                     example: true
+ *                   estabilidade:
+ *                     type: number
+ *                     example: 1.0
+ *                   dificuldade:
+ *                     type: number
+ *                     example: 5.0
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
  *                   disciplina:
  *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       titulo:
+ *                         type: string
+ *                         example: "Contabilidade Geral"
  *       404:
  *         description: Nenhum tópico encontrado
  *       401:
@@ -253,14 +332,43 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                 properties:
  *                   id:
  *                     type: integer
+ *                     example: 1
  *                   titulo:
  *                     type: string
+ *                     example: "Teoria Geral dos Direitos Fundamentais"
  *                   ordem:
  *                     type: integer
+ *                     example: 1
  *                   disciplinaId:
  *                     type: integer
+ *                     example: 1
+ *                   concluido:
+ *                     type: boolean
+ *                     example: false
+ *                   edital:
+ *                     type: boolean
+ *                     example: true
+ *                   estabilidade:
+ *                     type: number
+ *                     example: 1.0
+ *                   dificuldade:
+ *                     type: number
+ *                     example: 5.0
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
  *                   disciplina:
  *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       titulo:
+ *                         type: string
+ *                         example: "Contabilidade Geral"
  *       404:
  *         description: Nenhum tópico encontrado para esta disciplina
  *       401:
@@ -296,20 +404,43 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *               properties:
  *                 id:
  *                   type: integer
+ *                   example: 1
  *                 titulo:
  *                   type: string
+ *                   example: "Teoria Geral dos Direitos Fundamentais"
  *                 ordem:
  *                   type: integer
+ *                   example: 1
  *                 disciplinaId:
  *                   type: integer
+ *                   example: 1
  *                 concluido:
  *                   type: boolean
+ *                   example: false
+ *                 edital:
+ *                   type: boolean
+ *                   example: true
  *                 estabilidade:
  *                   type: number
+ *                   example: 1.0
  *                 dificuldade:
  *                   type: number
+ *                   example: 5.0
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
  *                 disciplina:
  *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     titulo:
+ *                       type: string
+ *                       example: "Contabilidade Geral"
  *       404:
  *         description: Tópico não encontrado
  *       401:
@@ -338,28 +469,40 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *             properties:
  *               titulo:
  *                 type: string
- *                 description: Novo título do tópico
- *                 example: "Teoria Geral dos Direitos Fundamentais - Atualizado"
+ *                 example: "Teoria Geral dos Direitos Fundamentais"
  *               ordem:
  *                 type: integer
- *                 description: Nova ordem do tópico
- *                 example: 2
+ *                 example: 1
+ *               disciplinaId:
+ *                 type: integer
+ *                 example: 1
  *               concluido:
  *                 type: boolean
- *                 description: Se o tópico foi concluído
+ *                 example: false
+ *               edital:
+ *                 type: boolean
  *                 example: true
  *               estabilidade:
  *                 type: number
- *                 description: Estabilidade de memorização
- *                 example: 2.5
+ *                 example: 1.0
  *               dificuldade:
  *                 type: number
- *                 description: Dificuldade do tópico (0-10)
- *                 example: 7.0
- *               observacoes:
+ *                 example: 5.0
+ *               createdAt:
  *                 type: string
- *                 description: Observações sobre o tópico
- *                 example: "Tópico revisado e atualizado"
+ *                 format: date-time
+ *               updatedAt:
+ *                 type: string
+ *                 format: date-time
+ *               disciplina:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   titulo:
+ *                     type: string
+ *                     example: "Contabilidade Geral"
  *     responses:
  *       200:
  *         description: Tópico atualizado com sucesso
@@ -372,10 +515,40 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *                   type: integer
  *                 titulo:
  *                   type: string
+ *                   example: "Teoria Geral dos Direitos Fundamentais"
  *                 ordem:
  *                   type: integer
+ *                   example: 1
  *                 disciplinaId:
  *                   type: integer
+ *                   example: 1
+ *                 concluido:
+ *                   type: boolean
+ *                   example: false
+ *                 edital:
+ *                   type: boolean
+ *                   example: true
+ *                 estabilidade:
+ *                   type: number
+ *                   example: 1.0
+ *                 dificuldade:
+ *                   type: number
+ *                   example: 5.0
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                 disciplina:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     titulo:
+ *                       type: string
+ *                       example: "Contabilidade Geral"
  *       400:
  *         description: Dados inválidos
  *       404:

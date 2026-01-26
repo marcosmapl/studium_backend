@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import DisciplinaForm from '../components/DisciplinaForm';
 import ConfirmDialog from '../components/ConfirmDialog';
+import TopicosModal from '../components/TopicosModal';
 import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData';
 import { useAuth } from '../contexts/AuthContext';
 import { getDisciplinasByPlanoId, createDisciplina, updateDisciplina, deleteDisciplina } from '../services/api';
@@ -40,6 +41,10 @@ const Disciplinas = () => {
     // Estado para controle do diálogo de confirmação
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [disciplinaParaExcluir, setDisciplinaParaExcluir] = useState(null);
+
+    // Estado para controle do modal de tópicos
+    const [isTopicosModalOpen, setIsTopicosModalOpen] = useState(false);
+    const [disciplinaSelecionada, setDisciplinaSelecionada] = useState(null);
 
     // Estado para o plano selecionado - pega do state de navegação ou primeiro plano
     const [planoSelecionado, setPlanoSelecionado] = useState(null);
@@ -145,12 +150,22 @@ const Disciplinas = () => {
         setDisciplinaParaExcluir(null);
     };
 
+    const handleVerTopicos = (disciplina) => {
+        setDisciplinaSelecionada(disciplina);
+        setIsTopicosModalOpen(true);
+    };
+
+    const handleCloseTopicosModal = () => {
+        setIsTopicosModalOpen(false);
+        setDisciplinaSelecionada(null);
+    };
+
     return (
         <Layout>
-            <div className="disciplinas-container">
+            <div className="studium-container">
                 <div className="studium-page-header disciplinas-header">
                     <div className="disciplinas-header-left">
-                        <h2 className="studium-page-title disciplinas-title">Disciplinas</h2>
+                        <h2 className="studium-page-title">Disciplinas</h2>
                         <div className="plano-selector">
                             <label htmlFor="planoSelect" className="plano-selector-label">
                                 Plano de Estudo:
@@ -286,14 +301,17 @@ const Disciplinas = () => {
                                             Criado em {formatDateToLocaleString(disciplina.createdAt)}
                                         </span>
                                         <div className="studium-card-footer-actions">
-                                            <button className="btn btn-secondary">
+                                            <button 
+                                                className="btn btn-secondary"
+                                                onClick={() => handleVerTopicos(disciplina)}
+                                            >
                                                 <FontAwesomeIcon icon={faList} />
                                                 Ver Tópicos
                                             </button>
-                                            <button className="btn btn-secondary">
+                                            {/* <button className="btn btn-secondary">
                                                 <FontAwesomeIcon icon={faChartBar} />
                                                 Ver Estatísticas
-                                            </button>
+                                            </button> */}
                                             <button
                                                 className="btn btn-primary"
                                                 onClick={() => handleEditarDisciplina(disciplina)}
@@ -329,9 +347,16 @@ const Disciplinas = () => {
                 <ConfirmDialog
                     isOpen={isConfirmOpen}
                     title="Confirmação de Exclusão"
-                    message="Deseja realmente excluir?"
+                    message="Deseja realmente excluir essa Disciplina?"
                     onConfirm={handleConfirmExclusao}
                     onCancel={handleCancelExclusao}
+                />
+
+                {/* Modal de Tópicos */}
+                <TopicosModal
+                    isOpen={isTopicosModalOpen}
+                    onClose={handleCloseTopicosModal}
+                    disciplina={disciplinaSelecionada}
                 />
             </div>
         </Layout>

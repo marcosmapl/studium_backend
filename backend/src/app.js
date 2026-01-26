@@ -13,26 +13,23 @@ const swaggerSpec = require("./config/swagger");
 
 // Importação de todas as rotas da API
 const authRouter = require("./routes/authRouter");
+const blocoEstudoRouter = require("./routes/blocoEstudoRouter");
+const categoriaSessaoRouter = require("./routes/categoriaSessaoRouter");
 const cidadeRouter = require("./routes/cidadeRouter");
+const disciplinaRouter = require("./routes/disciplinaRouter");
+const disciplinaPlanejamentoRouter = require("./routes/disciplinaPlanejamentoRouter");
 const generoUsuarioRouter = require("./routes/generoUsuarioRouter");
 const grupoUsuarioRouter = require("./routes/grupoUsuarioRouter");
-const situacaoUsuarioRouter = require("./routes/situacaoUsuarioRouter");
+const planejamentoRouter = require("./routes/planejamentoRouter");
+const planoEstudoRouter = require("./routes/planoEstudoRouter");
+const revisaoRouter = require("./routes/revisaoRouter");
+const sessaoEstudoRouter = require("./routes/sessaoEstudoRouter");
 const situacaoPlanoRouter = require("./routes/situacaoPlanoRouter");
+const situacaoSessaoRouter = require("./routes/situacaoSessaoRouter");
+const situacaoUsuarioRouter = require("./routes/situacaoUsuarioRouter");
+const topicoRouter = require("./routes/topicoRouter");
 const unidadeFederativaRouter = require("./routes/unidadeFederativaRouter");
 const usuarioRouter = require("./routes/usuarioRouter");
-const planoEstudoRouter = require("./routes/planoEstudoRouter");
-const disciplinaRouter = require("./routes/disciplinaRouter");
-const topicoRouter = require("./routes/topicoRouter");
-const categoriaSessaoRouter = require("./routes/categoriaSessaoRouter");
-const situacaoSessaoRouter = require("./routes/situacaoSessaoRouter");
-const sessaoEstudoRouter = require("./routes/sessaoEstudoRouter");
-const categoriaRevisaoRouter = require("./routes/categoriaRevisaoRouter");
-const situacaoRevisaoRouter = require("./routes/situacaoRevisaoRouter");
-const revisaoRouter = require("./routes/revisaoRouter");
-const disciplinaPlanejamentoRouter = require("./routes/disciplinaPlanejamentoRouter");
-const diaEstudoRouter = require("./routes/diaEstudoRouter");
-const alocacaoHorarioRouter = require("./routes/alocacaoHorarioRouter");
-const planejamentoRouter = require("./routes/planejamentoRouter");
 
 const healthRouter = require("./routes/healthRouter");
 
@@ -117,6 +114,7 @@ app.get("/api", (req, res) => res.redirect("/api-docs"));
 
 // Registro de rotas
 app.use("/api", authRouter);
+app.use("/api/blocoEstudo", blocoEstudoRouter);
 app.use("/api/cidade", cidadeRouter);
 app.use("/api/generoUsuario", generoUsuarioRouter);
 app.use("/api/grupoUsuario", grupoUsuarioRouter);
@@ -130,12 +128,8 @@ app.use("/api/topico", topicoRouter);
 app.use("/api/categoriaSessao", categoriaSessaoRouter);
 app.use("/api/situacaoSessao", situacaoSessaoRouter);
 app.use("/api/sessaoEstudo", sessaoEstudoRouter);
-app.use("/api/categoriaRevisao", categoriaRevisaoRouter);
-app.use("/api/situacaoRevisao", situacaoRevisaoRouter);
 app.use("/api/revisao", revisaoRouter);
 app.use("/api/disciplinaPlanejamento", disciplinaPlanejamentoRouter);
-app.use("/api/diaEstudo", diaEstudoRouter);
-app.use("/api/alocacaoHorario", alocacaoHorarioRouter);
 app.use("/api/planejamento", planejamentoRouter);
 app.use("/health", healthRouter);
 

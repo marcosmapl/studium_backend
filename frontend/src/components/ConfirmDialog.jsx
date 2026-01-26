@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faCancel, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './ConfirmDialog.css';
 
 const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="confirm-overlay" onClick={onCancel}>
+        <div className="modal-overlay" onClick={onCancel}>
             <div className="confirm-container" onClick={(e) => e.stopPropagation()}>
                 <div className="confirm-header">
                     <div className="confirm-icon-wrapper">
@@ -21,10 +21,12 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
                 </div>
 
                 <div className="confirm-footer">
-                    <button type="button" className="btn-confirm-no" onClick={onCancel}>
+                    <button type="button" className="btn btn-secondary btn-confirm-no" onClick={onCancel}>
+                        <FontAwesomeIcon icon={faCancel} />
                         Não
                     </button>
-                    <button type="button" className="btn-confirm-yes" onClick={onConfirm}>
+                    <button type="button" className="btn btn-danger btn-confirm-yes" onClick={onConfirm}>
+                        <FontAwesomeIcon icon={faTrash} />
                         Sim
                     </button>
                 </div>

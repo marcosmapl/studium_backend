@@ -59,87 +59,97 @@ const Login = () => {
     };
 
     return (
-        <div className="studium-container">
-            <div className="studium-main-card">
-                <div className="studium-page-header">
-                    <h1 className="studium-form-title login-form-title">Studium</h1>
-                </div>
-
-                <form onSubmit={handleSubmit} className="studium-form">
-                    <div className="studium-form-group">
-                        <label htmlFor="usuario" className="studium-form-label login-form-label">
-                            Usuário
-                        </label>
-                        <input
-                            id="usuario"
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="studium-form-input"
-                            placeholder="Digite seu usuário"
-                            disabled={loading}
-                        />
+        <div className="login-container">
+            {/* Lado Esquerdo - Logo */}
+            <div className="login-left">
+                <div className="login-logo-wrapper">
+                    <div className="login-logo-content">
+                        <img src="studium-logo.png" alt="Studium Logo" />
+                    <h1 className="login-logo-title">STUDIUM</h1>
+                    <p className="login-logo-subtitle">Seu sistema de gestão de estudos</p>
                     </div>
+                </div>
+            </div>
 
-                    <div className="studium-form-group">
-                        <label htmlFor="password" className="studium-form-label login-form-label">
-                            Senha
-                        </label>
-                        <div className="studium-pwd-field">
+            {/* Lado Direito - Formulário */}
+            <div className="login-right">
+                <div className="login-form-wrapper">
+                    <h2 className="login-welcome">Bem-vindo de volta</h2>
+                    <p className="login-instruction">Entre com suas credenciais para acessar sua conta</p>
+
+                    <form onSubmit={handleSubmit} className="login-form">
+                        <div className="login-form-group">
+                            <label htmlFor="usuario" className="login-form-label">
+                                Usuário
+                            </label>
                             <input
-                                id="password"
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="studium-form-input"
-                                placeholder="Digite sua senha"
+                                id="usuario"
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                className="login-form-input"
+                                placeholder="Digite seu usuário"
                                 disabled={loading}
+                                autoComplete="username"
                             />
+                        </div>
+
+                        <div className="login-form-group">
+                            <label htmlFor="password" className="login-form-label">
+                                Senha
+                            </label>
+                            <div className="login-pwd-field">
+                                <input
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="login-form-input"
+                                    placeholder="Digite sua senha"
+                                    disabled={loading}
+                                    autoComplete="current-password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="login-pwd-toggle"
+                                    disabled={loading}
+                                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                                >
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handleEsqueciSenha}
+                            className="login-forgot-link"
+                        >
+                            Esqueci minha senha
+                        </button>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="login-submit-btn"
+                        >
+                            {loading ? 'Entrando...' : 'Entrar'}
+                        </button>
+                    </form>
+
+                    <div className="login-register-section">
+                        <p className="login-register-text">
+                            Não é cadastrado?{' '}
                             <button
                                 type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="studium-pwd-toggle"
-                                disabled={loading}
-                                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                                onClick={handleCadastrar}
+                                className="login-register-link"
                             >
-                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                Faça seu cadastro aqui!
                             </button>
-                        </div>
+                        </p>
                     </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="btn-primary btn-login"
-                    >
-                        {loading ? 'Entrando...' : 'Entrar'}
-                    </button>
-                </form>
-
-                <div className="login-footer">
-                    <button
-                        type="button"
-                        onClick={handleEsqueciSenha}
-                        className="btn-link"
-                    >
-                        Esqueci minha senha
-                    </button>
-
-                    <div className="divider-container">
-                        <div className="divider"></div>
-                        <div className="divider-text">
-                            <span>ou</span>
-                        </div>
-                        <div className="divider"></div>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={handleCadastrar}
-                        className="btn-secondary btn-login"
-                    >
-                        Criar uma conta
-                    </button>
                 </div>
             </div>
         </div>

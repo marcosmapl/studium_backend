@@ -5,15 +5,6 @@
    ██                                                            ██
    ████████████████████████████████████████████████████████████████ */
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CONTAINER PRINCIPAL
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-.planos-container {
-    background-color: var(--color-background-light);
-    min-height: 100vh;
-    padding: var(--spacing-xl) var(--spacing-2xl);
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CABEÇALHO DA PÁGINA
@@ -29,12 +20,6 @@
     padding-bottom: var(--spacing-md);
 }
 
-.planos-title {
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-accent);
-}
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    LISTA DE PLANOS
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -43,6 +28,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+    padding: 0 var(--spacing-md);
+    width: 100%;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

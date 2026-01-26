@@ -7,6 +7,7 @@ import Cadastro from './pages/Cadastro';
 import Dashboard from './pages/Dashboard';
 import PlanosEstudo from './pages/PlanosEstudo';
 import Disciplinas from './pages/Disciplinas';
+import Planejamento from './pages/Planejamento';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -37,6 +38,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Disciplinas />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/planejamento" 
+            element={
+              <PrivateRoute>
+                <Planejamento />
               </PrivateRoute>
             } 
           />

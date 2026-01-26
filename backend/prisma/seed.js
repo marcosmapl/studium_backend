@@ -295,8 +295,15 @@ async function main() {
     });
 
     // Seed 3 Planos de Estudo para o usuário básico
-    const plano1 = await prisma.planoEstudo.create({
-        data: {
+    const plano1 = await prisma.planoEstudo.upsert({
+        where: {
+            titulo_usuarioId: {
+                titulo: "Preparação TRF 2024",
+                usuarioId: usuarioBasico.id,
+            },
+        },
+        update: {},
+        create: {
             titulo: "Preparação TRF 2024",
             concurso: "Concurso Tribunal Regional Federal da 1ª Região",
             cargo: "Técnico Judiciário - Área Administrativa",
@@ -307,8 +314,15 @@ async function main() {
         },
     });
 
-    const plano2 = await prisma.planoEstudo.create({
-        data: {
+    const plano2 = await prisma.planoEstudo.upsert({
+        where: {
+            titulo_usuarioId: {
+                titulo: "Concurso Polícia Federal 2024",
+                usuarioId: usuarioBasico.id,
+            },
+        },
+        update: {},
+        create: {
             titulo: "Concurso Polícia Federal 2024",
             concurso: "Concurso Nacional Unificado da Polícia Federal",
             cargo: "Agente de Polícia Federal",
@@ -319,8 +333,15 @@ async function main() {
         },
     });
 
-    const plano3 = await prisma.planoEstudo.create({
-        data: {
+    const plano3 = await prisma.planoEstudo.upsert({
+        where: {
+            titulo_usuarioId: {
+                titulo: "Preparação TCU 2024",
+                usuarioId: usuarioBasico.id,
+            },
+        },
+        update: {},
+        create: {
             titulo: "Preparação TCU 2024",
             concurso: "Tribunal de Contas da União",
             cargo: "Auditor Federal de Controle Externo",
@@ -333,82 +354,251 @@ async function main() {
     logger.info("Created 3 PlanoEstudo for usuario_basico");
 
     // Seed Disciplinas para o Plano 1 (TRF)
-    await prisma.disciplina.createMany({
-        data: [
-            {
+    const discConstPlano1 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Direito Constitucional",
-                peso: 4,
-                familiaridade: 3,
                 planoId: plano1.id,
             },
-            {
+        },
+        update: {},
+        create: {
+            titulo: "Direito Constitucional",
+            cor: "#FF6B6B",
+            planoId: plano1.id,
+        },
+    });
+
+    const discAdmPlano1 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Direito Administrativo",
-                peso: 5,
-                familiaridade: 4,
                 planoId: plano1.id,
             },
-            {
+        },
+        update: {},
+        create: {
+            titulo: "Direito Administrativo",
+            cor: "#4ECDC4",
+            planoId: plano1.id,
+        },
+    });
+
+    const discPortPlano1 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Língua Portuguesa",
-                peso: 3,
-                familiaridade: 5,
                 planoId: plano1.id,
             },
-        ],
-        skipDuplicates: true,
+        },
+        update: {},
+        create: {
+            titulo: "Língua Portuguesa",
+            cor: "#95E1D3",
+            planoId: plano1.id,
+        },
     });
     logger.info("Created 3 Disciplinas for Plano 1 (TRF)");
 
     // Seed Disciplinas para o Plano 2 (Polícia Federal)
-    await prisma.disciplina.createMany({
-        data: [
-            {
+    const discPenalPlano2 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Direito Penal",
-                peso: 5,
-                familiaridade: 3,
                 planoId: plano2.id,
             },
-            {
+        },
+        update: {},
+        create: {
+            titulo: "Direito Penal",
+            cor: "#F38181",
+            planoId: plano2.id,
+        },
+    });
+
+    const discProcPenalPlano2 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Direito Processual Penal",
-                peso: 4,
-                familiaridade: 2,
                 planoId: plano2.id,
             },
-            {
+        },
+        update: {},
+        create: {
+            titulo: "Direito Processual Penal",
+            cor: "#AA96DA",
+            planoId: plano2.id,
+        },
+    });
+
+    const discLegEspPlano2 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Legislação Especial",
-                peso: 4,
-                familiaridade: 2,
                 planoId: plano2.id,
             },
-        ],
-        skipDuplicates: true,
+        },
+        update: {},
+        create: {
+            titulo: "Legislação Especial",
+            cor: "#FCBAD3",
+            planoId: plano2.id,
+        },
     });
     logger.info("Created 3 Disciplinas for Plano 2 (Polícia Federal)");
 
     // Seed Disciplinas para o Plano 3 (TCU)
-    await prisma.disciplina.createMany({
-        data: [
-            {
+    const discControlePlano3 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Controle Externo",
-                peso: 5,
-                familiaridade: 2,
                 planoId: plano3.id,
             },
-            {
+        },
+        update: {},
+        create: {
+            titulo: "Controle Externo",
+            cor: "#A8E6CF",
+            planoId: plano3.id,
+        },
+    });
+
+    const discAuditoriaPlano3 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Auditoria Governamental",
-                peso: 5,
-                familiaridade: 1,
                 planoId: plano3.id,
             },
-            {
+        },
+        update: {},
+        create: {
+            titulo: "Auditoria Governamental",
+            cor: "#FFD3B6",
+            planoId: plano3.id,
+        },
+    });
+
+    const discConstPlano3 = await prisma.disciplina.upsert({
+        where: {
+            titulo_planoId: {
                 titulo: "Direito Constitucional",
-                peso: 4,
-                familiaridade: 3,
                 planoId: plano3.id,
             },
+        },
+        update: {},
+        create: {
+            titulo: "Direito Constitucional",
+            cor: "#FFAAA5",
+            planoId: plano3.id,
+        },
+    });
+    logger.info("Created 3 Disciplinas for Plano 3 (TCU)");
+
+    // Seed Tópicos para Direito Constitucional (Plano 1)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Princípios Fundamentais", ordem: 1, disciplinaId: discConstPlano1.id },
+            { titulo: "Direitos e Garantias Fundamentais", ordem: 2, disciplinaId: discConstPlano1.id },
+            { titulo: "Organização do Estado", ordem: 3, disciplinaId: discConstPlano1.id },
+            { titulo: "Poder Legislativo", ordem: 4, disciplinaId: discConstPlano1.id },
+            { titulo: "Poder Executivo", ordem: 5, disciplinaId: discConstPlano1.id },
         ],
         skipDuplicates: true,
     });
-    logger.info("Created 3 Disciplinas for Plano 3 (TCU)");
+    logger.info("Created 5 Tópicos for Direito Constitucional (Plano 1)");
+
+    // Seed Tópicos para Direito Administrativo (Plano 1)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Princípios da Administração Pública", ordem: 1, disciplinaId: discAdmPlano1.id },
+            { titulo: "Atos Administrativos", ordem: 2, disciplinaId: discAdmPlano1.id },
+            { titulo: "Licitações e Contratos", ordem: 3, disciplinaId: discAdmPlano1.id },
+            { titulo: "Servidores Públicos", ordem: 4, disciplinaId: discAdmPlano1.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 4 Tópicos for Direito Administrativo (Plano 1)");
+
+    // Seed Tópicos para Língua Portuguesa (Plano 1)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Interpretação de Textos", ordem: 1, disciplinaId: discPortPlano1.id },
+            { titulo: "Ortografia e Acentuação", ordem: 2, disciplinaId: discPortPlano1.id },
+            { titulo: "Sintaxe", ordem: 3, disciplinaId: discPortPlano1.id },
+            { titulo: "Concordância Verbal e Nominal", ordem: 4, disciplinaId: discPortPlano1.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 4 Tópicos for Língua Portuguesa (Plano 1)");
+
+    // Seed Tópicos para Direito Penal (Plano 2)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Aplicação da Lei Penal", ordem: 1, disciplinaId: discPenalPlano2.id },
+            { titulo: "Crime e Imputabilidade", ordem: 2, disciplinaId: discPenalPlano2.id },
+            { titulo: "Crimes contra a Pessoa", ordem: 3, disciplinaId: discPenalPlano2.id },
+            { titulo: "Crimes contra o Patrimônio", ordem: 4, disciplinaId: discPenalPlano2.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 4 Tópicos for Direito Penal (Plano 2)");
+
+    // Seed Tópicos para Direito Processual Penal (Plano 2)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Inquérito Policial", ordem: 1, disciplinaId: discProcPenalPlano2.id },
+            { titulo: "Ação Penal", ordem: 2, disciplinaId: discProcPenalPlano2.id },
+            { titulo: "Provas", ordem: 3, disciplinaId: discProcPenalPlano2.id },
+            { titulo: "Prisão e Liberdade Provisória", ordem: 4, disciplinaId: discProcPenalPlano2.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 4 Tópicos for Direito Processual Penal (Plano 2)");
+
+    // Seed Tópicos para Legislação Especial (Plano 2)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Lei de Drogas", ordem: 1, disciplinaId: discLegEspPlano2.id },
+            { titulo: "Estatuto do Desarmamento", ordem: 2, disciplinaId: discLegEspPlano2.id },
+            { titulo: "Crimes Hediondos", ordem: 3, disciplinaId: discLegEspPlano2.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 3 Tópicos for Legislação Especial (Plano 2)");
+
+    // Seed Tópicos para Controle Externo (Plano 3)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Tribunal de Contas da União", ordem: 1, disciplinaId: discControlePlano3.id },
+            { titulo: "Competências do TCU", ordem: 2, disciplinaId: discControlePlano3.id },
+            { titulo: "Fiscalização Contábil e Financeira", ordem: 3, disciplinaId: discControlePlano3.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 3 Tópicos for Controle Externo (Plano 3)");
+
+    // Seed Tópicos para Auditoria Governamental (Plano 3)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Normas de Auditoria", ordem: 1, disciplinaId: discAuditoriaPlano3.id },
+            { titulo: "Auditoria de Conformidade", ordem: 2, disciplinaId: discAuditoriaPlano3.id },
+            { titulo: "Auditoria Operacional", ordem: 3, disciplinaId: discAuditoriaPlano3.id },
+            { titulo: "Técnicas de Auditoria", ordem: 4, disciplinaId: discAuditoriaPlano3.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 4 Tópicos for Auditoria Governamental (Plano 3)");
+
+    // Seed Tópicos para Direito Constitucional (Plano 3)
+    await prisma.topico.createMany({
+        data: [
+            { titulo: "Controle de Constitucionalidade", ordem: 1, disciplinaId: discConstPlano3.id },
+            { titulo: "Direitos Sociais", ordem: 2, disciplinaId: discConstPlano3.id },
+            { titulo: "Orçamento Público", ordem: 3, disciplinaId: discConstPlano3.id },
+        ],
+        skipDuplicates: true,
+    });
+    logger.info("Created 3 Tópicos for Direito Constitucional (Plano 3)");
 
     logger.info("Seed finished.");
 }

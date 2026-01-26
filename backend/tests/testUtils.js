@@ -4,6 +4,7 @@
 const request = require("supertest");
 const bcrypt = require("bcryptjs");
 const prisma = require("../src/orm/prismaClient");
+const { UnidadeFederativa, GeneroUsuario, SituacaoUsuario, SituacaoPlano } = require("../src/utils/enum");
 
 /**
  * Limpa tabelas do banco de dados de teste
@@ -15,10 +16,7 @@ const cleanDatabase = async () => {
         await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
 
         // Limpar tabelas na ordem correta para respeitar foreign keys
-        await prisma.alocacaoHorario.deleteMany();
-        await prisma.disciplinaPlanejamento.deleteMany();
-        await prisma.diaEstudo.deleteMany();
-        await prisma.planejamento.deleteMany();
+        await prisma.bloco.deleteMany();
         await prisma.revisao.deleteMany();
         await prisma.sessaoEstudo.deleteMany();
         await prisma.topico.deleteMany();
@@ -26,14 +24,6 @@ const cleanDatabase = async () => {
         await prisma.planoEstudo.deleteMany();
         await prisma.usuario.deleteMany();
         await prisma.cidade.deleteMany();
-        await prisma.unidadeFederativa.deleteMany();
-        await prisma.generoUsuario.deleteMany();
-        await prisma.situacaoUsuario.deleteMany();
-        await prisma.situacaoPlano.deleteMany();
-        await prisma.categoriaSessao.deleteMany();
-        await prisma.situacaoSessao.deleteMany();
-        await prisma.categoriaRevisao.deleteMany();
-        await prisma.situacaoRevisao.deleteMany();
         await prisma.grupoUsuario.deleteMany();
 
         // Reabilitar verificação de chaves estrangeiras
@@ -54,30 +44,15 @@ const cleanDatabase = async () => {
  * Cria dados de seed básicos para testes
  */
 const seedBasicData = async () => {
-    // Criar unidade federativa
-    const unidadeFederativa = await prisma.unidadeFederativa.create({
-        data: { descricao: "EstadoTeste", sigla: "ET" },
-    });
 
     // Criar cidade
     const cidade = await prisma.cidade.create({
         data: {
             descricao: "Cidade Teste",
-            unidadeFederativaId: unidadeFederativa.id,
+            unidadeFederativa: UnidadeFederativa.AC,
         },
     });
 
-    // Criar gênero de usuário
-    const generoUsuario = await prisma.generoUsuario.create({
-        data: { descricao: "Gênero Teste" },
-    });
-
-    // Criar situação de usuário
-    const situacaoUsuario = await prisma.situacaoUsuario.create({
-        data: { descricao: "Ativo" },
-    });
-
-    // Criar ou buscar grupo de usuário
     const grupoUsuario = await prisma.grupoUsuario.create({
         data: { descricao: "Grupo Teste" },
     });
@@ -93,17 +68,11 @@ const seedBasicData = async () => {
             username: "teste",
             password: hashedPassword,
             email: "teste@studium.com",
-            generoUsuarioId: generoUsuario.id,
+            generoUsuario: GeneroUsuario.OUTRO,
+            situacaoUsuario: SituacaoUsuario.ATIVO,
             cidadeId: cidade.id,
-            situacaoUsuarioId: situacaoUsuario.id,
             grupoUsuarioId: grupoUsuario.id,
         },
-    });
-
-
-    // Criar situação de usuário
-    const situacaoPlano = await prisma.situacaoPlano.create({
-        data: { descricao: "Ativo" },
     });
 
     // Criar plano de estudo para testes
@@ -114,20 +83,20 @@ const seedBasicData = async () => {
             banca: "Banca Realizadora Teste",
             cargo: "Cargo de Concurso Teste",
             dataProva: new Date("2026-01-06T00:00:00.000Z"),
+            situacao: SituacaoPlano.NOVO,
             usuarioId: usuario.id,
-            situacaoId: situacaoPlano.id,
             concluido: false,
         },
     });
 
     return {
         cidade,
-        generoUsuario,
+        generoUsuario: GeneroUsuario.OUTRO,
         grupoUsuario,
         planoEstudo,
-        situacaoUsuario,
-        situacaoPlano,
-        unidadeFederativa,
+        situacaoPlano: SituacaoPlano.NOVO,
+        situacaoUsuario: SituacaoUsuario.ATIVO,
+        unidadeFederativa: UnidadeFederativa.AC,
         usuario,
     };
 };

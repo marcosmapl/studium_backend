@@ -7,34 +7,10 @@ class PrismaRevisaoRepository extends BaseRepository {
             defaultOrderBy: "dataProgramada",
             orderDirection: "desc",
             includeRelations: {
-                categoriaRevisao: true,
-                situacaoRevisao: true,
                 planoEstudo: true,
                 disciplina: true,
                 topico: true,
             }
-        });
-    }
-
-    /**
-     * Busca todas as revisões por categoria
-     * @param {number} categoriaRevisaoId - ID da categoria de revisão
-     * @returns {Promise<Array>} Lista de revisões da categoria
-     */
-    async findManyByCategoriaRevisaoId(categoriaRevisaoId) {
-        return await this.findMany({
-            categoriaRevisaoId: parseInt(categoriaRevisaoId),
-        });
-    }
-
-    /**
-     * Busca todas as revisões por situação
-     * @param {number} situacaoRevisaoId - ID da situação de revisão
-     * @returns {Promise<Array>} Lista de revisões da situação
-     */
-    async findManyBySituacaoRevisaoId(situacaoRevisaoId) {
-        return await this.findMany({
-            situacaoRevisaoId: parseInt(situacaoRevisaoId),
         });
     }
 

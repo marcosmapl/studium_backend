@@ -113,7 +113,6 @@ const PlanosEstudo = () => {
                 const novoPlanoData = {
                     ...planoData,
                     usuarioId: usuario.id,
-                    situacaoId: 1 // "Em Andamento" - ajustar conforme necessário
                 };
                 const response = await createPlanoEstudo(novoPlanoData);
                 setPlanos([...planos, response.data]);
@@ -154,9 +153,9 @@ const PlanosEstudo = () => {
 
     return (
         <Layout>
-            <div className="planos-container">
+            <div className="studium-container">
                 <div className="studium-page-header planos-header">
-                    <h2 className="studium-page-title planos-title">Planos de Estudo</h2>
+                    <h2 className="studium-page-title">Planos de Estudo</h2>
                     <button className="btn btn-primary" onClick={handleNovoPlano}>
                         <FontAwesomeIcon icon={faPlus} />
                         Novo Plano
@@ -258,7 +257,7 @@ const PlanosEstudo = () => {
                                         <FontAwesomeIcon icon={faFire} className="studium-stats-icon" />
                                         <div className="studium-stats-content">
                                             <span className="studium-stats-label">Constância</span>
-                                            <span className="studium-stats-valor">{plano.constancia}%</span>
+                                            <span className="studium-stats-valor">{`${plano.constancia || 0}%`}</span>
                                         </div>
                                     </div>
                                     <div className="studium-stats-item">
@@ -266,7 +265,7 @@ const PlanosEstudo = () => {
                                         <div className="studium-stats-content">
                                             <span className="studium-stats-label">Ritmo Atual</span>
                                             <span className="studium-stats-valor">
-                                                {plano.ritmoAtual > 0 ? `${plano.ritmoAtual}h/dia` : '-'}
+                                                {plano.ritmoAtual > 0 ? `${plano.ritmoAtual}h/dia` : '- h/dia'}
                                             </span>
                                         </div>
                                     </div>
@@ -292,14 +291,14 @@ const PlanosEstudo = () => {
                                             <FontAwesomeIcon icon={faBook} />
                                             Ver Disciplinas
                                         </button>
-                                        <button className="btn btn-secondary">
+                                        {/* <button className="btn btn-secondary">
                                             <FontAwesomeIcon icon={faList} />
                                             Ver Sessões
                                         </button>
                                         <button className="btn btn-secondary">
                                             <FontAwesomeIcon icon={faCalendar} />
                                             Ver Planejamento
-                                        </button>
+                                        </button> */}
                                         <button
                                             className="btn btn-primary"
                                             onClick={() => handleEditarPlano(plano)}
@@ -326,7 +325,7 @@ const PlanosEstudo = () => {
                     plano={planoParaEditar}
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
-                    onSave={handleSavePlano}
+                    onSubmit={handleSavePlano}
                 />
 
                 {/* Diálogo de Confirmação de Exclusão */}

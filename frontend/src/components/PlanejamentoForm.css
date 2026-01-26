@@ -1,0 +1,548 @@
+/* ████████████████████████████████████████████████████████████████
+   ██                                                            ██
+   ██   PLANEJAMENTO FORM - MODAL DE FORMULÁRIO                 ██
+   ██   Estilos para criação/ajuste de planejamento             ██
+   ██                                                            ██
+   ████████████████████████████████████████████████████████████████ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MODAL OVERLAY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-index-modal, 1000);
+    padding: var(--spacing-md);
+    overflow-y: auto;
+}
+
+.studium-modal-container {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-2xl);
+    display: flex;
+    flex-direction: column;
+    max-height: 95vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MODAL CUSTOMIZADO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planejamento-form-modal {
+    max-width: 1400px;
+    width: 95%;
+}
+
+.planejamento-form-body {
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LAYOUT PRINCIPAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planejamento-form-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--spacing-2xl);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEÇÃO DE DISCIPLINAS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planejamento-disciplinas-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.planejamento-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-border-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+.planejamento-section-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.planejamento-section-title svg {
+    color: var(--color-accent);
+    font-size: var(--font-size-lg);
+}
+
+.disciplinas-contador {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
+    background: linear-gradient(135deg, rgba(63, 175, 130, 0.1) 0%, rgba(63, 175, 130, 0.05) 100%);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-full);
+    border: 2px solid var(--color-accent-light);
+}
+
+.planejamento-disciplinas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD DE DISCIPLINA
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planejamento-disciplina-card {
+    border: var(--border-width-2) solid var(--color-gray-200);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+}
+
+.planejamento-disciplina-card:hover {
+    box-shadow: 0 8px 24px rgba(63, 175, 130, 0.15);
+}
+
+.planejamento-disciplina-card.disciplina-selecionada {
+    border: var(--border-width-3) solid var(--color-accent);
+}
+
+.disciplina-card-titulo {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0;
+    text-align: center;
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-gray-100);
+    letter-spacing: 0.3px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SLIDERS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.disciplina-card-slider {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+.slider-value {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    font-size: var(--font-size-base);
+}
+
+.studium-slider {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(
+        to right,
+        var(--color-gray-200) 0%,
+        var(--color-primary-light) 50%,
+        var(--color-primary) 100%
+    );
+    border-radius: var(--border-radius-full);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.studium-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    border: 3px solid var(--color-white);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(63, 175, 130, 0.3);
+    transition: all 0.2s ease;
+}
+
+.studium-slider::-webkit-slider-thumb:hover {
+    background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(63, 175, 130, 0.5);
+}
+
+.studium-slider::-webkit-slider-thumb:active {
+    transform: scale(1.05);
+}
+
+.studium-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    border: 3px solid var(--color-white);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(63, 175, 130, 0.3);
+    transition: all 0.2s ease;
+}
+
+.studium-slider::-moz-range-thumb:hover {
+    background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(63, 175, 130, 0.5);
+}
+
+.studium-slider::-moz-range-thumb:active {
+    transform: scale(1.05);
+}
+
+.slider-marks {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin-top: -4px;
+}
+
+.slider-marks span {
+    width: 20px;
+    text-align: center;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INPUT DE HORAS DA DISCIPLINA
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.disciplina-card-horas {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: var(--border-width) solid var(--color-border-light);
+}
+
+.horas-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.horas-input {
+    flex: 1;
+    text-align: center;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEÇÃO DE DIAS DA SEMANA
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planejamento-dias-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-xl);
+    border: 2px solid var(--color-gray-200);
+}
+
+.planejamento-dias-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    animation: fadeInUp 0.4s ease-out 0.2s both;
+}
+
+.dia-estudo-item {
+    align-items: center;
+    background-color: var(--color-primary-light);
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-md);
+    justify-content: space-between;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.dia-estudo-item:hover {
+    box-shadow: 0 6px 20px rgba(63, 175, 130, 0.15);
+}
+
+.dia-estudo-label {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-md);
+    align-items: center;
+    flex: 1;
+}
+
+.dia-sigla {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    font-size: var(--font-size-md);
+    letter-spacing: 0.5px;
+    min-width: 50px;
+    text-align: left;
+}
+
+.dia-nome {
+    color: var(--color-gray-500);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    flex: 1;
+}
+
+.dia-estudo-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    min-width: 100px;
+}
+
+.dia-horas-input {
+    width: 70px;
+    text-align: center;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    color: var(--color-accent);
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-xs);
+    transition: all 0.2s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.dia-horas-input:hover {
+    border-color: var(--color-accent-light);
+}
+
+.dia-horas-input:focus {
+    border-color: var(--color-accent);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(63, 175, 130, 0.1);
+    background: #ffffff;
+}
+
+.input-suffix {
+    font-size: var(--font-size-base);
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOTALIZADORES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.planejamento-totais {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-radius: var(--border-radius-xl);
+    margin-top: var(--spacing-md);
+    box-shadow: 0 8px 24px rgba(17, 33, 54, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.planejamento-totais::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(63, 175, 130, 0.1) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.total-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    position: relative;
+    z-index: 1;
+}
+
+.total-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.total-value {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.total-value.text-error {
+    color: var(--color-error);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.total-warning {
+    position: absolute;
+    bottom: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-error);
+    background-color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    white-space: nowrap;
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 1200px) {
+    .planejamento-disciplinas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .planejamento-form-layout {
+        grid-template-columns: 1fr 280px;
+    }
+}
+
+@media (max-width: 992px) {
+    .planejamento-form-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .planejamento-dias-section {
+        order: -1;
+    }
+
+    .planejamento-disciplinas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .planejamento-form-modal {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+
+    .planejamento-form-body {
+        max-height: calc(100vh - 200px);
+    }
+
+    .planejamento-disciplinas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planejamento-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .planejamento-section-header .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .planejamento-form-body {
+        padding: var(--spacing-md);
+    }
+
+    .dia-estudo-label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .slider-marks span {
+        font-size: 0.65rem;
+    }
+}

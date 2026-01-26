@@ -1,9 +1,11 @@
 const BaseController = require("./BaseController");
 const repository = require("../repositories/PlanoEstudoRepository");
-const situacaoPlanoRepository = require("../repositories/SituacaoPlanoRepository");
+const { SituacaoPlano } = require("../utils/enum")
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
+
 const { Prisma } = require("@prisma/client");
+
 
 class PlanoEstudoController extends BaseController {
 
@@ -44,18 +46,8 @@ class PlanoEstudoController extends BaseController {
                 }
             }
 
-            // Buscar situação "Novo" automaticamente
-            const situacaoNovo = await situacaoPlanoRepository.findUniqueByDescricao("Novo");
-            
-            if (!situacaoNovo) {
-                logger.error('Situação "Novo" não encontrada no banco de dados');
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                    error: 'Configuração do sistema incompleta: situação "Novo" não encontrada',
-                });
-            }
-
             // Sobrescrever situacaoId com a situação "Novo"
-            data.situacaoId = situacaoNovo.id;
+            data.situacao = SituacaoPlano.NOVO;
 
             const resultado = await this.repository.create(data);
 
@@ -97,8 +89,6 @@ class PlanoEstudoController extends BaseController {
                     let mensagem = "Registro relacionado não encontrado";
                     if (campo.includes("usuario")) {
                         mensagem = "Usuário não encontrado";
-                    } else if (campo.includes("situacao")) {
-                        mensagem = "Situação não encontrada";
                     }
 
                     return res.status(HttpStatus.BAD_REQUEST).json({

@@ -1,20 +1,20 @@
 const BaseController = require("./BaseController");
-const DisciplinaPlanejamentoRepository = require("../repositories/DisciplinaPlanejamentoRepository");
+const repository = require("../repositories/BlocoEstudoRepository");
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
 const { Prisma } = require("@prisma/client");
 
-class DisciplinaPlanejamentoController extends BaseController {
+class BlocoEstudoController extends BaseController {
 
     constructor() {
-        super(new DisciplinaPlanejamentoRepository(), "disciplina de planejamento", {
-            entityNamePlural: "disciplinas de planejamento",
-            requiredFields: ["importancia", "conhecimento", "horasSemanais", "planejamentoId", "disciplinaId"]
+        super(repository, "bloco de estudo", {
+            entityNamePlural: "blocos de estudo",
+            requiredFields: ["diaSemana", "ordem", "totalHorasPlanejadas", "planoEstudoId", "disciplinaId"]
         });
     }
 
     /**
-     * Cria uma nova disciplina de planejamento com validação de constraint única
+     * Cria um novo bloco de estudo com validação de constraint única
      */
     async create(req, res, next) {
         try {
@@ -54,17 +54,21 @@ class DisciplinaPlanejamentoController extends BaseController {
             // Tratamento específico para violação de constraint única
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 if (error.code === "P2002") {
+                    const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+                    const diaSemanaTexto = diasSemana[req.body.diaSemana] || req.body.diaSemana;
                     logger.warn(
                         `Tentativa de criar ${this.entityName} duplicado(a)`,
                         {
                             error: error.message,
                             meta: error.meta,
+                            ordem: req.body.ordem,
+                            diaSemana: req.body.diaSemana,
                             planejamentoId: req.body.planejamentoId,
                             disciplinaId: req.body.disciplinaId,
                         }
                     );
                     return res.status(HttpStatus.CONFLICT).json({
-                        error: `Já existe uma disciplina de planejamento para esta combinação de planejamento e disciplina`,
+                        error: `Já existe um dia de estudo para ${diaSemanaTexto} neste planejamento`,
                     });
                 }
 
@@ -82,7 +86,8 @@ class DisciplinaPlanejamentoController extends BaseController {
                     let mensagem = "Registro relacionado não encontrado";
                     if (campo.includes("planejamento")) {
                         mensagem = "Planejamento não encontrado";
-                    } else if (campo.includes("disciplina")) {
+                    }
+                    if (campo.includes("disciplina")) {
                         mensagem = "Disciplina não encontrada";
                     }
 
@@ -102,30 +107,32 @@ class DisciplinaPlanejamentoController extends BaseController {
     }
 
     /**
-     * Busca todas as disciplinas de um planejamento
+     * Busca todos os blocos de estudo de um planejamento
      */
-    async findManyByPlanejamentoId(req, res, next) {
+    async findManyByDisciplinaPlanejamento(req, res, next) {
         try {
-            const { planejamentoId } = req.params;
+            const { planejamentoId, disciplinaId } = req.params;
 
             logger.info(`Buscando ${this.entityNamePlural} do planejamento`, {
                 planejamentoId: parseInt(planejamentoId),
+                disciplinaId: parseInt(disciplinaId),
                 route: req.originalUrl,
             });
 
-            const disciplinas = await this.repository.findManyByPlanejamentoId(planejamentoId);
+            const blocos = await this.repository.findManyByDisciplinaPlanejamento(planejamentoId, disciplinaId);
 
-            if (!disciplinas || disciplinas.length === 0) {
-                logger.info(`Nenhuma ${this.entityName} encontrada para este planejamento`, {
+            if (!blocos || blocos.length === 0) {
+                logger.info(`Nenhum ${this.entityName} encontrado para este planejamento`, {
                     planejamentoId: parseInt(planejamentoId),
+                    disciplinaId: parseInt(disciplinaId),
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este planejamento`
+                    error: `Nenhum ${this.entityName} encontrado para este planejamento`
                 });
             }
 
-            return res.json(disciplinas);
+            return res.json(blocos);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por planejamento`, {
                 error: error.message,
@@ -136,50 +143,15 @@ class DisciplinaPlanejamentoController extends BaseController {
         }
     }
 
-    /**
-     * Busca todos os planejamentos de uma disciplina
-     */
-    async findManyByDisciplinaId(req, res, next) {
-        try {
-            const { disciplinaId } = req.params;
-
-            logger.info(`Buscando ${this.entityNamePlural} da disciplina`, {
-                disciplinaId: parseInt(disciplinaId),
-                route: req.originalUrl,
-            });
-
-            const planejamentos = await this.repository.findManyByDisciplinaId(disciplinaId);
-
-            if (!planejamentos || planejamentos.length === 0) {
-                logger.info(`Nenhuma ${this.entityName} encontrada para esta disciplina`, {
-                    disciplinaId: parseInt(disciplinaId),
-                    route: req.originalUrl,
-                });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta disciplina`
-                });
-            }
-
-            return res.json(planejamentos);
-        } catch (error) {
-            logger.error(`Erro ao buscar ${this.entityNamePlural} por disciplina`, {
-                error: error.message,
-                stack: error.stack,
-            });
-
-            next(error);
-        }
-    }
 }
 
-const controller = new DisciplinaPlanejamentoController();
+const controller = new BlocoEstudoController();
 
 module.exports = {
     create: controller.create.bind(controller),
     findAll: controller.findAll.bind(controller),
     findById: controller.findById.bind(controller),
-    findManyByPlanejamentoId: controller.findManyByPlanejamentoId.bind(controller),
-    findManyByDisciplinaId: controller.findManyByDisciplinaId.bind(controller),
+    findManyByDisciplinaPlanejamento: controller.findManyByDisciplinaPlanejamento.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

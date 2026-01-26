@@ -16,54 +16,22 @@
        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
     /* Cores Primárias do Sistema */
-    --color-primary: #0E1C2B;
     /* Azul noturno técnico */
-    --color-primary-light: #1A2D42;
+    --color-primary: #112136;
+    --color-primary-dark: #0d1f31;
+    --color-primary-light: #20344b;
+
     /* Azul noturno claro */
-    --color-primary-dark: #050D15;
-    /* Azul noturno escuro */
+    --color-secondary: #d8d8d8;
+    --color-secondary-dark: #b9b9b9;
 
-    /* Cores Secundárias do Sistema */
-    --color-secondary: #E4E7EC;
-    /* Cinza claro estrutural */
-    --color-accent: #3FAF82;
     /* Verde progresso */
-    --color-white: #FFFFFF;
+    --color-accent: #3FAF82;
+    --color-accent-dark: #1E6248;
+    --color-accent-light: #6FCF97;
+
     /* Branco puro */
-
-    /* Cores de Fundo */
-    --color-background: #0E1C2B;
-    /* Fundo principal escuro */
-    --color-background-light: #FFFFFF;
-    /* Fundo claro */
-    --color-background-dark: #08121D;
-    /* Fundo mais escuro */
-
-    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       CORES DE TEXTO
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-    /* Texto em Fundos Escuros */
-    --color-text-primary: #E5E7EB;
-    /* Texto principal claro */
-    --color-text-secondary: #9CA3AF;
-    /* Texto secundário */
-    --color-text-muted: #8A94A3;
-    /* Texto esmaecido */
-    --color-text-accent: #3FAF82;
-    /* Texto de destaque verde */
-
-    /* Texto em Fundos Claros */
-    --color-text-title: #065f46;
-    /* Títulos verdes */
-    --color-text-subtitle: #0E1C2B;
-    /* Subtítulos azul escuro */
-    --color-text-primary-light: #1F2937;
-    /* Texto principal escuro */
-    --color-text-secondary-light: #6B7280;
-    /* Texto secundário escuro */
-    --color-text-dark: #111827;
-    /* Texto muito escuro */
+    --color-white: #FFFFFF;
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        CORES DE STATUS E FEEDBACK
@@ -105,25 +73,14 @@
        CORES DE INTERAÇÃO
        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-    --color-hover: #343c4b;
     /* Hover padrão */
-    --color-hover-light: #f3f4f6;
+    --color-hover: #343c4b;
     /* Hover em fundos claros */
-    --color-active: #343c4b;
+    --color-hover-light: #f3f4f6;
     /* Estado ativo/selecionado */
-    --color-focus: #3b82f6;
-    /* Cor de foco (outline) */
-
-    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       CORES DE BORDA
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-    --color-border: #262c39;
-    /* Borda padrão */
-    --color-border-light: #e5e7eb;
-    /* Borda clara */
-    --color-border-accent: #bec2c6;
-    /* Borda de destaque */
+    --color-active: #343c4b;
+    /* Desabilitado */
+    --color-disabled: #9ca3af;
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
        CORES DO TAILWIND (Compatibilidade)
@@ -159,31 +116,6 @@
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      CORES DE BOTÕES
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-    /* Botão Primário — Ação principal (confirmação / avanço) */
-    --btn-primary-bg: #2F8F6B;
-    /* Verde estratégico */
-    --btn-primary-bg-hover: #257A5A;
-    /* Verde mais escuro no hover */
-    --btn-primary-bg-active: #1E6248;
-    /* Verde profundo ao clicar */
-    --btn-primary-text: #FFFFFF;
-    /* Texto branco */
-    --btn-primary-border: #2F8F6B;
-    /* Borda igual ao fundo */
-    --btn-primary-shadow: rgba(47, 143, 107, 0.35);
-    /* Sombra verde sutil */
-
-    /* Botão Secundário — Ação secundária (controle / navegação) */
-    --btn-secondary-bg: transparent;
-    --btn-secondary-bg-hover: #2F8F6B;
-    /* Azul institucional leve */
-    --btn-secondary-bg-active: rgba(30, 58, 95, 0.16);
-    --btn-secondary-text: #1E3A5F;
-    /* Azul profundo */
-    --btn-secondary-text-hover: #162C47;
-    --btn-secondary-border: #1E3A5F;
-    --btn-secondary-border-hover: #162C47;
 
     /* Botão Sucesso - Confirmações e ações positivas */
     --btn-success-bg: #10b981;
@@ -280,13 +212,19 @@
     /* 8px */
     --spacing-md: 1rem;
     /* 16px */
-    --spacing-lg: 1.5rem;
+    --spacing-lg: 1.25rem;
+    /* 20px */
+    --spacing-xl: 1.5rem;
     /* 24px */
-    --spacing-xl: 2rem;
+    --spacing-2xl: 1.75rem;
     /* 32px */
-    --spacing-2xl: 3rem;
+    --spacing-3xl: 2rem;
+    /* 36px */
+    --spacing-4xl: 2.5rem;
+    /* 40px */
+    --spacing-5xl: 3rem;
     /* 48px */
-    --spacing-3xl: 4rem;
+    --spacing-6xl: 4rem;
     /* 64px */
 
     /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -312,8 +250,11 @@
     /* 36px */
     --font-size-5xl: 2.75rem;
     /* 44px */
+    --font-size-6xl: 3rem;
+    /* 48px */
 
     /* Pesos de Fonte */
+    --font-weight-light: 300;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -324,6 +265,7 @@
     --line-height-tight: 1.25;
     --line-height-normal: 1.5;
     --line-height-relaxed: 1.75;
+    --line-height-loose: 2;
 
     /* Família de Fontes */
     --font-family-base: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -334,19 +276,18 @@
 
     --border-width: 1px;
     --border-width-2: 2px;
+    --border-width-3: 3px;
     --border-width-4: 4px;
+    --border-width-5: 5px;
+    --border-width-6: 6px;
 
     --border-radius-none: 0;
     --border-radius-sm: 0.375rem;
-    /* 6px */
     --border-radius-md: 0.5rem;
-    /* 8px */
     --border-radius-lg: 0.75rem;
-    /* 12px */
     --border-radius-xl: 1rem;
-    /* 16px */
     --border-radius-2xl: 1.5rem;
-    /* 24px */
+    --border-radius-3xl: 2rem;
     --border-radius-full: 9999px;
     /* Circular */
 
@@ -440,7 +381,7 @@ body {
 /* Container Principal */
 .studium-container {
     align-items: center;
-    background-color: var(--color-background-light);
+    background-color: var(--color-white);
     display: flex;
     flex-direction: column;
     padding: var(--spacing-xl);
@@ -450,26 +391,110 @@ body {
 
 /* Card de Cadastro/Login */
 .studium-main-card {
-    background-color: var(--color-secondary);
-    padding: var(--spacing-2xl);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-2xl);
+    border: var(--border-width-2) solid var(--color-gray-200);
+    background-color: var(--color-white);
+    padding: var(--spacing-3xl);
+    border-radius: var(--border-radius-2xl);
+    min-width: 28rem;
+    max-width: 32rem;
     width: 100%;
-    max-width: 35rem;
+    box-shadow: var(--shadow-xl);
 }
 
 .studium-page-header {
     border-bottom: 2px solid var(--color-gray-200);
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-2xl);
+    padding-bottom: var(--spacing-lg);
     width: 100%;
 }
 
 .studium-page-title {
-    color: var(--color-text-accent);
+    color: var(--color-accent);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     text-align: left;
+}
+
+
+/* ████████████████████████████████████████████████████████████████
+██                                                            ██
+██   COMPONENTES DE MODAL                                     ██
+██                                                            ██
+████████████████████████████████████████████████████████████████ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CABEÇALHO DO MODAL
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xl);
+    border-bottom: var(--border-width-2) solid var(--color-gray-200);
+}
+
+.studium-modal-header svg {
+    font-size: var(--font-size-2xl);
+    color: var(--color-primary);
+}
+
+.studium-modal-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+    margin: 0;
+}
+
+.studium-modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary-light);
+    font-size: var(--font-size-2xl);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-all-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+}
+
+.studium-modal-close-btn:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-dark);
+}
+
+.studium-modal-form {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    width: 100%;
+}
+
+.studium-modal-form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.studium-modal-form-label {
+    display: block;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.studium-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    border-top: var(--border-width) solid var(--color-gray-200);
+    background-color: var(--color-gray-50);
+    border-bottom-left-radius: var(--border-radius-xl);
+    border-bottom-right-radius: var(--border-radius-xl);
 }
 
 /* ████████████████████████████████████████████████████████████████
@@ -482,14 +507,15 @@ body {
 .studium-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
     margin-bottom: var(--spacing-md);
 }
 
 /* Header do Formulário */
 .studium-form-header {
-    text-align: center;
-    margin-bottom: var(--spacing-xl);
+    display: flex;
+    flex-direction: row;
+    margin-bottom: var(--spacing-md);
 }
 
 .studium-form-title {
@@ -522,21 +548,20 @@ body {
 .studium-form-label {
     display: block;
     text-align: right;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-subtitle);
-    margin-bottom: var(--spacing-sm);
-    width: 22%;
+    color: var(--color-primary);
 }
 
 /* Input */
 .studium-form-input {
-    border: var(--border-width) solid var(--color-border-light);
-    border-radius: var(--border-radius-md);
+    border: var(--border-width-2) solid var(--color-gray-300);
+    border-radius: var(--border-radius-lg);
     background-color: var(--color-white);
-    color: var(--color-text-primary-light);
-    font-size: var(--font-size-sm);
-    height: var(--spacing-2xl);
+    color: var(--color-text-dark);
+    font-size: var(--font-size-md);
+    font-family: var(--font-family-base);
+    min-height: 3rem;
     outline: none;
     padding: var(--spacing-sm) var(--spacing-md);
     transition: var(--transition-all-fast);
@@ -544,13 +569,14 @@ body {
 }
 
 .studium-form-input:focus {
-    border-color: var(--color-info);
+    outline: none;
+    border: var(--border-width-3) solid var(--color-accent);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .studium-form-input:disabled {
     background-color: var(--color-gray-100);
-    color: var(--color-text-secondary-light);
+    color: var(--color-secondary-dark);
     cursor: not-allowed;
     opacity: 0.6;
 }
@@ -620,8 +646,8 @@ body {
    ████████████████████████████████████████████████████████████████ */
 
 .studium-card-base {
-    background-color: var(--color-background-light);
-    border: var(--border-width-2) solid var(--color-border-light);
+    background-color: var(--color-white);
+    border: var(--border-width-2) solid var(--color-secondary);
     border-radius: var(--border-radius-2xl);
     padding: var(--spacing-md) var(--spacing-lg);
     box-shadow: var(--shadow-sm);
@@ -631,7 +657,6 @@ body {
 
 .studium-card-base:hover {
     box-shadow: var(--shadow-xl);
-    transform: translateY(-2px);
 }
 
 .studium-card-header {
@@ -734,7 +759,6 @@ body {
 
 .studium-stats-item:hover {
     background-color: var(--color-gray-100);
-    transform: translateY(-2px);
 }
 
 .studium-stats-icon {
@@ -807,7 +831,7 @@ body {
 
 .dropdown-header {
     padding: var(--spacing-md);
-    border-bottom: var(--border-width) solid var(--color-border-light);
+    border-bottom: var(--border-width) solid var(--color-secondary);
     text-align: left;
     color: var(--color-text-primary);
 }
@@ -849,7 +873,7 @@ body {
 
 .dropdown-divider {
     height: 1px;
-    background-color: var(--color-border-light);
+    background-color: var(--color-secondary);
     margin: var(--spacing-sm) 0;
 }
 
@@ -863,7 +887,7 @@ body {
 button,
 .btn {
     font-family: var(--font-family-base);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-medium);
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-md);
@@ -877,11 +901,6 @@ button,
     gap: var(--spacing-xs);
 }
 
-button:focus,
-.btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 var(--btn-focus-ring-width) var(--btn-primary-shadow);
-}
 
 button:disabled,
 .btn:disabled {
@@ -920,18 +939,17 @@ button:disabled,
 }
 
 .btn-icon:hover {
-    background-color: var(--color-hover-light);
+    background-color: var(--color-accent);
 }
 
 .btn-primary {
     background-color: var(--color-accent);
-    color: var(--btn-primary-text);
+    color: var(--color-white);
 }
 
 .btn-primary:hover {
-    background-color: var(--color-success-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+    background-color: var(--color-accent-dark);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-primary:focus {
@@ -939,28 +957,22 @@ button:disabled,
     box-shadow: 0 0 0 3px var(--btn-primary-shadow);
 }
 
-.btn-primary:active {
-    background-color: var(--btn-primary-bg-active);
-}
-
 .btn-primary:disabled {
-    background-color: var(--btn-disabled-bg);
-    color: var(--btn-disabled-text);
+    background-color: var(--color-disabled);
+    color: var(--color-secondary);
     cursor: var(--btn-disabled-cursor);
     opacity: var(--btn-disabled-opacity);
 }
 
-
 .btn-secondary {
     border: var(--border-width-2) solid var(--color-accent);
-    color: var(--btn-secondary-text);
-    background-color: var(--btn-secondary-bg);
+    color: var(--color-accent);
+    background-color: var(--color-white);
 }
 
 .btn-secondary:hover {
     background-color: var(--color-accent);
     color: var(--color-white);
-    transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
 }
 
@@ -969,13 +981,9 @@ button:disabled,
     box-shadow: 0 0 0 3px var(--btn-primary-shadow);
 }
 
-.btn-secondary:active {
-    background-color: var(--btn-secondary-bg-active);
-}
-
 .btn-success {
     background-color: var(--color-success);
-    color: var(--color-text-primary);
+    color: var(--color-white);
 }
 
 .btn-success:hover {
@@ -984,18 +992,17 @@ button:disabled,
 
 .btn-danger {
     background-color: var(--color-error);
-    color: var(--color-text-primary);
+    color: var(--color-white);
 }
 
 .btn-danger:hover {
     background-color: var(--color-error-dark);
-    transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
 }
 
 .btn-warning {
     background-color: var(--color-warning);
-    color: var(--color-text-primary);
+    color: var(--color-white);
 }
 
 .btn-warning:hover {
@@ -1005,20 +1012,19 @@ button:disabled,
 .btn-outline {
     background-color: transparent;
     border: var(--border-width-2) solid var(--color-gray-300);
-    color: var(--color-text-secondary-light);
+    color: var(--color-accent);
 }
 
 .btn-outline:hover {
     background-color: var(--color-gray-100);
-    color: var(--color-text-dark);
     border-color: var(--color-gray-400);
 }
 
 .btn-link {
     width: 100%;
-    color: var(--btn-primary-bg);
+    color: var(--color-accent);
     font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     background: none;
     border: none;
     cursor: pointer;
@@ -1026,7 +1032,7 @@ button:disabled,
 }
 
 .btn-link:hover {
-    color: var(--btn-primary-bg-hover);
+    color: var(--color-accent-light);
     text-decoration: underline;
 }
 
@@ -1127,24 +1133,16 @@ button:disabled,
     background-color: var(--color-primary);
 }
 
-.bg-primary-light {
-    background-color: var(--color-primary-light);
-}
-
 .bg-primary-dark {
     background-color: var(--color-primary-dark);
 }
 
 .bg-secondary {
-    background-color: var(--color-background);
+    background-color: var(--color-secondary);
 }
 
 .bg-light {
-    background-color: var(--color-background-light);
-}
-
-.bg-dark {
-    background-color: var(--color-background-dark);
+    background-color: var(--color-white);
 }
 
 .bg-success {
@@ -1289,24 +1287,24 @@ button:disabled,
 
 /* Border Width */
 .border {
-    border: var(--border-width) solid var(--color-border);
+    border: var(--border-width) solid var(--color-accent);
 }
 
 .border-2 {
-    border: var(--border-width-2) solid var(--color-border);
+    border: var(--border-width-2) solid var(--color-accent);
 }
 
 .border-4 {
-    border: var(--border-width-4) solid var(--color-border);
+    border: var(--border-width-4) solid var(--color-accent);
 }
 
 /* Border Color */
 .border-light {
-    border-color: var(--color-border-light);
+    border-color: var(--color-secondary);
 }
 
 .border-accent {
-    border-color: var(--color-border-accent);
+    border-color: var(--color-accent-accent);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
