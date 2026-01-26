@@ -26,7 +26,8 @@ import {
     faList,
     faEdit,
     faPlayCircle,
-    faPauseCircle
+    faPauseCircle,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import './PlanosEstudo.css';
 
@@ -48,6 +49,9 @@ const PlanosEstudo = () => {
 
     // Estado local para manipulação dos planos (inicializado com dados do hook)
     const [planos, setPlanos] = useState([]);
+
+    // Estado para pesquisa
+    const [searchTerm, setSearchTerm] = useState('');
 
     // Atualiza planos quando os dados do hook mudarem
     useEffect(() => {
@@ -151,24 +155,54 @@ const PlanosEstudo = () => {
         navigate('/disciplinas', { state: { planoId } });
     };
 
+    // Função de filtro de planos
+    const filteredPlanos = planos.filter((plano) => {
+        if (!searchTerm) return true;
+
+        const searchLower = searchTerm.toLowerCase();
+        const dataProvaFormatted = formatDateToLocaleString(plano.dataProva).toLowerCase();
+
+        return (
+            plano.titulo.toLowerCase().includes(searchLower) ||
+            plano.concurso.toLowerCase().includes(searchLower) ||
+            plano.cargo.toLowerCase().includes(searchLower) ||
+            plano.banca.toLowerCase().includes(searchLower) ||
+            dataProvaFormatted.includes(searchLower)
+        );
+    });
+
     return (
         <Layout>
             <div className="studium-container">
                 <div className="studium-page-header planos-header">
                     <h2 className="studium-page-title">Planos de Estudo</h2>
-                    <button className="btn btn-primary" onClick={handleNovoPlano}>
-                        <FontAwesomeIcon icon={faPlus} />
-                        Novo Plano
-                    </button>
+                    <div className="planos-header-actions">
+                        <div className="search-container">
+                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            <input
+                                type="text"
+                                placeholder="Pesquisar por título, concurso, cargo, banca ou data..."
+                                className="search-input"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <button className="btn btn-primary" onClick={handleNovoPlano}>
+                            <FontAwesomeIcon icon={faPlus} />
+                            Novo Plano
+                        </button>
+                    </div>
                 </div>
 
                 {loadingData ? (
                     <div className="loading-message">Carregando planos de estudo...</div>
                 ) : planos.length === 0 ? (
                     <div className="empty-message">Nenhum plano de estudo encontrado. Crie seu primeiro plano!</div>
+                ) : filteredPlanos.length === 0 ? (
+                    <div className="empty-message">Nenhum plano encontrado com os critérios de pesquisa.</div>
                 ) : (
                     <div className="planos-lista">
-                        {planos.map((plano) => (
+                        {filteredPlanos.map((plano) => (
                             <div key={plano.id} className="studium-card-base">
                                 {/* Cabeçalho do Card */}
                                 <div className="studium-card-header">

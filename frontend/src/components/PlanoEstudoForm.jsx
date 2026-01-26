@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faSave, faClipboardList, faCancel } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faSave, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import './PlanoEstudoForm.css';
 import { formatDateForInput } from '../utils/utils';
 
@@ -223,10 +223,6 @@ const PlanoEstudoForm = ({ plano, isOpen, onClose, onSubmit }) => {
                     </div>
 
                     <div className="studium-modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                            <FontAwesomeIcon icon={faCancel} />
-                            Cancelar
-                        </button>
                         <button type="submit" className="btn btn-primary">
                             <FontAwesomeIcon icon={faSave} />
                             {plano ? 'Atualizar Plano' : 'Criar Plano'}

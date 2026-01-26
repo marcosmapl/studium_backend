@@ -410,7 +410,7 @@ body {
 
 .studium-page-title {
     color: var(--color-accent);
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     text-align: left;
 }
@@ -423,15 +423,18 @@ body {
 ████████████████████████████████████████████████████████████████ */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   CABEÇALHO DO MODAL
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+CABEÇALHO DO MODAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .studium-modal-header {
+    align-items: center;
+    background-color: var(--color-gray-50);
+    border-top-left-radius: var(--border-radius-xl);
+    border-top-right-radius: var(--border-radius-xl);
+    border-bottom: var(--border-width-2) solid var(--color-gray-200);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-xl);
-    border-bottom: var(--border-width-2) solid var(--color-gray-200);
+    padding: var(--spacing-md) var(--spacing-lg);
 }
 
 .studium-modal-header svg {
@@ -440,7 +443,7 @@ body {
 }
 
 .studium-modal-title {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-accent);
     margin: 0;
@@ -449,12 +452,8 @@ body {
 .studium-modal-close-btn {
     background: transparent;
     border: none;
-    color: var(--color-text-secondary-light);
-    font-size: var(--font-size-2xl);
+    color: var(--color-accent);
     cursor: pointer;
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius-md);
-    transition: var(--transition-all-fast);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -464,7 +463,11 @@ body {
 
 .studium-modal-close-btn:hover {
     background-color: var(--color-gray-100);
-    color: var(--color-text-dark);
+    color: var(--color-error-dark);
+}
+
+.studium-modal-close-btn svg:hover {
+    color: var(--color-error);
 }
 
 .studium-modal-form {
@@ -475,14 +478,14 @@ body {
 }
 
 .studium-modal-form-group {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
 }
 
 .studium-modal-form-label {
     display: block;
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-dark);
+    color: var(--color-primary-dark);
     margin-bottom: var(--spacing-sm);
 }
 
@@ -490,7 +493,7 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: var(--spacing-md);
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-lg);
     border-top: var(--border-width) solid var(--color-gray-200);
     background-color: var(--color-gray-50);
     border-bottom-left-radius: var(--border-radius-xl);
@@ -519,14 +522,14 @@ body {
 }
 
 .studium-form-title {
-    font-size: var(--font-size-4xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-accent);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
     margin-bottom: var(--spacing-sm);
 }
 
 .studium-form-subtitle {
-    color: var(--color-text-subtitle);
+    color: var(--color-secondary-dark);
     font-size: var(--font-size-base);
 }
 
@@ -546,22 +549,22 @@ body {
 
 /* Label */
 .studium-form-label {
+    color: var(--color-primary-dark);
     display: block;
-    text-align: right;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    text-align: right;
 }
 
 /* Input */
 .studium-form-input {
-    border: var(--border-width-2) solid var(--color-gray-300);
+    border: var(--border-width-2) solid var(--color-gray-200);
     border-radius: var(--border-radius-lg);
     background-color: var(--color-white);
-    color: var(--color-text-dark);
-    font-size: var(--font-size-md);
+    color: var(--color-primary-dark);
+    font-size: var(--font-size-xs);
     font-family: var(--font-family-base);
-    min-height: 3rem;
     outline: none;
     padding: var(--spacing-sm) var(--spacing-md);
     transition: var(--transition-all-fast);
@@ -570,8 +573,7 @@ body {
 
 .studium-form-input:focus {
     outline: none;
-    border: var(--border-width-3) solid var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border: var(--border-width-2) solid var(--color-accent);
 }
 
 .studium-form-input:disabled {
@@ -582,7 +584,7 @@ body {
 }
 
 .studium-form-input::placeholder {
-    color: var(--color-text-secondary-light);
+    color: var(--color-gray-700);
     opacity: 0.5;
 }
 
@@ -593,7 +595,6 @@ body {
 
 .studium-form-input.error:focus {
     border-color: var(--color-error);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 /* Campo de Senha com Ícone */
@@ -611,7 +612,7 @@ body {
     transform: translateY(-50%);
     background: transparent;
     border: none;
-    color: var(--color-text-secondary-light);
+    color: var(--color-secondary-dark);
     cursor: pointer;
     padding: var(--spacing-xs);
     display: flex;
@@ -623,7 +624,7 @@ body {
 }
 
 .studium-pwd-toggle:hover {
-    color: var(--color-text-primary-light);
+    color: var(--color-primary-light);
 }
 
 .studium-pwd-toggle:disabled {
@@ -648,8 +649,8 @@ body {
 .studium-card-base {
     background-color: var(--color-white);
     border: var(--border-width-2) solid var(--color-secondary);
-    border-radius: var(--border-radius-2xl);
-    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: var(--shadow-sm);
     transition: box-shadow var(--transition-fast);
     flex: 1;
@@ -676,14 +677,14 @@ body {
 }
 
 .studium-card-title {
-    color: var(--color-text-dark);
+    color: var(--color-primary-dark);
     font-weight: var(--font-weight-semibold);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
 }
 
 .studium-card-subtitle {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+    color: var(--color-secondary-dark);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     margin-top: var(--spacing-xs);
 }
@@ -698,7 +699,7 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     padding-top: var(--spacing-sm);
     border-top: var(--border-width) solid var(--color-gray-200);
     gap: var(--spacing-md);
@@ -714,9 +715,9 @@ body {
 }
 
 .studium-card-value {
-    color: var(--color-text-primary-light);
+    color: var(--color-primary-dark);
     font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-md);
     letter-spacing: 0.03em;
 }
 
@@ -737,13 +738,12 @@ body {
 }
 
 .studium-stats-grid {
-    background-color: var(--color-gray-50);
     border-radius: var(--border-radius-lg);
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .studium-stats-item {
@@ -752,19 +752,19 @@ body {
     border-radius: var(--border-radius-lg);
     display: flex;
     flex-direction: row;
-    gap: var(--spacing-lg);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-lg);
     transition: var(--transition-all-fast);
 }
 
 .studium-stats-item:hover {
-    background-color: var(--color-gray-100);
+    background-color: var(--color-gray-200);
 }
 
 .studium-stats-icon {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-xl);
     color: var(--color-accent);
-    margin-bottom: var(--spacing-sm);
     justify-self: center;
 }
 
@@ -776,16 +776,15 @@ body {
 }
 
 .studium-stats-valor {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-dark);
-    /* text-align: right; */
+    color: var(--color-primary-dark);
 }
 
 .studium-stats-label {
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary-light);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-500);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -799,8 +798,8 @@ body {
 .studium-section-row {
     display: flex;
     flex-direction: row;
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-sm);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     width: 100%;
 }
 
@@ -809,7 +808,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     width: 100%;
 }
 
@@ -823,7 +822,6 @@ body {
     position: absolute;
     background-color: var(--color-primary-light);
     border-radius: var(--border-radius-sm);
-    box-shadow: var(--shadow-xl);
     border: var(--border-width) solid var(--color-primary-light);
     z-index: var(--z-index-dropdown);
     min-width: 200px;
@@ -833,7 +831,7 @@ body {
     padding: var(--spacing-md);
     border-bottom: var(--border-width) solid var(--color-secondary);
     text-align: left;
-    color: var(--color-text-primary);
+    color: var(--color-primary);
 }
 
 .dropdown-content {
@@ -843,23 +841,23 @@ body {
 }
 
 .dropdown-item {
-    width: 100%;
-    text-align: left;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-secondary);
+    align-items: center;
     background: transparent;
     border: none;
+    color: var(--color-secondary);
     cursor: pointer;
-    transition: var(--transition-all-fast);
     display: flex;
-    align-items: center;
+    font-size: var(--font-size-sm);
     gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-md);
+    text-align: left;
+    transition: var(--transition-all-fast);
+    width: 100%;
 }
 
 .dropdown-item:hover {
-    background-color: var(--color-hover);
-    color: var(--color-text-primary);
+    background-color: var(--color-white);
+    color: var(--color-primary);
 }
 
 .dropdown-item-danger {
@@ -886,19 +884,19 @@ body {
 /* Estilos Base para Todos os Botões */
 button,
 .btn {
-    font-family: var(--font-family-base);
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-medium);
-    padding: var(--spacing-sm) var(--spacing-md);
+    align-items: center;
+    border: none;
     border-radius: var(--border-radius-md);
     cursor: pointer;
-    transition: var(--transition-all-fast);
-    border: none;
-    text-align: center;
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
     gap: var(--spacing-xs);
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-sm);
+    text-align: center;
+    transition: var(--transition-all-fast);
 }
 
 
@@ -908,34 +906,8 @@ button:disabled,
     cursor: var(--btn-disabled-cursor);
 }
 
-/* Variantes de Botão */
-.btn-base {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-    text-decoration: none;
-}
-
 .btn-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-full);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-all-fast);
+    background-color: var(--color-white);
 }
 
 .btn-icon:hover {
@@ -973,7 +945,7 @@ button:disabled,
 .btn-secondary:hover {
     background-color: var(--color-accent);
     color: var(--color-white);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-secondary:focus {
@@ -1012,7 +984,7 @@ button:disabled,
 .btn-outline {
     background-color: transparent;
     border: var(--border-width-2) solid var(--color-gray-300);
-    color: var(--color-accent);
+    color: var(--color-gray-600);
 }
 
 .btn-outline:hover {
@@ -1021,14 +993,14 @@ button:disabled,
 }
 
 .btn-link {
-    width: 100%;
-    color: var(--color-accent);
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-lg);
-    background: none;
     border: none;
+    background: none;
+    color: var(--color-accent);
     cursor: pointer;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-md);
     transition: var(--transition-all-fast);
+    width: 100%;
 }
 
 .btn-link:hover {
@@ -1048,19 +1020,19 @@ button:disabled,
 
 /* Cores de Texto */
 .text-primary {
-    color: var(--color-text-primary);
+    color: var(--color-primary);
 }
 
 .text-secondary {
-    color: var(--color-text-secondary);
+    color: var(--color-secondary);
 }
 
 .text-muted {
-    color: var(--color-text-muted);
+    color: var(--color-gray-400);
 }
 
 .text-dark {
-    color: var(--color-text-dark);
+    color: var(--color-primary-dark);
 }
 
 .text-success {

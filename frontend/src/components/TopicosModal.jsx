@@ -11,7 +11,6 @@ import {
     faSync,
     faPlus,
     faGripVertical,
-    faXmark,
     faListCheck,
     faTrash
 } from '@fortawesome/free-solid-svg-icons';
@@ -478,10 +477,6 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
 
                 {/* Rodapé */}
                 <div className="topicos-modal-footer">
-                    <button className="btn btn-secondary" onClick={onClose}>
-                        <FontAwesomeIcon icon={faXmark} />
-                        Fechar
-                    </button>
                 </div>
             </div>
 

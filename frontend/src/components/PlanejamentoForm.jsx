@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faFloppyDisk, faBan, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faFloppyDisk, faCalculator } from '@fortawesome/free-solid-svg-icons';
 import './PlanejamentoForm.css';
 
 const diasSemanaOptions = [
@@ -332,10 +332,6 @@ const PlanejamentoForm = ({ planejamento, disciplinas, isOpen, onClose, onSubmit
                     </div>
 
                     <div className="studium-modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                            <FontAwesomeIcon icon={faBan} />
-                            Cancelar
-                        </button>
                         <button type="submit" className="btn btn-primary">
                             <FontAwesomeIcon icon={faFloppyDisk} />
                             {planejamento ? 'Atualizar Planejamento' : 'Criar Planejamento'}

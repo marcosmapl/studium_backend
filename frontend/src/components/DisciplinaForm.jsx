@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faBookOpen, faStar, faFloppyDisk, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faBookOpen, faStar, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import './DisciplinaForm.css';
 
@@ -225,10 +225,6 @@ const DisciplinaForm = ({ disciplina, isOpen, onClose, onSubmit }) => {
                     </div>
 
                     <div className="studium-modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={handleCancel}                            >
-                            <FontAwesomeIcon icon={faBan} />
-                            Cancelar
-                        </button>
                         <button type="submit" className="btn btn-primary">
                             <FontAwesomeIcon icon={faFloppyDisk} />
                             {disciplina ? 'Atualizar Disciplina' : 'Criar Disciplina'}
