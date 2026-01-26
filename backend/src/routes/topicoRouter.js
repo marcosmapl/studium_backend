@@ -44,11 +44,13 @@ const { verifyToken } = require("../middleware/auth");
  *                 example: true
  *               estabilidade:
  *                 type: number
- *                 description: Estabilidade de memorização
+ *                 format: decimal
+ *                 description: Estabilidade de memorização (Decimal 2,1 - 0.0 a 5.0)
  *                 example: 1.0
  *               dificuldade:
  *                 type: number
- *                 description: Dificuldade do tópico (0-10)
+ *                 format: decimal
+ *                 description: Dificuldade do tópico (Decimal 2,1 - 0.0 a 5.0)
  *                 example: 5.0
  *     responses:
  *       201:
@@ -78,9 +80,11 @@ const { verifyToken } = require("../middleware/auth");
  *                   example: true
  *                 estabilidade:
  *                   type: number
+ *                   format: decimal
  *                   example: 1.0
  *                 dificuldade:
  *                   type: number
+ *                   format: decimal
  *                   example: 5.0
  *                 createdAt:
  *                   type: string
@@ -133,9 +137,11 @@ const { verifyToken } = require("../middleware/auth");
  *                     example: true
  *                   estabilidade:
  *                     type: number
+ *                     format: decimal
  *                     example: 1.0
  *                   dificuldade:
  *                     type: number
+ *                     format: decimal
  *                     example: 5.0
  *                   createdAt:
  *                     type: string
@@ -202,9 +208,11 @@ router.get("/", verifyToken, controller.findAll);
  *                   example: true
  *                 estabilidade:
  *                   type: number
+ *                   format: decimal
  *                   example: 1.0
  *                 dificuldade:
  *                   type: number
+ *                   format: decimal
  *                   example: 5.0
  *                 createdAt:
  *                   type: string
@@ -276,9 +284,11 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                     example: true
  *                   estabilidade:
  *                     type: number
+ *                     format: decimal
  *                     example: 1.0
  *                   dificuldade:
  *                     type: number
+ *                     format: decimal
  *                     example: 5.0
  *                   createdAt:
  *                     type: string
@@ -350,9 +360,11 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                     example: true
  *                   estabilidade:
  *                     type: number
+ *                     format: decimal
  *                     example: 1.0
  *                   dificuldade:
  *                     type: number
+ *                     format: decimal
  *                     example: 5.0
  *                   createdAt:
  *                     type: string
@@ -422,9 +434,11 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *                   example: true
  *                 estabilidade:
  *                   type: number
+ *                   format: decimal
  *                   example: 1.0
  *                 dificuldade:
  *                   type: number
+ *                   format: decimal
  *                   example: 5.0
  *                 createdAt:
  *                   type: string
@@ -484,25 +498,12 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *                 example: true
  *               estabilidade:
  *                 type: number
+ *                 format: decimal
  *                 example: 1.0
  *               dificuldade:
  *                 type: number
+ *                 format: decimal
  *                 example: 5.0
- *               createdAt:
- *                 type: string
- *                 format: date-time
- *               updatedAt:
- *                 type: string
- *                 format: date-time
- *               disciplina:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   titulo:
- *                     type: string
- *                     example: "Contabilidade Geral"
  *     responses:
  *       200:
  *         description: Tópico atualizado com sucesso
@@ -530,9 +531,11 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *                   example: true
  *                 estabilidade:
  *                   type: number
+ *                   format: decimal
  *                   example: 1.0
  *                 dificuldade:
  *                   type: number
+ *                   format: decimal
  *                   example: 5.0
  *                 createdAt:
  *                   type: string

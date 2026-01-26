@@ -19,27 +19,40 @@ const { verifyToken } = require("../middleware/auth");
  *             type: object
  *             required:
  *               - titulo
- *               - peso
- *               - familiaridade
- *               - cor
  *               - planoId
  *             properties:
  *               titulo:
  *                 type: string
  *                 description: Título da disciplina
  *                 example: "Direito Constitucional"
- *               peso:
- *                 type: integer
- *                 description: Peso da disciplina no edital
- *                 example: 3
- *               familiaridade:
- *                 type: integer
- *                 description: Familiaridade do usuário com a disciplina (1 - 5)
- *                 example: 1
  *               cor:
  *                 type: string
  *                 description: Cor da disciplina em formato hexadecimal
  *                 example: "#FF5733"
+ *                 default: "#FFFFFF"
+ *               concluido:
+ *                 type: boolean
+ *                 description: Indica se a disciplina foi concluída
+ *                 example: false
+ *                 default: false
+ *               importancia:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Peso/importância da disciplina (0.0 a 5.0)
+ *                 example: 3.0
+ *                 default: 1.0
+ *               conhecimento:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Nível de conhecimento atual (0.0 a 5.0)
+ *                 example: 1.0
+ *                 default: 0.0
+ *               horasSemanais:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Horas semanais alocadas para estudo
+ *                 example: 4.5
+ *                 default: 0.0
  *               planoId:
  *                 type: integer
  *                 description: ID do plano de estudo
@@ -58,21 +71,24 @@ const { verifyToken } = require("../middleware/auth");
  *                 titulo:
  *                   type: string
  *                   example: "Direito Constitucional"
- *                 peso:
- *                   type: integer
- *                   example: 3
- *                 familiaridade:
- *                   type: integer
- *                   example: 1
  *                 cor:
  *                   type: string
  *                   example: "#FF5733"
- *                 planoId:
- *                   type: integer
- *                   example: 1
  *                 concluido:
  *                   type: boolean
  *                   example: false
+ *                 importancia:
+ *                   type: number
+ *                   example: 3.0
+ *                 conhecimento:
+ *                   type: number
+ *                   example: 1.0
+ *                 horasSemanais:
+ *                   type: number
+ *                   example: 4.5
+ *                 planoId:
+ *                   type: integer
+ *                   example: 1
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -110,21 +126,24 @@ const { verifyToken } = require("../middleware/auth");
  *                   titulo:
  *                     type: string
  *                     example: "Direito Constitucional"
- *                   peso:
- *                     type: integer
- *                     example: 3
- *                   familiaridade:
- *                     type: integer
- *                     example: 1
  *                   cor:
  *                     type: string
  *                     example: "#FF5733"
- *                   planoId:
- *                     type: integer
- *                     example: 1
  *                   concluido:
  *                     type: boolean
  *                     example: false
+ *                   importancia:
+ *                     type: number
+ *                     example: 3.0
+ *                   conhecimento:
+ *                     type: number
+ *                     example: 1.0
+ *                   horasSemanais:
+ *                     type: number
+ *                     example: 4.5
+ *                   planoId:
+ *                     type: integer
+ *                     example: 1
  *                   plano:
  *                     type: object
  *                     properties:
@@ -174,16 +193,18 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: integer
  *                 titulo:
  *                   type: string
- *                 peso:
- *                   type: integer
- *                 familiaridade:
- *                   type: integer
  *                 cor:
  *                   type: string
- *                 planoId:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
+ *                 importancia:
+ *                   type: number
+ *                 conhecimento:
+ *                   type: number
+ *                 horasSemanais:
+ *                   type: number
+ *                 planoId:
+ *                   type: integer
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -229,16 +250,18 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                     type: integer
  *                   titulo:
  *                     type: string
- *                   peso:
- *                     type: integer
- *                   familiaridade:
- *                     type: integer
  *                   cor:
  *                     type: string
- *                   planoId:
- *                     type: integer
  *                   concluido:
  *                     type: boolean
+ *                   importancia:
+ *                     type: number
+ *                   conhecimento:
+ *                     type: number
+ *                   horasSemanais:
+ *                     type: number
+ *                   planoId:
+ *                     type: integer
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -284,16 +307,18 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                     type: integer
  *                   titulo:
  *                     type: string
- *                   peso:
- *                     type: integer
- *                   familiaridade:
- *                     type: integer
  *                   cor:
  *                     type: string
- *                   planoId:
- *                     type: integer
  *                   concluido:
  *                     type: boolean
+ *                   importancia:
+ *                     type: number
+ *                   conhecimento:
+ *                     type: number
+ *                   horasSemanais:
+ *                     type: number
+ *                   planoId:
+ *                     type: integer
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -337,16 +362,18 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                   type: integer
  *                 titulo:
  *                   type: string
- *                 peso:
- *                   type: integer
- *                 familiaridade:
- *                   type: integer
  *                 cor:
  *                   type: string
- *                 planoId:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
+ *                 importancia:
+ *                   type: number
+ *                 conhecimento:
+ *                   type: number
+ *                 horasSemanais:
+ *                   type: number
+ *                 planoId:
+ *                   type: integer
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -383,18 +410,29 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                 type: string
  *                 description: Novo título da disciplina
  *                 example: "Direito Constitucional Avançado"
- *               peso:
- *                 type: string
- *                 description: Novo peso da disciplina
- *                 example: 2
- *               familiaridade:
- *                 type: string
- *                 description: Novo nível de familiaridade
- *                 example: 2
  *               cor:
  *                 type: string
  *                 description: Nova cor
  *                 example: "#3498DB"
+ *               concluido:
+ *                 type: boolean
+ *                 description: Status de conclusão
+ *                 example: false
+ *               importancia:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Novo peso/importância da disciplina (0.0 a 5.0)
+ *                 example: 2.5
+ *               conhecimento:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Novo nível de conhecimento (0.0 a 5.0)
+ *                 example: 2.0
+ *               horasSemanais:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Novas horas semanais
+ *                 example: 5.0
  *     responses:
  *       200:
  *         description: Disciplina atualizada com sucesso
@@ -407,16 +445,18 @@ router.get("/plano/:planoId", verifyToken, controller.findManyByPlanoId);
  *                   type: integer
  *                 titulo:
  *                   type: string
- *                 peso:
- *                   type: integer
- *                 familiaridade:
- *                   type: integer
  *                 cor:
  *                   type: string
- *                 planoId:
- *                   type: integer
  *                 concluido:
  *                   type: boolean
+ *                 importancia:
+ *                   type: number
+ *                 conhecimento:
+ *                   type: number
+ *                 horasSemanais:
+ *                   type: number
+ *                 planoId:
+ *                   type: integer
  *                 createdAt:
  *                   type: string
  *                   format: date-time

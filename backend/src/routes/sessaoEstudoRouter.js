@@ -21,8 +21,6 @@ const { verifyToken } = require("../middleware/auth");
  *               - planoEstudoId
  *               - disciplinaId
  *               - topicoId
- *               - categoriaSessaoId
- *               - situacaoSessaoId
  *             properties:
  *               planoEstudoId:
  *                 type: integer
@@ -36,14 +34,20 @@ const { verifyToken } = require("../middleware/auth");
  *                 type: integer
  *                 description: ID do tópico
  *                 example: 1
- *               categoriaSessaoId:
+ *               blocoEstudoId:
  *                 type: integer
- *                 description: ID da categoria de sessão
+ *                 description: ID do bloco de estudo (opcional)
  *                 example: 1
- *               situacaoSessaoId:
- *                 type: integer
- *                 description: ID da situação de sessão
- *                 example: 1
+ *               categoriaSessao:
+ *                 type: string
+ *                 enum: [TEORIA, REVISAO, RESOLUCAO_QUESTOES, LEITURA, OUTROS]
+ *                 description: Categoria da sessão de estudo
+ *                 example: TEORIA
+ *               situacaoSessao:
+ *                 type: string
+ *                 enum: [AGENDADA, CANCELADA, EM_ANDAMENTO, PAUSADA, CONCLUIDA]
+ *                 description: Situação da sessão de estudo
+ *                 example: AGENDADA
  *               dataInicio:
  *                 type: string
  *                 format: date-time
@@ -62,7 +66,8 @@ const { verifyToken } = require("../middleware/auth");
  *                 example: 0
  *               tempoEstudo:
  *                 type: number
- *                 description: Tempo de estudo em horas
+ *                 format: decimal
+ *                 description: Tempo de estudo em horas (Decimal 4,2)
  *                 example: 0.0
  *               paginasLidas:
  *                 type: integer
@@ -71,6 +76,10 @@ const { verifyToken } = require("../middleware/auth");
  *               topicoFinalizado:
  *                 type: boolean
  *                 description: Se o tópico foi finalizado nesta sessão
+ *                 example: false
+ *               concluida:
+ *                 type: boolean
+ *                 description: Se a sessão foi concluída
  *                 example: false
  *               observacoes:
  *                 type: string
@@ -210,7 +219,41 @@ router.get("/topico/:topicoId", verifyToken, controller.findManyByTopicoId);
 
 /**
  * @swagger
- * /api/sessaoEstudo/categoria/{categoriaSessaoId}:
+ * /api/sessaoEstudo/blocoEstudo/{blocoEstudoId}:
+ *   get:
+ *     summary: Busca todas as sessões de estudo de um bloco de estudo
+ *     tags: [Sessão de Estudo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: blocoEstudoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do bloco de estudo
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Sessões de estudo encontradas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       404:
+ *         description: Nenhuma sessão de estudo encontrada para este bloco
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/blocoEstudo/:blocoEstudoId", verifyToken, controller.findManyByBlocoEstudoId);
+
+/**
+ * @swagger
+ * /api/sessaoEstudo/categoria/{categoriaSessao}:
  *   get:
  *     summary: Busca todas as sessões de estudo por categoria
  *     tags: [Sessão de Estudo]
@@ -218,12 +261,13 @@ router.get("/topico/:topicoId", verifyToken, controller.findManyByTopicoId);
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: categoriaSessaoId
+ *         name: categoriaSessao
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID da categoria de sessão
- *         example: 1
+ *           type: string
+ *           enum: [TEORIA, REVISAO, RESOLUCAO_QUESTOES, LEITURA, OUTROS]
+ *         description: Categoria da sessão
+ *         example: TEORIA
  *     responses:
  *       200:
  *         description: Sessões de estudo encontradas
@@ -240,11 +284,11 @@ router.get("/topico/:topicoId", verifyToken, controller.findManyByTopicoId);
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/categoria/:categoriaSessaoId", verifyToken, controller.findManyByCategoriaSessaoId);
+router.get("/categoria/:categoriaSessao", verifyToken, controller.findManyByCategoriaSessao);
 
 /**
  * @swagger
- * /api/sessaoEstudo/situacao/{situacaoSessaoId}:
+ * /api/sessaoEstudo/situacao/{situacaoSessao}:
  *   get:
  *     summary: Busca todas as sessões de estudo por situação
  *     tags: [Sessão de Estudo]
@@ -252,12 +296,13 @@ router.get("/categoria/:categoriaSessaoId", verifyToken, controller.findManyByCa
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: situacaoSessaoId
+ *         name: situacaoSessao
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID da situação de sessão
- *         example: 1
+ *           type: string
+ *           enum: [AGENDADA, CANCELADA, EM_ANDAMENTO, PAUSADA, CONCLUIDA]
+ *         description: Situação da sessão
+ *         example: AGENDADA
  *     responses:
  *       200:
  *         description: Sessões de estudo encontradas
@@ -274,7 +319,7 @@ router.get("/categoria/:categoriaSessaoId", verifyToken, controller.findManyByCa
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/situacao/:situacaoSessaoId", verifyToken, controller.findManyBySituacaoSessaoId);
+router.get("/situacao/:situacaoSessao", verifyToken, controller.findManyBySituacaoSessao);
 
 /**
  * @swagger
@@ -333,9 +378,12 @@ router.get("/situacao/:situacaoSessaoId", verifyToken, controller.findManyBySitu
  *                 type: integer
  *               tempoEstudo:
  *                 type: number
+ *                 format: decimal
  *               paginasLidas:
  *                 type: integer
  *               topicoFinalizado:
+ *                 type: boolean
+ *               concluida:
  *                 type: boolean
  *               observacoes:
  *                 type: string
@@ -345,10 +393,14 @@ router.get("/situacao/:situacaoSessaoId", verifyToken, controller.findManyBySitu
  *                 type: integer
  *               topicoId:
  *                 type: integer
- *               categoriaSessaoId:
+ *               blocoEstudoId:
  *                 type: integer
- *               situacaoSessaoId:
- *                 type: integer
+ *               categoriaSessao:
+ *                 type: string
+ *                 enum: [TEORIA, REVISAO, RESOLUCAO_QUESTOES, LEITURA, OUTROS]
+ *               situacaoSessao:
+ *                 type: string
+ *                 enum: [AGENDADA, CANCELADA, EM_ANDAMENTO, PAUSADA, CONCLUIDA]
  *     responses:
  *       200:
  *         description: Sessão de estudo atualizada com sucesso

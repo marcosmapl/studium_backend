@@ -6,6 +6,7 @@ const prisma = require("../orm/prismaClient");
  * @abstract
  */
 class BaseRepository {
+    
     /**
      * @param {string} modelName - Nome do modelo Prisma (ex: 'cliente', 'fornecedor')
      * @param {string} repositoryName - Nome do repositório para logs (ex: 'ClienteRepository')

@@ -6,11 +6,18 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
     constructor() {
         super("planoEstudo", "PlanoEstudoRepository.js", {
             defaultOrderBy: "titulo",
-            orderDirection: "asc"
+            orderDirection: "asc",
+            includeRelations: {
+                usuario: true,
+                disciplinas: true,
+                sessoesEstudo: true,
+                revisoes: true,
+                blocosEstudo: true,
+            }
         });
     }
 
-    
+
 
     /**
      * Busca plano de estudo por título (primeiro encontrado)
@@ -50,10 +57,6 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
             },
         };
 
-        if (this.includeRelations) {
-            query.include = this.includeRelations;
-        }
-
         try {
             return await this.findMany(query);
         } catch (error) {
@@ -78,8 +81,7 @@ class PrismaPlanoEstudoRepository extends BaseRepository {
             include: {
                 disciplinas: true,
                 sessoesEstudo: true,
-                revisoes: true,
-                situacao: true
+                revisoes: true
             }
         };
 

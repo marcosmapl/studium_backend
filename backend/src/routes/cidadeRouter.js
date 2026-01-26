@@ -18,17 +18,18 @@ const { verifyToken } = require("../middleware/auth");
  *           schema:
  *             type: object
  *             required:
- *               - cidade
- *               - unidadeFederativaId
+ *               - descricao
+ *               - unidadeFederativa
  *             properties:
- *               cidade:
+ *               descricao:
  *                 type: string
  *                 description: Nome da cidade
  *                 example: "Brasília"
- *               unidadeFederativaId:
- *                 type: integer
- *                 description: ID da Unidade Federativa
- *                 example: 1
+ *               unidadeFederativa:
+ *                 type: string
+ *                 description: Sigla da Unidade Federativa
+ *                 enum: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+ *                 example: "DF"
  *     responses:
  *       201:
  *         description: Cidade criada com sucesso
@@ -40,12 +41,12 @@ const { verifyToken } = require("../middleware/auth");
  *                 id:
  *                   type: integer
  *                   example: 1
- *                 cidade:
+ *                 descricao:
  *                   type: string
  *                   example: "Brasília"
- *                 unidadeFederativaId:
- *                   type: integer
- *                   example: 1
+ *                 unidadeFederativa:
+ *                   type: string
+ *                   example: "DF"
  *       400:
  *         description: Dados inválidos ou campo obrigatório ausente
  *         content:
@@ -76,12 +77,12 @@ const { verifyToken } = require("../middleware/auth");
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   cidade:
+ *                   descricao:
  *                     type: string
  *                     example: "Brasília"
- *                   unidadeFederativaId:
- *                     type: integer
- *                     example: 1
+ *                   unidadeFederativa:
+ *                     type: string
+ *                     example: "DF"
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
@@ -92,7 +93,7 @@ router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/cidade/descricao/{descricao}/uf/{unidadeFederativaId}:
+ * /api/cidade/descricao/{descricao}/uf/{unidadeFederativa}:
  *   get:
  *     summary: Busca cidade por descrição exata e Unidade Federativa
  *     tags: [Cidade]
@@ -107,12 +108,13 @@ router.get("/", verifyToken, controller.findAll);
  *         description: Descrição exata da cidade
  *         example: "Brasília"
  *       - in: path
- *         name: unidadeFederativaId
+ *         name: unidadeFederativa
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID da Unidade Federativa
- *         example: 1
+ *           type: string
+ *           enum: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+ *         description: Sigla da Unidade Federativa
+ *         example: "DF"
  *     responses:
  *       200:
  *         description: Cidade encontrada
@@ -125,8 +127,8 @@ router.get("/", verifyToken, controller.findAll);
  *                   type: integer
  *                 descricao:
  *                   type: string
- *                 unidadeFederativaId:
- *                   type: integer
+ *                 unidadeFederativa:
+ *                   type: string
  *       404:
  *         description: Nenhuma cidade encontrada com essa descrição e UF
  *       401:
@@ -134,7 +136,7 @@ router.get("/", verifyToken, controller.findAll);
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/descricao/:descricao/uf/:unidadeFederativaId", verifyToken, controller.findByDescricaoAndUF);
+router.get("/descricao/:descricao/uf/:unidadeFederativa", verifyToken, controller.findByDescricaoAndUF);
 
 /**
  * @swagger
@@ -166,8 +168,8 @@ router.get("/descricao/:descricao/uf/:unidadeFederativaId", verifyToken, control
  *                     type: integer
  *                   descricao:
  *                     type: string
- *                   unidadeFederativaId:
- *                     type: integer
+ *                   unidadeFederativa:
+ *                     type: string
  *       404:
  *         description: Nenhuma cidade encontrada
  *       401:
@@ -179,20 +181,19 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
 
 /**
  * @swagger
- * /api/cidade/uf/{unidadeFederativaId}:
+ * /api/cidade/uf/{unidadeFederativa}:
  *   get:
  *     summary: Busca todas as cidades de uma Unidade Federativa
  *     tags: [Cidade]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: unidadeFederativaId
+ *         name: unidadeFederativa
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID da Unidade Federativa
- *         example: 1
+ *           type: string
+ *           enum: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+ *         description: Sigla da Unidade Federativa
+ *         example: "DF"
  *     responses:
  *       200:
  *         description: Cidades encontradas
@@ -207,17 +208,15 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
  *                     type: integer
  *                   descricao:
  *                     type: string
- *                   unidadeFederativaId:
- *                     type: integer
- *       404:
- *         description: Nenhuma cidade encontrada para esta UF
- *       401:
- *         description: Não autorizado
- *       500:
- *         description: Erro interno do servidor
+ *                   unidadeFederativa:
+ *                     type: string
+       404:
+         description: Nenhuma cidade encontrada para esta UF
+       500:
+         description: Erro interno do servidor
  */
 router.get(
-    "/uf/:unidadeFederativaId",
+    "/uf/:unidadeFederativa",
     controller.findManyByUnidadeFederativa // Rota pública para formulário de cadastro
 );
 
@@ -249,8 +248,8 @@ router.get(
  *                   type: integer
  *                 descricao:
  *                   type: string
- *                 unidadeFederativaId:
- *                   type: integer
+ *                 unidadeFederativa:
+ *                   type: string
  *       404:
  *         description: Cidade não encontrada
  *       401:
@@ -281,10 +280,11 @@ router.get(
  *                 type: string
  *                 description: Nova descrição da cidade
  *                 example: "São Paulo"
- *               unidadeFederativaId:
- *                 type: integer
- *                 description: Novo ID da Unidade Federativa
- *                 example: 2
+ *               unidadeFederativa:
+ *                 type: string
+ *                 description: Nova sigla da Unidade Federativa
+ *                 enum: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+ *                 example: "SP"
  *     responses:
  *       200:
  *         description: Cidade atualizada com sucesso
@@ -297,14 +297,14 @@ router.get(
  *                   type: integer
  *                 descricao:
  *                   type: string
- *                 unidadeFederativaId:
- *                   type: integer
+ *                 unidadeFederativa:
+ *                   type: string
  *       400:
  *         description: Dados inválidos
  *       404:
  *         description: Cidade não encontrada
  *       409:
- *         description: Descrição da cidade já cadastrada
+ *         description: Cidade já cadastrada para esta UF
  *       401:
  *         description: Não autorizado
  *       500:

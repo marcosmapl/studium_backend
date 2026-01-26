@@ -73,6 +73,7 @@ class DisciplinaController extends BaseController {
                     });
                 }
             }
+            
             next(error);
         }
     }

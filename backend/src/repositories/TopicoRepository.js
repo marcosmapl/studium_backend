@@ -47,11 +47,13 @@ class PrismaTopicoRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de tópicos encontrados
      */
     async findManyByTitulo(titulo) {
-        return await this.findMany({
+        const query = {
             titulo: {
                 contains: titulo,
             },
-        });
+        }
+
+        return await this.findMany(query);
     }
 
     /**
@@ -60,9 +62,11 @@ class PrismaTopicoRepository extends BaseRepository {
      * @returns {Promise<Array>} Lista de tópicos da disciplina
      */
     async findManyByDisciplinaId(disciplinaId) {
-        return await this.findMany({
+        const query = {
             disciplinaId: parseInt(disciplinaId),
-        });
+        }
+
+        return await this.findMany(query);
     }
 
 }

@@ -1,4 +1,5 @@
 const BaseRepository = require("./BaseRepository");
+const logger = require("../config/logger");
 
 class PrismaSessaoEstudoRepository extends BaseRepository {
 
@@ -56,6 +57,28 @@ class PrismaSessaoEstudoRepository extends BaseRepository {
     async findManyByBlocoEstudoId(blocoEstudoId) {
         return await this.findMany({
             blocoEstudoId: parseInt(blocoEstudoId),
+        });
+    }
+
+    /**
+     * Busca todas as sessões de estudo por categoria
+     * @param {string} categoriaSessao - Categoria da sessão (enum)
+     * @returns {Promise<Array>} Lista de sessões de estudo da categoria
+     */
+    async findManyByCategoriaSessao(categoriaSessao) {
+        return await this.findMany({
+            categoriaSessao: categoriaSessao,
+        });
+    }
+
+    /**
+     * Busca todas as sessões de estudo por situação
+     * @param {string} situacaoSessao - Situação da sessão (enum)
+     * @returns {Promise<Array>} Lista de sessões de estudo da situação
+     */
+    async findManyBySituacaoSessao(situacaoSessao) {
+        return await this.findMany({
+            situacaoSessao: situacaoSessao,
         });
     }
 

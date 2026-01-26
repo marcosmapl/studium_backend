@@ -14,21 +14,13 @@ const swaggerSpec = require("./config/swagger");
 // Importação de todas as rotas da API
 const authRouter = require("./routes/authRouter");
 const blocoEstudoRouter = require("./routes/blocoEstudoRouter");
-const categoriaSessaoRouter = require("./routes/categoriaSessaoRouter");
 const cidadeRouter = require("./routes/cidadeRouter");
 const disciplinaRouter = require("./routes/disciplinaRouter");
-const disciplinaPlanejamentoRouter = require("./routes/disciplinaPlanejamentoRouter");
-const generoUsuarioRouter = require("./routes/generoUsuarioRouter");
 const grupoUsuarioRouter = require("./routes/grupoUsuarioRouter");
-const planejamentoRouter = require("./routes/planejamentoRouter");
 const planoEstudoRouter = require("./routes/planoEstudoRouter");
 const revisaoRouter = require("./routes/revisaoRouter");
 const sessaoEstudoRouter = require("./routes/sessaoEstudoRouter");
-const situacaoPlanoRouter = require("./routes/situacaoPlanoRouter");
-const situacaoSessaoRouter = require("./routes/situacaoSessaoRouter");
-const situacaoUsuarioRouter = require("./routes/situacaoUsuarioRouter");
 const topicoRouter = require("./routes/topicoRouter");
-const unidadeFederativaRouter = require("./routes/unidadeFederativaRouter");
 const usuarioRouter = require("./routes/usuarioRouter");
 
 const healthRouter = require("./routes/healthRouter");
@@ -64,7 +56,7 @@ app.use(bodyParser.json());
  *                   example: Studium Backend API
  *                 version:
  *                   type: string
- *                   example: 1.1.0
+ *                   example: 1.0.0
  *                 environment:
  *                   type: string
  *                   example: development
@@ -88,7 +80,7 @@ app.get("/", (req, res) =>
   res.json({
     ok: true,
     message: "Studium Backend API",
-    version: "1.3.0",
+    version: "1.0.0",
     environment: process.env.NODE_ENV || "development",
     endpoints: {
       health: "/health",
@@ -116,22 +108,14 @@ app.get("/api", (req, res) => res.redirect("/api-docs"));
 app.use("/api", authRouter);
 app.use("/api/blocoEstudo", blocoEstudoRouter);
 app.use("/api/cidade", cidadeRouter);
-app.use("/api/generoUsuario", generoUsuarioRouter);
-app.use("/api/grupoUsuario", grupoUsuarioRouter);
-app.use("/api/situacaoUsuario", situacaoUsuarioRouter);
-app.use("/api/situacaoPlano", situacaoPlanoRouter);
-app.use("/api/usuario", usuarioRouter);
-app.use("/api/unidadeFederativa", unidadeFederativaRouter);
-app.use("/api/planoEstudo", planoEstudoRouter);
 app.use("/api/disciplina", disciplinaRouter);
-app.use("/api/topico", topicoRouter);
-app.use("/api/categoriaSessao", categoriaSessaoRouter);
-app.use("/api/situacaoSessao", situacaoSessaoRouter);
-app.use("/api/sessaoEstudo", sessaoEstudoRouter);
-app.use("/api/revisao", revisaoRouter);
-app.use("/api/disciplinaPlanejamento", disciplinaPlanejamentoRouter);
-app.use("/api/planejamento", planejamentoRouter);
+app.use("/api/grupoUsuario", grupoUsuarioRouter);
 app.use("/health", healthRouter);
+app.use("/api/planoEstudo", planoEstudoRouter);
+app.use("/api/revisao", revisaoRouter);
+app.use("/api/sessaoEstudo", sessaoEstudoRouter);
+app.use("/api/topico", topicoRouter);
+app.use("/api/usuario", usuarioRouter);
 
 // Tratamento de erros
 const { notFound, errorHandler } = require("./middleware/errorHandler");

@@ -8,7 +8,7 @@ class SessaoEstudoController extends BaseController {
     constructor() {
         super(repository, "sessão de estudo", {
             entityNamePlural: "sessões de estudo",
-            requiredFields: ["dataInicio", "planoEstudoId", "disciplinaId", "topicoId", "blocoEstudoId"]
+            requiredFields: ["dataInicio", "planoEstudoId", "disciplinaId", "topicoId"]
         });
     }
 
@@ -118,7 +118,7 @@ class SessaoEstudoController extends BaseController {
     }
 
     /**
-     * Busca todas as sessões de estudo por categoria
+     * Busca todas as sessões de estudo por bloco de estudo
      */
     async findManyByBlocoEstudoId(req, res, next) {
         try {
@@ -153,22 +153,57 @@ class SessaoEstudoController extends BaseController {
     }
 
     /**
-     * Busca todas as sessões de estudo por situação
+     * Busca todas as sessões de estudo por categoria
      */
-    async findManyBySituacaoSessaoId(req, res, next) {
+    async findManyByCategoriaSessao(req, res, next) {
         try {
-            const { situacaoSessaoId } = req.params;
+            const { categoriaSessao } = req.params;
 
-            logger.info(`Buscando ${this.entityNamePlural} por situação de sessão`, {
-                situacaoSessaoId: parseInt(situacaoSessaoId),
+            logger.info(`Buscando ${this.entityNamePlural} por categoria de sessão`, {
+                categoriaSessao: categoriaSessao,
                 route: req.originalUrl,
             });
 
-            const sessoes = await this.repository.findManyBySituacaoSessaoId(situacaoSessaoId);
+            const sessoes = await this.repository.findManyByCategoriaSessao(categoriaSessao);
+
+            if (!sessoes || sessoes.length === 0) {
+                logger.info(`Nenhuma ${this.entityName} encontrada para esta categoria`, {
+                    categoriaSessao: categoriaSessao,
+                    route: req.originalUrl,
+                });
+                return res.status(HttpStatus.NOT_FOUND).json({
+                    error: `Nenhuma ${this.entityName} encontrada para esta categoria`
+                });
+            }
+
+            return res.json(sessoes);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por categoria de sessão`, {
+                error: error.message,
+                stack: error.stack,
+            });
+
+            next(error);
+        }
+    }
+
+    /**
+     * Busca todas as sessões de estudo por situação
+     */
+    async findManyBySituacaoSessao(req, res, next) {
+        try {
+            const { situacaoSessao } = req.params;
+
+            logger.info(`Buscando ${this.entityNamePlural} por situação de sessão`, {
+                situacaoSessao: situacaoSessao,
+                route: req.originalUrl,
+            });
+
+            const sessoes = await this.repository.findManyBySituacaoSessao(situacaoSessao);
 
             if (!sessoes || sessoes.length === 0) {
                 logger.info(`Nenhuma ${this.entityName} encontrada para esta situação`, {
-                    situacaoSessaoId: parseInt(situacaoSessaoId),
+                    situacaoSessao: situacaoSessao,
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
@@ -197,8 +232,9 @@ module.exports = {
     findManyByPlanoEstudoId: controller.findManyByPlanoEstudoId.bind(controller),
     findManyByDisciplinaId: controller.findManyByDisciplinaId.bind(controller),
     findManyByTopicoId: controller.findManyByTopicoId.bind(controller),
-    findManyByCategoriaSessaoId: controller.findManyByCategoriaSessaoId.bind(controller),
-    findManyBySituacaoSessaoId: controller.findManyBySituacaoSessaoId.bind(controller),
+    findManyByBlocoEstudoId: controller.findManyByBlocoEstudoId.bind(controller),
+    findManyByCategoriaSessao: controller.findManyByCategoriaSessao.bind(controller),
+    findManyBySituacaoSessao: controller.findManyBySituacaoSessao.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

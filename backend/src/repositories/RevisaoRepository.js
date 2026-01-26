@@ -1,4 +1,5 @@
 const BaseRepository = require("./BaseRepository");
+const logger = require("../config/logger");
 
 class PrismaRevisaoRepository extends BaseRepository {
 

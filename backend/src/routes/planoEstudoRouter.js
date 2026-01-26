@@ -20,7 +20,6 @@ const { verifyToken } = require("../middleware/auth");
  *             required:
  *               - titulo
  *               - usuarioId
- *               - situacaoId
  *             properties:
  *               titulo:
  *                 type: string
@@ -28,7 +27,7 @@ const { verifyToken } = require("../middleware/auth");
  *                 example: "Plano TCU - Auditor Federal"
  *               concurso:
  *                 type: string
- *                 description: Nome do concurso metaa do plano de estudo
+ *                 description: Nome do concurso meta do plano de estudo
  *                 example: "Concurso do Tribunal de Contas da União - 2026"
  *               cargo:
  *                 type: string
@@ -43,6 +42,17 @@ const { verifyToken } = require("../middleware/auth");
  *                 format: date-time
  *                 description: Data da prova
  *                 example: "2026-01-01"
+ *               situacao:
+ *                 type: string
+ *                 description: Situação do plano (NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO)
+ *                 enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                 default: NOVO
+ *                 example: "NOVO"
+ *               concluido:
+ *                 type: boolean
+ *                 description: Indica se o plano de estudo foi concluído
+ *                 default: false
+ *                 example: false
  *               usuarioId:
  *                 type: integer
  *                 description: ID do usuário proprietário do plano
@@ -138,9 +148,10 @@ const { verifyToken } = require("../middleware/auth");
  *                   usuarioId:
  *                     type: integer
  *                     example: 1
- *                   situacaoId:
- *                     type: integer
- *                     example: 1
+ *                   situacao:
+ *                     type: string
+ *                     enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                     example: "NOVO"
  *                   concluido:
  *                     type: boolean
  *                     example: false
@@ -204,9 +215,10 @@ router.get("/", verifyToken, controller.findAll);
  *                 usuarioId:
  *                   type: integer
  *                   example: 1
- *                 situacaoId:
- *                   type: integer
- *                   example: 1
+ *                 situacao:
+ *                   type: string
+ *                   enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                   example: "NOVO"
  *                 concluido:
  *                   type: boolean
  *                   example: false
@@ -275,9 +287,10 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                   usuarioId:
  *                     type: integer
  *                     example: 1
- *                   situacaoId:
- *                     type: integer
- *                     example: 1
+ *                   situacao:
+ *                     type: string
+ *                     enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                     example: "NOVO"
  *                   concluido:
  *                     type: boolean
  *                     example: false
@@ -347,9 +360,10 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                   usuarioId:
  *                     type: integer
  *                     example: 1
- *                   situacaoId:
- *                     type: integer
- *                     example: 1
+ *                   situacao:
+ *                     type: string
+ *                     enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                     example: "NOVO"
  *                   concluido:
  *                     type: boolean
  *                     example: false
@@ -361,8 +375,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                     type: string
  *                     format: date-time
  *                     example: "2026-01-01 00:00:00"
- *       404:
- *         description: Não foram encontrados planos de estudo para esse ID de usuário
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
@@ -417,9 +429,10 @@ router.get("/usuario/:usuarioId", verifyToken, controller.findManyByUsuarioId);
 *                 usuarioId:
 *                   type: integer
 *                   example: 1
-*                 situacaoId:
-*                   type: integer
-*                   example: 1
+*                 situacao:
+*                   type: string
+*                   enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+*                   example: "NOVO"
 *                 concluido:
 *                   type: boolean
 *                   example: false
@@ -478,12 +491,14 @@ router.get("/usuario/:usuarioId", verifyToken, controller.findManyByUsuarioId);
  *                 format: date-time
  *                 description: Nova data de prova
  *                 example: "2026-01-01"
- *               situacaoId:
- *                 type: integer
- *                 description: Novo ID da situação
- *                 example: 2
+ *               situacao:
+ *                 type: string
+ *                 description: Nova situação do plano
+ *                 enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                 example: "EM_ANDAMENTO"
  *               concluido:
  *                 type: boolean
+ *                 description: Indica se o plano foi concluído
  *                 example: false
  *     responses:
  *       200:
@@ -516,10 +531,11 @@ router.get("/usuario/:usuarioId", verifyToken, controller.findManyByUsuarioId);
  *                   type: integer
  *                   description: ID do usuário criador do plano de estudo
  *                   example: 1
- *                 situacaoId:
- *                   type: integer
- *                   description: Novo ID da situação
- *                   example: 2
+ *                 situacao:
+ *                   type: string
+ *                   enum: [NOVO, EM_ANDAMENTO, CONCLUIDO, EXCLUIDO]
+ *                   description: Situação do plano
+ *                   example: "EM_ANDAMENTO"
  *                 concluido:
  *                   type: boolean
  *                   example: false

@@ -63,12 +63,12 @@ class BlocoEstudoController extends BaseController {
                             meta: error.meta,
                             ordem: req.body.ordem,
                             diaSemana: req.body.diaSemana,
-                            planejamentoId: req.body.planejamentoId,
+                            planoEstudoId: req.body.planoEstudoId,
                             disciplinaId: req.body.disciplinaId,
                         }
                     );
                     return res.status(HttpStatus.CONFLICT).json({
-                        error: `Já existe um dia de estudo para ${diaSemanaTexto} neste planejamento`,
+                        error: `Já existe um dia de estudo para ${diaSemanaTexto} neste plano de estudo e disciplina.`,
                     });
                 }
 
@@ -84,8 +84,8 @@ class BlocoEstudoController extends BaseController {
                     );
 
                     let mensagem = "Registro relacionado não encontrado";
-                    if (campo.includes("planejamento")) {
-                        mensagem = "Planejamento não encontrado";
+                    if (campo.includes("plano")) {
+                        mensagem = "Plano de estudo não encontrado";
                     }
                     if (campo.includes("disciplina")) {
                         mensagem = "Disciplina não encontrada";
@@ -107,28 +107,28 @@ class BlocoEstudoController extends BaseController {
     }
 
     /**
-     * Busca todos os blocos de estudo de um planejamento
+     * Busca todos os blocos de estudo para um plano de estudo e disciplina
      */
-    async findManyByDisciplinaPlanejamento(req, res, next) {
+    async findManyByDisciplinaPlano(req, res, next) {
         try {
-            const { planejamentoId, disciplinaId } = req.params;
+            const { planoEstudoId, disciplinaId } = req.params;
 
-            logger.info(`Buscando ${this.entityNamePlural} do planejamento`, {
-                planejamentoId: parseInt(planejamentoId),
+            logger.info(`Buscando ${this.entityNamePlural} para um plano de estudo e disciplina`, {
+                planoEstudoId: parseInt(planoEstudoId),
                 disciplinaId: parseInt(disciplinaId),
                 route: req.originalUrl,
             });
 
-            const blocos = await this.repository.findManyByDisciplinaPlanejamento(planejamentoId, disciplinaId);
+            const blocos = await this.repository.findManyByDisciplinaPlano(planoEstudoId, disciplinaId);
 
             if (!blocos || blocos.length === 0) {
-                logger.info(`Nenhum ${this.entityName} encontrado para este planejamento`, {
-                    planejamentoId: parseInt(planejamentoId),
+                logger.info(`Nenhum ${this.entityName} encontrado para este plano de estudo e disciplina.`, {
+                    planoEstudoId: parseInt(planoEstudoId),
                     disciplinaId: parseInt(disciplinaId),
                     route: req.originalUrl,
                 });
                 return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhum ${this.entityName} encontrado para este planejamento`
+                    error: `Nenhum ${this.entityName} encontrado para este plano de estudo e disciplina.`,
                 });
             }
 
@@ -151,7 +151,7 @@ module.exports = {
     create: controller.create.bind(controller),
     findAll: controller.findAll.bind(controller),
     findById: controller.findById.bind(controller),
-    findManyByDisciplinaPlanejamento: controller.findManyByDisciplinaPlanejamento.bind(controller),
+    findManyByDisciplinaPlano: controller.findManyByDisciplinaPlano.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

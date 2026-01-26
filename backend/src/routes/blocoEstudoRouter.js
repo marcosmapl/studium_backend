@@ -75,23 +75,30 @@ router.get("/", verifyToken, controller.findAll);
 
 /**
  * @swagger
- * /api/bloco/planejamento/{planejamentoId}:
+ * /api/bloco/plano/{planoEstudoId}/disciplina/{disciplinaId}:
  *   get:
- *     summary: Busca todos os dias de estudo de um planejamento
+ *     summary: Busca todos os blocos de estudo de um plano e disciplina
  *     tags: [Bloco Estudo]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: planejamentoId
+ *         name: planoEstudoId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do planejamento
+ *         description: ID do plano de estudo
+ *         example: 1
+ *       - in: path
+ *         name: disciplinaId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da disciplina
  *         example: 1
  *     responses:
  *       200:
- *         description: Dias de estudo encontrados
+ *         description: Blocos de estudo encontrados
  *         content:
  *           application/json:
  *             schema:
@@ -99,49 +106,14 @@ router.get("/", verifyToken, controller.findAll);
  *               items:
  *                 type: object
  *       404:
- *         description: Nenhum bloco encontrado para este planejamento
+ *         description: Nenhum bloco encontrado para este plano e disciplina
  *       401:
  *         description: Não autorizado
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/disciplinaPlanejamento/:disciplinaPlanejamentoId", verifyToken, controller.findManyByDisciplinaPlanejamentoId);
+router.get("/plano/:planoEstudoId/disciplina/:disciplinaId", verifyToken, controller.findManyByDisciplinaPlano);
 
-/**
- * @swagger
- * /api/bloco/diaSemana/{diaSemana}:
- *   get:
- *     summary: Busca dias de estudo por dia da semana
- *     tags: [Bloco Estudo]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: diaSemana
- *         required: true
- *         schema:
- *           type: integer
- *           minimum: 0
- *           maximum: 6
- *         description: Dia da semana (0=Domingo, 1=Segunda, ..., 6=Sábado)
- *         example: 1
- *     responses:
- *       200:
- *         description: Dias de estudo encontrados
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *       404:
- *         description: Nenhum bloco encontrado para este dia da semana
- *       401:
- *         description: Não autorizado
- *       500:
- *         description: Erro interno do servidor
- */
-router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana);
 
 /**
  * @swagger
@@ -198,13 +170,22 @@ router.get("/diaSemana/:diaSemana", verifyToken, controller.findManyByDiaSemana)
  *                 minimum: 0
  *                 maximum: 6
  *                 example: 2
- *               horasPlanejadas:
- *                 type: number
- *                 description: Horas planejadas para estudo no dia
- *                 example: 5.0
- *               planejamentoId:
+ *               ordem:
  *                 type: integer
- *                 description: ID do planejamento
+ *                 description: Ordem do bloco no dia da semana
+ *                 example: 2
+ *               totalHorasPlanejadas:
+ *                 type: number
+ *                 description: Total de horas planejadas para estudo
+ *                 example: 5.0
+ *               planoEstudoId:
+ *                 type: integer
+ *                 description: ID do plano de estudo
+ *                 example: 1
+ *               disciplinaId:
+ *                 type: integer
+ *                 description: ID da disciplina
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Dia de estudo atualizado com sucesso
