@@ -1,175 +1,207 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import PlanoEstudoForm from '../components/PlanoEstudoForm';
+import PlanoEstudoCard from '../components/PlanoEstudoCard';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData';
+import { useDebounce } from '../hooks/useDebounce';
 import { useAuth } from '../contexts/AuthContext';
 import { createPlanoEstudo, updatePlanoEstudo, deletePlanoEstudo } from '../services/api';
 import { toast } from 'react-toastify';
-import { formatDateToLocaleString, calculateTotalHours, calculatePerformance } from '../utils/utils';
+import { formatDateToLocaleString } from '../utils/utils';
+import { MESSAGES, SEARCH_CONFIG, ARIA_LABELS } from '../constants/planosEstudo.constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faPlus,
-    faBuilding,
-    faBriefcase,
-    faUniversity,
-    faCheckCircle,
-    faCirclePlus,
-    faClock,
-    faBook,
-    faCalendar,
-    faFire,
-    faTachometerAlt,
-    faBullseye,
-    faTrash,
-    faList,
-    faEdit,
-    faPlayCircle,
-    faPauseCircle,
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import './PlanosEstudo.css';
 
+/**
+ * Componente principal para gerenciamento de Planos de Estudo
+ * 
+ * Responsabilidades:
+ * - Listagem de todos os planos do usuário
+ * - Busca/filtro de planos por múltiplos critérios
+ * - Criação, edição e exclusão de planos
+ * - Navegação para páginas relacionadas (disciplinas)
+ * 
+ * @component
+ */
 const PlanosEstudo = () => {
-    // Contexto de autenticação
+    // ==================== HOOKS ====================
+
+    /** Dados do usuário autenticado */
     const { usuario } = useAuth();
+
+    /** Hook de navegação do React Router */
     const navigate = useNavigate();
 
-    // Hook customizado para carregar dados iniciais
+    /** Hook customizado que carrega planos de estudo do backend */
     const { loading: loadingData, planosEstudo } = usePlanoEstudoData(usuario?.id);
 
-    // Estado para controle do modal
+    // ==================== ESTADO LOCAL ====================
+
+    /** Controla visibilidade do modal de criação/edição */
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    /** Armazena o plano sendo editado (null = modo criação) */
     const [planoParaEditar, setPlanoParaEditar] = useState(null);
 
-    // Estado para controle do diálogo de confirmação
+    /** Controla visibilidade do diálogo de confirmação de exclusão */
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
+    /** Armazena o plano marcado para exclusão */
     const [planoParaExcluir, setPlanoParaExcluir] = useState(null);
 
-    // Estado local para manipulação dos planos (inicializado com dados do hook)
+    /** Lista local de planos (cópia manipulável dos dados do hook) */
     const [planos, setPlanos] = useState([]);
 
-    // Estado para pesquisa
+    /** Termo de busca para filtrar planos */
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Atualiza planos quando os dados do hook mudarem
+    /** Termo de busca com debounce aplicado (reduz re-renders durante digitação) */
+    const debouncedSearchTerm = useDebounce(searchTerm, SEARCH_CONFIG.DEBOUNCE_DELAY);
+
+    // ==================== EFEITOS ====================
+
+    /**
+     * Sincroniza estado local com dados do hook quando estes mudam
+     * Mantém uma cópia local para permitir atualizações otimistas na UI
+     */
     useEffect(() => {
         if (planosEstudo && planosEstudo.length > 0) {
             setPlanos(planosEstudo);
         }
     }, [planosEstudo]);
 
-    const getSituacaoClass = (descricao) => {
-        switch (descricao) {
-            case 'Em Andamento':
-                return 'situacao-andamento';
-            case 'Pausado':
-                return 'situacao-pausado';
-            case 'Concluído':
-                return 'situacao-concluido';
-            case 'Novo':
-                return 'situacao-novo';
-            default:
-                return '';
-        }
-    };
+    // ==================== HANDLERS ====================
 
-    const getSituacaoIcon = (descricao) => {
-        switch (descricao) {
-            case 'Em Andamento':
-                return faPlayCircle;
-            case 'Pausado':
-                return faPauseCircle;
-            case 'Concluído':
-                return faCheckCircle;
-            case 'Novo':
-                return faCirclePlus;
-            default:
-                return '';
-        }
-    };
-
-    const handleNovoPlano = () => {
+    /**
+     * Abre modal em modo criação (sem plano selecionado)
+     */
+    const handleNovoPlano = useCallback(() => {
         setPlanoParaEditar(null);
         setIsModalOpen(true);
-    };
+    }, []);
 
-    const handleEditarPlano = (plano) => {
+    /**
+     * Abre modal em modo edição com plano selecionado
+     * @param {Object} plano - Plano a ser editado
+     */
+    const handleEditarPlano = useCallback((plano) => {
         setPlanoParaEditar(plano);
         setIsModalOpen(true);
-    };
+    }, []);
 
-    const handleCloseModal = () => {
+    /**
+     * Fecha modal e limpa estado de edição
+     */
+    const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
         setPlanoParaEditar(null);
-    };
+    }, []);
 
-    const handleSavePlano = async (planoData) => {
+    /**
+     * Salva plano (criação ou edição)
+     * Realiza atualização otimista do estado local
+     * 
+     * @param {Object} planoData - Dados do plano a ser salvo
+     */
+    const handleSavePlano = useCallback(async (planoData) => {
         try {
             if (planoParaEditar) {
-                // Editar plano existente
+                // Modo edição: atualiza plano existente
                 await updatePlanoEstudo(planoData.id, planoData);
-                setPlanos(planos.map(p => p.id === planoData.id ? { ...p, ...planoData } : p));
-                toast.success('Plano atualizado com sucesso!');
+                setPlanos(prevPlanos =>
+                    prevPlanos.map(p => p.id === planoData.id ? { ...p, ...planoData } : p)
+                );
+                toast.success(MESSAGES.SUCCESS.UPDATE);
             } else {
-                // Adicionar novo plano - precisa incluir usuarioId e situacaoId
+                // Modo criação: adiciona novo plano
                 const novoPlanoData = {
                     ...planoData,
                     usuarioId: usuario.id,
                 };
                 const response = await createPlanoEstudo(novoPlanoData);
-                setPlanos([...planos, response.data]);
-                toast.success('Plano criado com sucesso!');
+                setPlanos(prevPlanos => [...prevPlanos, response.data]);
+                toast.success(MESSAGES.SUCCESS.CREATE);
             }
         } catch (error) {
-            toast.error(error.response?.data?.error || 'Erro ao salvar plano de estudo');
+            toast.error(error.response?.data?.error || MESSAGES.ERROR.SAVE);
         }
-    };
+    }, [planoParaEditar, usuario?.id]);
 
-    const handleExcluirPlano = (plano) => {
+    /**
+     * Prepara exclusão de plano (abre diálogo de confirmação)
+     * @param {Object} plano - Plano a ser excluído
+     */
+    const handleExcluirPlano = useCallback((plano) => {
         setPlanoParaExcluir(plano);
         setIsConfirmOpen(true);
-    };
+    }, []);
 
-    const handleConfirmExclusao = async () => {
+    /**
+     * Confirma e executa exclusão do plano
+     * Remove plano do estado local após sucesso
+     */
+    const handleConfirmExclusao = useCallback(async () => {
         if (planoParaExcluir) {
             try {
                 await deletePlanoEstudo(planoParaExcluir.id);
-                setPlanos(planos.filter(p => p.id !== planoParaExcluir.id));
-                toast.success('Plano excluído com sucesso!');
+                setPlanos(prevPlanos => prevPlanos.filter(p => p.id !== planoParaExcluir.id));
+                toast.success(MESSAGES.SUCCESS.DELETE);
             } catch (error) {
-                toast.error(error.response?.data?.error || 'Erro ao excluir plano de estudo');
+                toast.error(error.response?.data?.error || MESSAGES.ERROR.DELETE);
             }
         }
         setIsConfirmOpen(false);
         setPlanoParaExcluir(null);
-    };
+    }, [planoParaExcluir]);
 
-    const handleCancelExclusao = () => {
+    /**
+     * Cancela exclusão e fecha diálogo
+     */
+    const handleCancelExclusao = useCallback(() => {
         setIsConfirmOpen(false);
         setPlanoParaExcluir(null);
-    };
+    }, []);
 
-    const handleVerDisciplinas = (planoId) => {
+    /**
+     * Navega para página de disciplinas do plano
+     * @param {number} planoId - ID do plano
+     */
+    const handleVerDisciplinas = useCallback((planoId) => {
         navigate('/disciplinas', { state: { planoId } });
-    };
+    }, [navigate]);
 
-    // Função de filtro de planos
-    const filteredPlanos = planos.filter((plano) => {
-        if (!searchTerm) return true;
+    // ==================== COMPUTED VALUES ====================
 
-        const searchLower = searchTerm.toLowerCase();
-        const dataProvaFormatted = formatDateToLocaleString(plano.dataProva).toLowerCase();
+    /**
+     * Filtra planos com base no termo de busca (com debounce)
+     * Busca em: título, concurso, cargo, banca e data da prova
+     * Memoizado para evitar recálculo desnecessário
+     */
+    const filteredPlanos = useMemo(() => {
+        // Early return se não houver termo de busca
+        if (!debouncedSearchTerm) return planos;
 
-        return (
-            plano.titulo.toLowerCase().includes(searchLower) ||
-            plano.concurso.toLowerCase().includes(searchLower) ||
-            plano.cargo.toLowerCase().includes(searchLower) ||
-            plano.banca.toLowerCase().includes(searchLower) ||
-            dataProvaFormatted.includes(searchLower)
-        );
-    });
+        const searchLower = debouncedSearchTerm.toLowerCase();
+
+        return planos.filter((plano) => {
+            // Cache da formatação de data
+            const dataProvaFormatted = formatDateToLocaleString(plano.dataProva).toLowerCase();
+
+            return (
+                plano.titulo.toLowerCase().includes(searchLower) ||
+                plano.concurso.toLowerCase().includes(searchLower) ||
+                plano.cargo.toLowerCase().includes(searchLower) ||
+                plano.banca.toLowerCase().includes(searchLower) ||
+                dataProvaFormatted.includes(searchLower)
+            );
+        });
+    }, [planos, debouncedSearchTerm]);
 
     return (
         <Layout>
@@ -178,178 +210,49 @@ const PlanosEstudo = () => {
                     <h2 className="studium-page-title">Planos de Estudo</h2>
                     <div className="planos-header-actions">
                         <div className="search-container">
-                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            <FontAwesomeIcon icon={faSearch} className="search-icon" aria-hidden="true" />
                             <input
                                 type="text"
-                                placeholder="Pesquisar por título, concurso, cargo, banca ou data..."
+                                placeholder={SEARCH_CONFIG.PLACEHOLDER}
                                 className="search-input"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                aria-label={ARIA_LABELS.SEARCH_INPUT}
                             />
                         </div>
-                        <button className="btn btn-primary" onClick={handleNovoPlano}>
-                            <FontAwesomeIcon icon={faPlus} />
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleNovoPlano}
+                            aria-label={ARIA_LABELS.NEW_PLAN_BUTTON}
+                        >
+                            <FontAwesomeIcon icon={faPlus} aria-hidden="true" />
                             Novo Plano
                         </button>
                     </div>
                 </div>
 
                 {loadingData ? (
-                    <div className="loading-message">Carregando planos de estudo...</div>
+                    <div className="loading-message" role="status" aria-live="polite">
+                        {MESSAGES.LOADING}
+                    </div>
                 ) : planos.length === 0 ? (
-                    <div className="empty-message">Nenhum plano de estudo encontrado. Crie seu primeiro plano!</div>
+                    <div className="empty-message" role="status">
+                        {MESSAGES.EMPTY.NO_PLANS}
+                    </div>
                 ) : filteredPlanos.length === 0 ? (
-                    <div className="empty-message">Nenhum plano encontrado com os critérios de pesquisa.</div>
+                    <div className="empty-message" role="status">
+                        {MESSAGES.EMPTY.NO_RESULTS}
+                    </div>
                 ) : (
                     <div className="planos-lista">
                         {filteredPlanos.map((plano) => (
-                            <div key={plano.id} className="studium-card-base">
-                                {/* Cabeçalho do Card */}
-                                <div className="studium-card-header">
-                                    <div className="plano-titulo-wrapper">
-                                        <h3 className="studium-card-title">{plano.titulo}</h3>
-                                        <span className={`plano-situacao ${getSituacaoClass(plano.situacao.descricao)}`}>
-                                            <FontAwesomeIcon icon={getSituacaoIcon(plano.situacao.descricao)} />
-                                            {plano.situacao.descricao}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Informações do Concurso */}
-                                <div className="plano-info-concurso">
-                                    <div className="info-item">
-                                        <div className="info-icon">
-                                            <FontAwesomeIcon icon={faBuilding} />
-                                        </div>
-                                        <div className="info-content">
-                                            <span className="info-label">Concurso</span>
-                                            <span className="info-value">{plano.concurso}</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-item">
-                                        <div className="info-icon">
-                                            <FontAwesomeIcon icon={faBriefcase} />
-                                        </div>
-                                        <div className="info-content">
-                                            <span className="info-label">Cargo</span>
-                                            <span className="info-value">{plano.cargo}</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-item">
-                                        <div className="info-icon">
-                                            <FontAwesomeIcon icon={faUniversity} />
-                                        </div>
-                                        <div className="info-content">
-                                            <span className="info-label">Banca</span>
-                                            <span className="info-value">{plano.banca}</span>
-                                        </div>
-                                    </div>
-                                    <div className="info-item">
-                                        <div className="info-icon">
-                                            <FontAwesomeIcon icon={faCalendar} />
-                                        </div>
-                                        <div className="info-content">
-                                            <span className="info-label">Data da Prova</span>
-                                            <span className="info-value">{formatDateToLocaleString(plano.dataProva)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Progresso Geral */}
-                                <div className="plano-progresso-section">
-                                    <div className="progresso-header">
-                                        <span className="progresso-label">Progresso Geral</span>
-                                        <span className="progresso-percentual">{plano.progressoGeral | 0}%</span>
-                                    </div>
-                                    <div className="progresso-barra-container">
-                                        <div
-                                            className="progresso-barra-preenchida"
-                                            style={{ width: `${plano.progressoGeral | 0}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-
-                                {/* Estatísticas do Plano */}
-                                <div className="studium-stats-grid">
-                                    <div className="studium-stats-item">
-                                        <div className="studium-stats-icon">
-                                            <FontAwesomeIcon icon={faClock} />
-                                        </div>
-                                        <div className="studium-stats-content">
-                                            <span className="studium-stats-label">Horas Estudadas</span>
-                                            <span className="studium-stats-valor">{calculateTotalHours(plano.sessoesEstudo)}h</span>
-                                        </div>
-                                    </div>
-                                    <div className="studium-stats-item">
-                                        <FontAwesomeIcon icon={faBook} className="studium-stats-icon" />
-                                        <div className="studium-stats-content">
-                                            <span className="studium-stats-label">Disciplinas</span>
-                                            <span className="studium-stats-valor">{plano.disciplinas?.length | 0}</span>
-                                        </div>
-                                    </div>
-                                    <div className="studium-stats-item">
-                                        <FontAwesomeIcon icon={faFire} className="studium-stats-icon" />
-                                        <div className="studium-stats-content">
-                                            <span className="studium-stats-label">Constância</span>
-                                            <span className="studium-stats-valor">{`${plano.constancia || 0}%`}</span>
-                                        </div>
-                                    </div>
-                                    <div className="studium-stats-item">
-                                        <FontAwesomeIcon icon={faTachometerAlt} className="studium-stats-icon" />
-                                        <div className="studium-stats-content">
-                                            <span className="studium-stats-label">Ritmo Atual</span>
-                                            <span className="studium-stats-valor">
-                                                {plano.ritmoAtual > 0 ? `${plano.ritmoAtual}h/dia` : '- h/dia'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="studium-stats-item">
-                                        <FontAwesomeIcon icon={faBullseye} className="studium-stats-icon" />
-                                        <div className="studium-stats-content">
-                                            <span className="studium-stats-label">Desempenho</span>
-                                            <span className="studium-stats-valor">{calculatePerformance(plano.sessoesEstudo)}%</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Rodapé do Card */}
-                                <div className="studium-card-footer">
-                                    <span className="plano-data-criacao">
-                                        Criado em {formatDateToLocaleString(plano.createdAt)}
-                                    </span>
-                                    <div className="studium-card-footer-actions">
-                                        <button
-                                            className="btn btn-secondary"
-                                            onClick={() => handleVerDisciplinas(plano.id)}
-                                        >
-                                            <FontAwesomeIcon icon={faBook} />
-                                            Ver Disciplinas
-                                        </button>
-                                        {/* <button className="btn btn-secondary">
-                                            <FontAwesomeIcon icon={faList} />
-                                            Ver Sessões
-                                        </button>
-                                        <button className="btn btn-secondary">
-                                            <FontAwesomeIcon icon={faCalendar} />
-                                            Ver Planejamento
-                                        </button> */}
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={() => handleEditarPlano(plano)}
-                                        >
-                                            <FontAwesomeIcon icon={faEdit} />
-                                            Editar
-                                        </button>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => handleExcluirPlano(plano)}
-                                        >
-                                            <FontAwesomeIcon icon={faTrash} />
-                                            Excluir
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <PlanoEstudoCard
+                                key={plano.id}
+                                plano={plano}
+                                onEdit={handleEditarPlano}
+                                onDelete={handleExcluirPlano}
+                                onViewDisciplinas={handleVerDisciplinas}
+                            />
                         ))}
                     </div>
                 )}
@@ -365,8 +268,8 @@ const PlanosEstudo = () => {
                 {/* Diálogo de Confirmação de Exclusão */}
                 <ConfirmDialog
                     isOpen={isConfirmOpen}
-                    title="Confirmação de Exclusão"
-                    message="Este ação irá excluir o plano de estudo e todas as disciplinas, tópicos, sessões, revisões e planejamentos associados. Deseja realmente excluir?"
+                    title={MESSAGES.CONFIRM.DELETE_TITLE}
+                    message={MESSAGES.CONFIRM.DELETE_MESSAGE}
                     onConfirm={handleConfirmExclusao}
                     onCancel={handleCancelExclusao}
                 />

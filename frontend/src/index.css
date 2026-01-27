@@ -22,8 +22,8 @@
     --color-primary-light: #20344b;
 
     /* Azul noturno claro */
-    --color-secondary: #d8d8d8;
-    --color-secondary-dark: #b9b9b9;
+    --color-secondary: #dedede;
+    --color-secondary-dark: #767373;
 
     /* Verde progresso */
     --color-accent: #3FAF82;
@@ -449,14 +449,22 @@ CABEÇALHO DO MODAL
     margin: 0;
 }
 
+.studium-modal-subtitle {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-secondary-dark);
+    margin-top: var(--spacing-xs);
+}
+
 .studium-modal-close-btn {
+    align-items: center;
     background: transparent;
     border: none;
     color: var(--color-accent);
     cursor: pointer;
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding: 0 var(--spacing-lg);
     width: 2rem;
     height: 2rem;
 }

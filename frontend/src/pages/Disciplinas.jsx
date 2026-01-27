@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faPlus,
-    faWeightHanging,
+    faExclamationCircle,
     faClock,
     faListCheck,
     faBullseye,
@@ -21,7 +21,7 @@ import {
     faChartBar,
     faEdit,
     faTrash,
-    faStar,
+    faGraduationCap,
     faClone
 } from '@fortawesome/free-solid-svg-icons';
 import './Disciplinas.css';
@@ -237,29 +237,20 @@ const Disciplinas = () => {
                                     <div className="studium-stats-grid">
                                         <div className="studium-stats-item">
                                             <div className="studium-stats-icon">
-                                                <FontAwesomeIcon icon={faWeightHanging} />
+                                                <FontAwesomeIcon icon={faExclamationCircle} />
                                             </div>
                                             <div className="studium-stats-content">
-                                                <span className="studium-stats-label">Peso</span>
-                                                <span className="studium-stats-valor">{disciplina.peso}</span>
+                                                <span className="studium-stats-label">Importância</span>
+                                                <span className="studium-stats-valor">{Number(disciplina.importancia).toFixed(1)}</span>
                                             </div>
                                         </div>
                                         <div className="studium-stats-item">
                                             <div className="studium-stats-icon">
-                                                <FontAwesomeIcon icon={faStar} />
+                                                <FontAwesomeIcon icon={faGraduationCap} />
                                             </div>
                                             <div className="studium-stats-content">
-                                                <span className="studium-stats-label">Familiaridade</span>
-                                                <span className="studium-stats-valor">{disciplina.familiaridade || 0}</span>
-                                            </div>
-                                        </div>
-                                        <div className="studium-stats-item">
-                                            <div className="studium-stats-icon">
-                                                <FontAwesomeIcon icon={faClock} />
-                                            </div>
-                                            <div className="studium-stats-content">
-                                                <span className="studium-stats-label">Horas Estudadas</span>
-                                                <span className="studium-stats-valor">{calculateTotalHours(disciplina.sessoesEstudo)}h</span>
+                                                <span className="studium-stats-label">Conhecimento</span>
+                                                <span className="studium-stats-valor">{Number(disciplina.conhecimento).toFixed(1)}</span>
                                             </div>
                                         </div>
                                         <div className="studium-stats-item">
@@ -269,6 +260,15 @@ const Disciplinas = () => {
                                             <div className="studium-stats-content">
                                                 <span className="studium-stats-label">Tópicos</span>
                                                 <span className="studium-stats-valor">{disciplina.topicos?.length || 0}</span>
+                                            </div>
+                                        </div>
+                                        <div className="studium-stats-item">
+                                            <div className="studium-stats-icon">
+                                                <FontAwesomeIcon icon={faClock} />
+                                            </div>
+                                            <div className="studium-stats-content">
+                                                <span className="studium-stats-label">Horas Estudadas</span>
+                                                <span className="studium-stats-valor">{calculateTotalHours(disciplina.sessoesEstudo)}h</span>
                                             </div>
                                         </div>
                                         <div className="studium-stats-item">
@@ -301,7 +301,7 @@ const Disciplinas = () => {
                                             Criado em {formatDateToLocaleString(disciplina.createdAt)}
                                         </span>
                                         <div className="studium-card-footer-actions">
-                                            <button 
+                                            <button
                                                 className="btn btn-secondary"
                                                 onClick={() => handleVerTopicos(disciplina)}
                                             >

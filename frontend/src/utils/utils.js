@@ -107,3 +107,53 @@ export const calculateTopicCoverage = (topicos) => {
 
     return Math.round((totalConcluidos / topicos.length) * 100);
 };
+
+/**
+ * Opções de dias da semana com ID, label e sigla
+ */
+export const diasSemanaOptions = [
+    { id: 0, label: 'Domingo', sigla: 'DOM' },
+    { id: 1, label: 'Segunda-feira', sigla: 'SEG' },
+    { id: 2, label: 'Terça-feira', sigla: 'TER' },
+    { id: 3, label: 'Quarta-feira', sigla: 'QUA' },
+    { id: 4, label: 'Quinta-feira', sigla: 'QUI' },
+    { id: 5, label: 'Sexta-feira', sigla: 'SEX' },
+    { id: 6, label: 'Sábado', sigla: 'SÁB' }
+];
+
+/**
+ * Converte horas decimais para formato HH:MM
+ * @param {number} horas - Horas em formato decimal (ex: 2.5)
+ * @returns {string} Horas formatadas como HH:MM (ex: "02:30")
+ */
+export const horasToHHMM = (horas) => {
+    if (!horas || horas === 0) return '00:00';
+    const h = Math.floor(horas);
+    const m = Math.round((horas - h) * 60);
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+};
+
+/**
+ * Converte formato HH:MM para horas decimais
+ * @param {string} hhmm - Horas no formato HH:MM (ex: "02:30") ou apenas dígitos (ex: "0230")
+ * @returns {number} Horas em formato decimal (ex: 2.5)
+ */
+export const hhmmToHoras = (hhmm) => {
+    if (!hhmm) return 0;
+
+    // Remove tudo que não é dígito
+    const digitsOnly = hhmm.replace(/\D/g, '');
+
+    if (digitsOnly === '' || digitsOnly === '0000' || digitsOnly === '00') return 0;
+
+    // Se tem 4 dígitos ou mais, pega os 2 primeiros como hora e os próximos 2 como minuto
+    if (digitsOnly.length >= 3) {
+        const h = parseInt(digitsOnly.slice(0, -2), 10) || 0;
+        const m = parseInt(digitsOnly.slice(-2), 10) || 0;
+        return h + (m / 60);
+    }
+
+    // Se tem menos de 3 dígitos, considera apenas horas
+    const h = parseInt(digitsOnly, 10) || 0;
+    return h;
+};

@@ -60,4 +60,11 @@ export const createTopico = (topicoData) => api.post('/topico', topicoData);
 export const updateTopico = (id, topicoData) => api.put(`/topico/${id}`, topicoData);
 export const deleteTopico = (id) => api.delete(`/topico/${id}`);
 
+// BlocoEstudo endpoints
+export const getBlocosByPlanoId = (planoEstudoId) => api.get(`/bloco?planoEstudoId=${planoEstudoId}`);
+export const getBlocosByPlanoAndDisciplina = (planoEstudoId, disciplinaId) => api.get(`/bloco/plano/${planoEstudoId}/disciplina/${disciplinaId}`);
+export const createBloco = (blocoData) => api.post('/bloco', blocoData);
+export const updateBloco = (id, blocoData) => api.put(`/bloco/${id}`, blocoData);
+export const deleteBloco = (id) => api.delete(`/bloco/${id}`);
+
 export default api;
