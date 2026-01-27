@@ -40,6 +40,29 @@ class PrismaBlocoEstudoRepository extends BaseRepository {
         }
     }
 
+    /**
+     * Busca todos os blocos de estudo pelo ID do plano de estudo
+     * @param {number} planoEstudoId - ID do plano de estudo
+     * @returns {Promise<Array>} Lista de blocos de estudo encontrados
+     */
+    async findManyByPlanoId(planoEstudoId) {
+        const whereClause = {
+            planoEstudoId: parseInt(planoEstudoId),
+        };
+
+        try {
+            return await this.findMany(whereClause);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.modelName} por planoEstudoId`, {
+                error: error.message,
+                planoEstudoId,
+                file: this.repositoryName,
+            });
+
+            throw error;
+        }
+    }
+
 }
 
 module.exports = new PrismaBlocoEstudoRepository();

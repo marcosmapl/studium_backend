@@ -143,6 +143,32 @@ class BlocoEstudoController extends BaseController {
         }
     }
 
+    /**
+     * Busca todos os blocos de estudo para um plano de estudo
+     */
+    async findManyByPlanoId(req, res, next) {
+        try {
+            const { planoEstudoId } = req.params;
+
+            logger.info(`Buscando ${this.entityNamePlural} para um plano de estudo`, {
+                planoEstudoId: parseInt(planoEstudoId),
+                route: req.originalUrl,
+            });
+
+            const blocos = await this.repository.findManyByPlanoId(planoEstudoId);
+
+            // Retorna array vazio se não houver blocos (não é erro)
+            return res.json(blocos);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por plano de estudo`, {
+                error: error.message,
+                stack: error.stack,
+            });
+
+            next(error);
+        }
+    }
+
 }
 
 const controller = new BlocoEstudoController();
@@ -152,6 +178,7 @@ module.exports = {
     findAll: controller.findAll.bind(controller),
     findById: controller.findById.bind(controller),
     findManyByDisciplinaPlano: controller.findManyByDisciplinaPlano.bind(controller),
+    findManyByPlanoId: controller.findManyByPlanoId.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

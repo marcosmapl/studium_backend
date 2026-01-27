@@ -210,10 +210,10 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
  *                     type: string
  *                   unidadeFederativa:
  *                     type: string
-       404:
-         description: Nenhuma cidade encontrada para esta UF
-       500:
-         description: Erro interno do servidor
+ *       404:
+ *         description: Nenhuma cidade encontrada para esta UF
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.get(
     "/uf/:unidadeFederativa",

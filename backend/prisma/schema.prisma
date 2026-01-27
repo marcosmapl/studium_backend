@@ -151,6 +151,7 @@ model Disciplina {
     importancia   Decimal  @default(1) @db.Decimal(3, 1) // Peso da disciplina (0.0 a 5.0)
     conhecimento  Decimal  @default(0) @db.Decimal(3, 1) // Nível conhecimento atual (0.0 a 5.0)
     horasSemanais Decimal  @map("horas_semanais") @db.Decimal(4, 2) // Mínimo de horas semanais alocadas por semana
+    selecionada   Boolean  @default(true) // Indica se a disciplina está selecionada para o planejamento atual
     createdAt     DateTime @default(now()) @map("created_at")
     updatedAt     DateTime @updatedAt @map("updated_at")
 

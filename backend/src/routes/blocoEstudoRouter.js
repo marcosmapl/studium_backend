@@ -114,6 +114,40 @@ router.get("/", verifyToken, controller.findAll);
  */
 router.get("/plano/:planoEstudoId/disciplina/:disciplinaId", verifyToken, controller.findManyByDisciplinaPlano);
 
+/**
+ * @swagger
+ * /api/blocoEstudo/plano/{planoEstudoId}:
+ *   get:
+ *     summary: Busca todos os blocos de estudo de um plano
+ *     tags: [Bloco Estudo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: planoEstudoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do plano de estudo
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Blocos de estudo encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       404:
+ *         description: Nenhum bloco encontrado para este plano
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/plano/:planoEstudoId", verifyToken, controller.findManyByPlanoId);
+
 
 /**
  * @swagger

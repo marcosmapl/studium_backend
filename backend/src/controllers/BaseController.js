@@ -31,7 +31,7 @@ class BaseController {
      * @returns {Array<string>} Lista de campos ausentes
      */
     validateRequiredFields(data, fields = this.requiredFields) {
-        return fields.filter((field) => !data[field]);
+        return fields.filter((field) => data[field] === undefined || data[field] === null || data[field] === '');
     }
 
     /**
@@ -93,28 +93,28 @@ class BaseController {
     findAll = async (req, res, next) => {
         try {
             const { limit, offset, orderBy } = req.query;
-            
+
             // Preparar opções de consulta
             const options = {};
-            
+
             if (limit) {
                 options.take = parseInt(limit);
             }
-            
+
             if (offset) {
                 options.skip = parseInt(offset);
             }
-            
+
             if (orderBy && this.repository.options?.defaultOrderBy) {
                 options.orderBy = this.repository.options.defaultOrderBy;
             }
-            
+
             // Se não houver parâmetros, usa findAll padrão
             if (Object.keys(options).length === 0) {
                 const result = await this.repository.findAll();
                 return res.json(result);
             }
-            
+
             // Caso contrário, usa findMany com opções
             const result = await this.repository.findMany({}, options);
             return res.json(result);
@@ -177,7 +177,7 @@ class BaseController {
                 error: "Busca por descrição não implementada"
             });
         }
-        
+
         try {
             const result = await this.repository.findByDescricao(descricaoDecodificada);
 
@@ -277,7 +277,7 @@ class BaseController {
             });
             return res.status(400).json({ error: "ID inválido" });
         }
-        
+
         try {
             await this.repository.delete(id);
 
