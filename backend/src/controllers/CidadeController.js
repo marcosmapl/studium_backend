@@ -85,9 +85,7 @@ class CidadeController extends BaseController {
                     descricao: descricaoDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Não foram encontradas ${this.entityNamePlural} com essa descrição parcial`
-                });
+                return res.json([]);
             }
 
             return res.json(cidades);
@@ -122,9 +120,7 @@ class CidadeController extends BaseController {
                     unidadeFederativa,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Não foram encontradas ${this.entityNamePlural} para essa Unidade Federativa`
-                });
+                return res.json([]);
             }
 
             return res.json(cidades);

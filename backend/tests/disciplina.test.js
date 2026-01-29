@@ -60,6 +60,7 @@ describe("Disciplina - /api/disciplina", () => {
             const disciplinaData = {
                 titulo: "Contabilidade Geral",
                 planoId: seedData.planoEstudo.id,
+                horasSemanais: 10.0,
             };
 
             const response = await request(app)
@@ -84,6 +85,7 @@ describe("Disciplina - /api/disciplina", () => {
             const disciplinaData = {
                 titulo: "Contabilidade Geral",
                 planoId: segundoPlano.id,
+                horasSemanais: 10.0,
             };
 
             const response = await request(app)
@@ -111,6 +113,7 @@ describe("Disciplina - /api/disciplina", () => {
             const disciplinaData = {
                 titulo: "Disciplina Teste",
                 planoId: 99999,
+                horasSemanais: 10.0,
             };
 
             const response = await request(app)
@@ -269,6 +272,7 @@ describe("Disciplina - /api/disciplina", () => {
                 data: {
                     titulo: "Disciplina Para Excluir",
                     planoId: seedData.planoEstudo.id,
+                    horasSemanais: 10.0,
                 },
             });
 

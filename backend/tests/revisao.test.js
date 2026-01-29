@@ -32,6 +32,7 @@ describe("Revisao - /api/revisao", () => {
             data: {
                 titulo: "Disciplina Teste Revisão",
                 planoId: seedData.planoEstudo.id,
+                horasSemanais: 10.0,
             },
         });
 
@@ -236,6 +237,7 @@ describe("Revisao - /api/revisao", () => {
                 data: {
                     titulo: "Disciplina Sem Revisões",
                     planoId: seedData.planoEstudo.id,
+                    horasSemanais: 10.0,
                 },
             });
 

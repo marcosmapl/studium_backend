@@ -31,6 +31,7 @@ describe("BlocoEstudo - /api/blocoEstudo", () => {
             data: {
                 titulo: "Disciplina Teste Bloco",
                 planoId: seedData.planoEstudo.id,
+                horasSemanais: 10.0,
             },
         });
     });
@@ -204,6 +205,7 @@ describe("BlocoEstudo - /api/blocoEstudo", () => {
                 data: {
                     titulo: "Disciplina Sem Blocos",
                     planoId: seedData.planoEstudo.id,
+                    horasSemanais: 10.0,
                 },
             });
 

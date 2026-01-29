@@ -34,6 +34,7 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             data: {
                 titulo: "Disciplina Teste",
                 planoId: planoEstudoTeste.id,
+                horasSemanais: 10.0,
             },
         });
 
@@ -65,6 +66,7 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
     describe("POST /api/sessaoEstudo", () => {
         it("deve criar uma nova sessão de estudo", async () => {
             const sessaoData = {
+                dataInicio: new Date().toISOString(),
                 planoEstudoId: planoEstudoTeste.id,
                 disciplinaId: disciplinaTeste.id,
                 topicoId: topicoTeste.id,

@@ -63,7 +63,7 @@ describe("Cidade - /api/cidade", () => {
         it("deve permitir criar cidade com mesmo nome em UF diferente", async () => {
             const cidadeData = {
                 descricao: "Nova Cidade Teste",
-                unidadeFederativa: 'TT',
+                unidadeFederativa: 'SP',
             };
 
             const response = await request(app)
@@ -73,7 +73,7 @@ describe("Cidade - /api/cidade", () => {
 
             expect(response.status).toBe(HttpStatus.CREATED);
             expect(response.body.descricao).toBe("Nova Cidade Teste");
-            expect(response.body.unidadeFederativa).toBe('TT');
+            expect(response.body.unidadeFederativa).toBe('SP');
         });
 
         it("deve validar ausência de campos obrigatórios", async () => {
@@ -147,7 +147,7 @@ describe("Cidade - /api/cidade", () => {
             const cidadeMesmoNome = await prisma.cidade.create({
                 data: {
                     descricao: cidadeTeste.descricao,
-                    unidadeFederativa: 'OE'
+                    unidadeFederativa: 'RJ'
                 }
             });
 
@@ -161,7 +161,7 @@ describe("Cidade - /api/cidade", () => {
             // Buscar a cidade na outra UF
             const response2 = await request(app)
                 .get(
-                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/OE`
+                    `/api/cidade/descricao/${encodeURIComponent(cidadeTeste.descricao)}/uf/RJ`
                 )
                 .set("Authorization", `Bearer ${token}`);
 
@@ -185,12 +185,14 @@ describe("Cidade - /api/cidade", () => {
             expect(response.body.some((c) => c.descricao.includes("Nova"))).toBe(true);
         });
 
-        it("deve retornar 404 quando nenhuma cidade for encontrada", async () => {
+        it("deve retornar array vazio quando nenhuma cidade for encontrada", async () => {
             const response = await request(app)
                 .get("/api/cidade/descricao/search/XYZInexistente")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -210,12 +212,14 @@ describe("Cidade - /api/cidade", () => {
             ).toBe(true);
         });
 
-        it("deve retornar 404 para UF sem cidades", async () => {
+        it("deve retornar array vazio para UF sem cidades", async () => {
             const response = await request(app)
-                .get("/api/cidade/uf/99999")
+                .get("/api/cidade/uf/DF")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 

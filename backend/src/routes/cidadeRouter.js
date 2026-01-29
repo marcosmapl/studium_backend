@@ -156,7 +156,7 @@ router.get("/descricao/:descricao/uf/:unidadeFederativa", verifyToken, controlle
  *         example: "Brasí"
  *     responses:
  *       200:
- *         description: Cidades encontradas
+ *         description: Cidades encontradas (array vazio se não houver cidades)
  *         content:
  *           application/json:
  *             schema:
@@ -170,8 +170,6 @@ router.get("/descricao/:descricao/uf/:unidadeFederativa", verifyToken, controlle
  *                     type: string
  *                   unidadeFederativa:
  *                     type: string
- *       404:
- *         description: Nenhuma cidade encontrada
  *       401:
  *         description: Não autorizado
  *       500:
@@ -196,7 +194,7 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
  *         example: "DF"
  *     responses:
  *       200:
- *         description: Cidades encontradas
+ *         description: Cidades encontradas (array vazio se não houver cidades)
  *         content:
  *           application/json:
  *             schema:
@@ -210,8 +208,6 @@ router.get("/descricao/search/:descricao", verifyToken, controller.findManyByDes
  *                     type: string
  *                   unidadeFederativa:
  *                     type: string
- *       404:
- *         description: Nenhuma cidade encontrada para esta UF
  *       500:
  *         description: Erro interno do servidor
  */
