@@ -194,12 +194,14 @@ describe("Tópico - /api/topico", () => {
             expect(response.body.some(t => t.titulo.includes("Teoria"))).toBe(true);
         });
 
-        it("deve retornar 404 quando nenhum tópico for encontrado", async () => {
+        it("deve retornar array vazio quando nenhum tópico for encontrado", async () => {
             const response = await request(app)
                 .get("/api/topico/titulo/search/XYZInexistente")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -215,12 +217,14 @@ describe("Tópico - /api/topico", () => {
             expect(response.body.every(t => t.disciplinaId === disciplinaTeste.id)).toBe(true);
         });
 
-        it("deve retornar 404 quando nenhum tópico for encontrado para disciplina", async () => {
+        it("deve retornar array vazio quando nenhum tópico for encontrado para disciplina", async () => {
             const response = await request(app)
                 .get("/api/topico/disciplina/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 

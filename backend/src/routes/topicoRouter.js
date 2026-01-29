@@ -256,7 +256,7 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *         example: "Direitos"
  *     responses:
  *       200:
- *         description: Tópicos encontrados
+ *         description: Lista de tópicos (array vazio se não houver tópicos com esse padrão)
  *         content:
  *           application/json:
  *             schema:
@@ -305,8 +305,6 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                       titulo:
  *                         type: string
  *                         example: "Contabilidade Geral"
- *       404:
- *         description: Nenhum tópico encontrado
  *       401:
  *         description: Não autorizado
  *       500:
@@ -332,7 +330,7 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *         example: 1
  *     responses:
  *       200:
- *         description: Tópicos da disciplina encontrados
+ *         description: Lista de tópicos (array vazio se não houver tópicos para esta disciplina)
  *         content:
  *           application/json:
  *             schema:
@@ -381,8 +379,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                       titulo:
  *                         type: string
  *                         example: "Contabilidade Geral"
- *       404:
- *         description: Nenhum tópico encontrado para esta disciplina
  *       401:
  *         description: Não autorizado
  *       500:

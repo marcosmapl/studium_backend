@@ -83,7 +83,7 @@ class TopicoController extends BaseController {
                     if (campo.includes("disciplina")) {
                         mensagem = "Disciplina não encontrada";
                     }
-                    
+
                     return res.status(HttpStatus.BAD_REQUEST).json({
                         error: mensagem,
                     });
@@ -154,17 +154,15 @@ class TopicoController extends BaseController {
                 tituloDecodificado
             );
 
+            // Retorna array vazio se não houver tópicos (não é erro)
             if (!topicos || topicos.length === 0) {
                 logger.info(`Nenhum ${this.entityName} encontrado com esse padrão`, {
                     titulo: tituloDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhum ${this.entityName} encontrado com esse padrão`
-                });
             }
 
-            return res.json(topicos);
+            return res.json(topicos || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por título parcial`, {
                 error: error.message,
@@ -189,17 +187,15 @@ class TopicoController extends BaseController {
 
             const topicos = await this.repository.findManyByDisciplinaId(disciplinaId);
 
+            // Retorna array vazio se não houver tópicos (não é erro)
             if (!topicos || topicos.length === 0) {
                 logger.info(`Nenhum ${this.entityName} encontrado para esta disciplina`, {
                     disciplinaId: parseInt(disciplinaId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhum ${this.entityName} encontrado para esta disciplina`
-                });
             }
 
-            return res.json(topicos);
+            return res.json(topicos || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por disciplina`, {
                 error: error.message,
