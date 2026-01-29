@@ -257,7 +257,7 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *         example: "Concurso Infraero"
  *     responses:
  *       200:
- *         description: Planos de estudo encontrados
+ *         description: Lista de planos de estudo (array vazio se não houver planos com esse padrão)
  *         content:
  *           application/json:
  *             schema:
@@ -302,8 +302,6 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                     type: string
  *                     format: date-time
  *                     example: "2026-01-01 00:00:00"
- *       404:
- *         description: Não foram encontrados planos de estudo com esse padrão
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:

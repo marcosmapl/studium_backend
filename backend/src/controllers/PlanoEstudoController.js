@@ -161,17 +161,15 @@ class PlanoEstudoController extends BaseController {
                 tituloDecodificado
             );
 
+            // Retorna array vazio se não houver planos (não é erro)
             if (!planos || planos.length === 0) {
                 logger.info(`Não foram encontrados ${this.entityNamePlural} com esse padrão`, {
                     titulo: tituloDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Não foram encontrados ${this.entityNamePlural} com esse padrão`
-                });
             }
 
-            return res.json(planos);
+            return res.json(planos || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por título parcial`, {
                 error: error.message,
