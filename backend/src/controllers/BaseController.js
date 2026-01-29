@@ -47,7 +47,7 @@ class BaseController {
     /**
      * Cria um novo registro
      */
-    create = async (req, res, next) => {
+    async create(req, res, next) {
         const missingFields = this.validateRequiredFields(req.body);
 
         if (missingFields.length > 0) {
@@ -85,7 +85,7 @@ class BaseController {
             }
             next(error);
         }
-    };
+    }
 
     /**
      * Busca todos os registros

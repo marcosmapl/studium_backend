@@ -98,15 +98,13 @@ router.get("/", verifyToken, controller.findAll);
  *         example: 1
  *     responses:
  *       200:
- *         description: Blocos de estudo encontrados
+ *         description: Blocos de estudo encontrados (array vazio se não houver blocos)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhum bloco encontrado para este plano e disciplina
  *       401:
  *         description: Não autorizado
  *       500:
@@ -132,15 +130,13 @@ router.get("/plano/:planoEstudoId/disciplina/:disciplinaId", verifyToken, contro
  *         example: 1
  *     responses:
  *       200:
- *         description: Blocos de estudo encontrados
+ *         description: Blocos de estudo encontrados (array vazio se não houver blocos)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhum bloco encontrado para este plano
  *       401:
  *         description: Não autorizado
  *       500:

@@ -294,7 +294,7 @@ describe("BlocoEstudo - /api/blocoEstudo", () => {
                 .delete(`/api/blocoEstudo/${blocoParaExcluir.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.OK);
+            expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
             // Verificar se foi excluído
             const checkResponse = await request(app)
