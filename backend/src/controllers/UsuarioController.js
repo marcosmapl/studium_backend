@@ -10,7 +10,7 @@ class UsuarioController extends BaseController {
     constructor() {
         super(repository, "usuário", {
             entityNamePlural: "usuários",
-            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuarioId", "cidadeId", "situacaoUsuarioId", "grupoUsuarioId"]
+            requiredFields: ["username", "password", "email", "nome", "sobrenome", "generoUsuario", "cidadeId", "situacaoUsuario", "grupoUsuarioId"]
         });
     }
 
@@ -25,12 +25,11 @@ class UsuarioController extends BaseController {
                 sobrenome,
                 password,
                 email,
-                generoUsuarioId,
-                situacaoUsuarioId,
+                generoUsuario,
+                situacaoUsuario,
                 cidadeId,
                 grupoUsuarioId,
-                dataNascimento,
-                fotoUrl
+                dataNascimento
             } = req.body;
 
             // Validação de campos obrigatórios
@@ -78,12 +77,11 @@ class UsuarioController extends BaseController {
                 sobrenome,
                 password: hashedPassword,
                 email,
-                generoUsuarioId: parseInt(generoUsuarioId),
+                generoUsuario,
                 cidadeId: parseInt(cidadeId),
-                situacaoUsuarioId: parseInt(situacaoUsuarioId),
+                situacaoUsuario,
                 grupoUsuarioId: parseInt(grupoUsuarioId),
-                dataNascimento: dataNascimento ? new Date(dataNascimento) : null,
-                fotoUrl: fotoUrl || null
+                dataNascimento: dataNascimento ? new Date(dataNascimento) : null
             });
 
             // Remove a senha da resposta
@@ -206,13 +204,12 @@ class UsuarioController extends BaseController {
                 sobrenome,
                 password,
                 email,
-                generoUsuarioId,
+                generoUsuario,
                 cidadeId,
-                situacaoUsuarioId,
+                situacaoUsuario,
                 unidadeFederativaId,
                 grupoUsuarioId,
-                dataNascimento,
-                fotoUrl
+                dataNascimento
             } = req.body;
 
             if (isNaN(id)) {
@@ -258,13 +255,12 @@ class UsuarioController extends BaseController {
                 updateData.password = await bcrypt.hash(password, 10);
             }
             if (email) updateData.email = email;
-            if (generoUsuarioId !== undefined) updateData.generoUsuarioId = parseInt(generoUsuarioId);
+            if (generoUsuario !== undefined) updateData.generoUsuario = generoUsuario;
             if (cidadeId !== undefined) updateData.cidadeId = parseInt(cidadeId);
-            if (situacaoUsuarioId !== undefined) updateData.situacaoUsuarioId = parseInt(situacaoUsuarioId);
+            if (situacaoUsuario !== undefined) updateData.situacaoUsuario = situacaoUsuario;
             if (unidadeFederativaId !== undefined) updateData.unidadeFederativaId = parseInt(unidadeFederativaId);
             if (grupoUsuarioId !== undefined) updateData.grupoUsuarioId = parseInt(grupoUsuarioId);
             if (dataNascimento) updateData.dataNascimento = new Date(dataNascimento);
-            if (fotoUrl !== undefined) updateData.fotoUrl = fotoUrl;
 
             const usuario = await this.repository.update(id, updateData);
 
