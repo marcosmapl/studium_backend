@@ -8,8 +8,94 @@ class RevisaoController extends BaseController {
     constructor() {
         super(repository, "revisão", {
             entityNamePlural: "revisões",
-            requiredFields: ["numero", "dataProgramada", "planoEstudoId", "disciplinaId", "topicoId"]
+            requiredFields: ["numero", "dataProgramada", "planoEstudoId", "disciplinaId", "topicoId", "situacaoRevisao"]
         });
+    }
+
+    /**
+     * Cria uma nova revisão
+     * Sobrescreve o método do BaseController para tratar erros específicos
+     */
+    async create(req, res, next) {
+        try {
+            const data = req.body;
+
+            // Validação dos campos obrigatórios
+            if (this.requiredFields && this.requiredFields.length > 0) {
+                const camposFaltando = this.requiredFields.filter(
+                    (field) => data[field] === undefined || data[field] === null || data[field] === ""
+                );
+
+                if (camposFaltando.length > 0) {
+                    logger.warn(
+                        `Campos obrigatórios ausentes ao criar ${this.entityName}`,
+                        {
+                            route: req.originalUrl,
+                            method: req.method,
+                            missingFields: camposFaltando,
+                        }
+                    );
+                    return res.status(HttpStatus.BAD_REQUEST).json({
+                        error: `Campos obrigatórios ausentes: ${camposFaltando.join(", ")}`,
+                    });
+                }
+            }
+
+            const resultado = await this.repository.create(data);
+
+            logger.info(`${this.entityName} criado(a) com sucesso`, {
+                id: resultado.id,
+                route: req.originalUrl,
+            });
+
+            return res.status(HttpStatus.CREATED).json(resultado);
+        } catch (error) {
+            // Tratamento específico para violação de constraint única (P2002)
+            if (error.code === "P2002") {
+                logger.warn(`Tentativa de criar ${this.entityName} duplicado(a)`, {
+                    route: req.originalUrl,
+                });
+                return res.status(HttpStatus.CONFLICT).json({
+                    error: `Já existe uma revisão com este número para este tópico.`,
+                });
+            }
+
+            // Tratamento para foreign key não encontrada (P2003)
+            if (error.code === "P2003") {
+                const campo = error.meta?.field_name || "relacionado";
+                logger.warn(
+                    `Registro relacionado não encontrado ao criar ${this.entityName}`,
+                    {
+                        error: error.message,
+                        meta: error.meta,
+                        field_name: campo,
+                    }
+                );
+
+                let mensagem = "Registro relacionado não encontrado";
+                if (campo.includes("plano")) {
+                    mensagem = "Plano de estudo não encontrado";
+                } else if (campo.includes("disciplina")) {
+                    mensagem = "Disciplina não encontrada";
+                } else if (campo.includes("topico")) {
+                    mensagem = "Tópico não encontrado";
+                }
+
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: mensagem,
+                });
+            }
+
+            // Log do erro e passa para o middleware de erro
+            logger.error(`Erro ao criar ${this.entityName}`, {
+                error: error.message,
+                data: req.body,
+                file: "BaseRepository.js",
+                line: 47,
+            });
+
+            next(error);
+        }
     }
 
     /**
@@ -26,17 +112,15 @@ class RevisaoController extends BaseController {
 
             const revisoes = await this.repository.findManyByPlanoEstudoId(planoEstudoId);
 
+            // Retorna array vazio se não houver revisões (não é erro)
             if (!revisoes || revisoes.length === 0) {
                 logger.info(`Nenhuma ${this.entityName} encontrada para este plano de estudo`, {
                     planoEstudoId: parseInt(planoEstudoId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este plano de estudo`
-                });
             }
 
-            return res.json(revisoes);
+            return res.json(revisoes || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por plano de estudo`, {
                 error: error.message,
@@ -61,17 +145,15 @@ class RevisaoController extends BaseController {
 
             const revisoes = await this.repository.findManyByDisciplinaId(disciplinaId);
 
+            // Retorna array vazio se não houver revisões (não é erro)
             if (!revisoes || revisoes.length === 0) {
                 logger.info(`Nenhuma ${this.entityName} encontrada para esta disciplina`, {
                     disciplinaId: parseInt(disciplinaId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta disciplina`
-                });
             }
 
-            return res.json(revisoes);
+            return res.json(revisoes || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por disciplina`, {
                 error: error.message,
@@ -96,17 +178,15 @@ class RevisaoController extends BaseController {
 
             const revisoes = await this.repository.findManyByTopicoId(topicoId);
 
+            // Retorna array vazio se não houver revisões (não é erro)
             if (!revisoes || revisoes.length === 0) {
                 logger.info(`Nenhuma ${this.entityName} encontrada para este tópico`, {
                     topicoId: parseInt(topicoId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este tópico`
-                });
             }
 
-            return res.json(revisoes);
+            return res.json(revisoes || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por tópico`, {
                 error: error.message,

@@ -132,15 +132,13 @@ router.get("/", verifyToken, controller.findAll);
  *         example: 1
  *     responses:
  *       200:
- *         description: Revisões encontradas
+ *         description: Lista de revisões (array vazio se não houver revisões para este plano)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma revisão encontrada para este plano
  *       401:
  *         description: Não autorizado
  *       500:
@@ -166,15 +164,13 @@ router.get("/planoEstudo/:planoEstudoId", verifyToken, controller.findManyByPlan
  *         example: 1
  *     responses:
  *       200:
- *         description: Revisões encontradas
+ *         description: Lista de revisões (array vazio se não houver revisões para esta disciplina)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma revisão encontrada para esta disciplina
  *       401:
  *         description: Não autorizado
  *       500:
@@ -200,15 +196,13 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *         example: 1
  *     responses:
  *       200:
- *         description: Revisões encontradas
+ *         description: Lista de revisões (array vazio se não houver revisões para este tópico)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma revisão encontrada para este tópico
  *       401:
  *         description: Não autorizado
  *       500:

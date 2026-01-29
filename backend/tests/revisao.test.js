@@ -84,6 +84,7 @@ describe("Revisao - /api/revisao", () => {
                 planoEstudoId: seedData.planoEstudo.id,
                 disciplinaId: disciplinaTeste.id,
                 topicoId: topicoTeste.id,
+                situacaoRevisao: "AGENDADA",
             };
 
             const response = await request(app)
@@ -111,6 +112,7 @@ describe("Revisao - /api/revisao", () => {
                 planoEstudoId: seedData.planoEstudo.id,
                 disciplinaId: disciplinaTeste.id,
                 topicoId: outroTopico.id,
+                situacaoRevisao: "AGENDADA",
             };
 
             const response = await request(app)
@@ -140,6 +142,7 @@ describe("Revisao - /api/revisao", () => {
                 planoEstudoId: 99999,
                 disciplinaId: disciplinaTeste.id,
                 topicoId: topicoTeste.id,
+                situacaoRevisao: "AGENDADA",
             };
 
             const response = await request(app)
@@ -201,7 +204,7 @@ describe("Revisao - /api/revisao", () => {
             expect(response.body[0].planoEstudoId).toBe(seedData.planoEstudo.id);
         });
 
-        it("deve retornar 404 quando não houver revisões no plano", async () => {
+        it("deve retornar array vazio quando não houver revisões no plano", async () => {
             // Criar plano vazio
             const planoVazio = await prisma.planoEstudo.create({
                 data: {
@@ -215,7 +218,9 @@ describe("Revisao - /api/revisao", () => {
                 .get(`/api/revisao/planoEstudo/${planoVazio.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -231,7 +236,7 @@ describe("Revisao - /api/revisao", () => {
             expect(response.body[0].disciplinaId).toBe(disciplinaTeste.id);
         });
 
-        it("deve retornar 404 quando não houver revisões na disciplina", async () => {
+        it("deve retornar array vazio quando não houver revisões na disciplina", async () => {
             // Criar disciplina sem revisões
             const disciplinaSemRevisoes = await prisma.disciplina.create({
                 data: {
@@ -245,7 +250,9 @@ describe("Revisao - /api/revisao", () => {
                 .get(`/api/revisao/disciplina/${disciplinaSemRevisoes.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -261,7 +268,7 @@ describe("Revisao - /api/revisao", () => {
             expect(response.body[0].topicoId).toBe(topicoTeste.id);
         });
 
-        it("deve retornar 404 quando não houver revisões no tópico", async () => {
+        it("deve retornar array vazio quando não houver revisões no tópico", async () => {
             // Criar tópico sem revisões
             const topicoSemRevisoes = await prisma.topico.create({
                 data: {
@@ -275,7 +282,9 @@ describe("Revisao - /api/revisao", () => {
                 .get(`/api/revisao/topico/${topicoSemRevisoes.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -333,7 +342,7 @@ describe("Revisao - /api/revisao", () => {
                 .delete(`/api/revisao/${revisaoParaExcluir.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.OK);
+            expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
             // Verificar se foi excluída
             const checkResponse = await request(app)
