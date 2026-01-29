@@ -1,0 +1,302 @@
+.historico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.historico-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.historico-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.historico-vazio {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-xl);
+    text-align: center;
+    border: var(--border-width-2) dashed var(--color-gray-300);
+    width: 100%;
+}
+
+.historico-vazio p {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary-light);
+    margin: 0;
+}
+
+.historico-dia {
+    background: var(--color-background);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.historico-dia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--color-background-secondary);
+    border-bottom: 2px solid var(--color-accent);
+}
+
+.historico-dia-titulo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.historico-dia-data {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.historico-registros {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.historico-card {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.historico-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sessao-card {
+    border-left: 4px solid var(--color-accent);
+}
+
+.revisao-card {
+    border-left: 4px solid var(--color-info);
+}
+
+.historico-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--color-background-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.historico-card-tipo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.historico-card-tipo svg {
+    font-size: 1.1rem;
+}
+
+.sessao-card .historico-card-tipo svg {
+    color: var(--color-accent);
+}
+
+.revisao-card .historico-card-tipo svg {
+    color: var(--color-info);
+}
+
+.historico-card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.historico-card-actions .btn-icon {
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.historico-card-body {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 0.75rem 1rem;
+    justify-content: space-between;
+}
+
+.historico-info-principal {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.historico-disciplina-topico {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.historico-topico {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.historico-stats {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    align-items: center;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    min-width: fit-content;
+}
+
+.historico-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.historico-stat svg {
+    font-size: 1rem;
+    color: var(--color-accent);
+}
+
+.historico-stat .icon-success {
+    color: var(--color-success);
+}
+
+.historico-stat .icon-danger {
+    color: var(--color-danger);
+}
+
+.historico-disciplina-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.historico-percentual {
+    font-weight: 600;
+    color: var(--color-text);
+    margin-left: 0.25rem;
+}
+
+.historico-observacoes-icon {
+    position: relative;
+    display: inline-flex;
+    cursor: help;
+    color: var(--color-accent);
+}
+
+.historico-observacoes-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    background: var(--color-background);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    white-space: normal;
+    max-width: 300px;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.historico-observacoes-icon:hover .historico-observacoes-tooltip {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.historico-observacoes-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    border: 6px solid transparent;
+    border-top-color: var(--color-border);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .historico-header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .historico-card-body {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .historico-info-principal {
+        min-width: 100%;
+    }
+
+    .historico-stats {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        min-width: 100%;
+        padding-top: 1rem;
+        border-top: 1px solid var(--color-border) flex-start;
+        gap: 0.5rem;
+    }
+
+    .historico-stats {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .historico-registros {
+        padding: 1rem;
+    }
+}

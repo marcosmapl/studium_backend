@@ -1,4 +1,17 @@
 /**
+ * Opções de dias da semana com ID, label e sigla
+ */
+export const diasSemanaOptions = [
+    { id: 0, label: 'Domingo', sigla: 'DOM' },
+    { id: 1, label: 'Segunda-feira', sigla: 'SEG' },
+    { id: 2, label: 'Terça-feira', sigla: 'TER' },
+    { id: 3, label: 'Quarta-feira', sigla: 'QUA' },
+    { id: 4, label: 'Quinta-feira', sigla: 'QUI' },
+    { id: 5, label: 'Sexta-feira', sigla: 'SEX' },
+    { id: 6, label: 'Sábado', sigla: 'SÁB' }
+];
+
+/**
  * Formata uma data ISO para o formato brasileiro (DD/MM/AAAA)
  * @param {string} dateString - String de data no formato ISO
  * @returns {string} Data formatada no padrão brasileiro
@@ -109,19 +122,6 @@ export const calculateTopicCoverage = (topicos) => {
 };
 
 /**
- * Opções de dias da semana com ID, label e sigla
- */
-export const diasSemanaOptions = [
-    { id: 0, label: 'Domingo', sigla: 'DOM' },
-    { id: 1, label: 'Segunda-feira', sigla: 'SEG' },
-    { id: 2, label: 'Terça-feira', sigla: 'TER' },
-    { id: 3, label: 'Quarta-feira', sigla: 'QUA' },
-    { id: 4, label: 'Quinta-feira', sigla: 'QUI' },
-    { id: 5, label: 'Sexta-feira', sigla: 'SEX' },
-    { id: 6, label: 'Sábado', sigla: 'SÁB' }
-];
-
-/**
  * Converte horas decimais para formato HH:MM
  * @param {number} horas - Horas em formato decimal (ex: 2.5)
  * @returns {string} Horas formatadas como HH:MM (ex: "02:30")
@@ -156,4 +156,79 @@ export const hhmmToHoras = (hhmm) => {
     // Se tem menos de 3 dígitos, considera apenas horas
     const h = parseInt(digitsOnly, 10) || 0;
     return h;
+};
+
+/**
+ * Formata o período da semana para exibição
+ * @param {Date} semanaAtual - Data de referência da semana
+ * @returns {string} Período formatado (ex: "22/1/2026 - 28/1/2026")
+ */
+export const formatarPeriodoSemana = (semanaAtual) => {
+    const inicio = new Date(semanaAtual);
+    inicio.setDate(inicio.getDate() - inicio.getDay());
+
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 6);
+
+    return `${inicio.getDate()}/${inicio.getMonth() + 1}/${fim.getFullYear()} - ${fim.getDate()}/${fim.getMonth() + 1}/${fim.getFullYear()}`;
+};
+
+/**
+ * Formata o período mensal para exibição
+ * @param {Date} mesAtual - Data de referência do mês
+ * @returns {string} Mês e ano formatados (ex: "Janeiro 2026")
+ */
+export const formatarPeriodoMensal = (mesAtual) => {
+    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    return `${meses[mesAtual.getMonth()]} ${mesAtual.getFullYear()}`;
+};
+
+/**
+ * Gera array com todos os dias do mês (incluindo dias adjacentes)
+ * @param {Date} mesAtual - Data de referência do mês
+ * @returns {Array<{dia: number, mesAtual: boolean, data: Date}>} Array com 42 dias (6 semanas)
+ */
+export const getDiasDoMes = (mesAtual) => {
+    const ano = mesAtual.getFullYear();
+    const mes = mesAtual.getMonth();
+
+    const primeiroDia = new Date(ano, mes, 1);
+    const ultimoDia = new Date(ano, mes + 1, 0);
+
+    const diasAnteriores = primeiroDia.getDay();
+    const totalDias = ultimoDia.getDate();
+
+    const dias = [];
+
+    // Dias do mês anterior
+    const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
+    for (let i = diasAnteriores - 1; i >= 0; i--) {
+        dias.push({
+            dia: ultimoDiaMesAnterior - i,
+            mesAtual: false,
+            data: new Date(ano, mes - 1, ultimoDiaMesAnterior - i)
+        });
+    }
+
+    // Dias do mês atual
+    for (let i = 1; i <= totalDias; i++) {
+        dias.push({
+            dia: i,
+            mesAtual: true,
+            data: new Date(ano, mes, i)
+        });
+    }
+
+    // Dias do próximo mês
+    const diasRestantes = 42 - dias.length; // 6 semanas x 7 dias
+    for (let i = 1; i <= diasRestantes; i++) {
+        dias.push({
+            dia: i,
+            mesAtual: false,
+            data: new Date(ano, mes + 1, i)
+        });
+    }
+
+    return dias;
 };

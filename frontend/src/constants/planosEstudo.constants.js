@@ -16,7 +16,7 @@ export const MESSAGES = {
     },
     LOADING: 'Carregando planos de estudo...',
     EMPTY: {
-        NO_PLANS: 'Nenhum plano de estudo encontrado. Crie seu primeiro plano!',
+        NO_PLANS: 'Nenhum plano de estudo cadastrado. Crie seu primeiro plano!',
         NO_RESULTS: 'Nenhum plano encontrado com os critérios de pesquisa.',
     },
     CONFIRM: {

@@ -46,12 +46,10 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
         setLoading(true);
         try {
             const response = await getTopicosByDisciplinaId(disciplina.id);
-            console.log('Tópicos carregados:', response.data);
             setTopicos(response.data || []);
         } catch (error) {
             setTopicos([]);
             toast.error('Erro ao carregar tópicos');
-            console.error('Erro ao carregar tópicos:', error);
         } finally {
             setLoading(false);
         }
@@ -92,7 +90,6 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
             //TODO: atualizar a lista de disciplina para refletir o novo tópico 
 
         } catch (error) {
-            console.error('Erro ao criar tópico:', error);
             toast.error(error.response?.data?.error || 'Erro ao criar tópico');
         } finally {
             setCriandoTopico(false);
@@ -135,7 +132,6 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
             setTopicos(topicosAtualizados);
 
         } catch (error) {
-            console.error('Erro ao atualizar ordem dos tópicos:', error);
             toast.error('Erro ao salvar a nova ordem');
             // Recarrega os tópicos em caso de erro
             carregarTopicos();
@@ -200,7 +196,6 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
 
             toast.success('Tópico atualizado com sucesso!');
         } catch (error) {
-            console.error('Erro ao atualizar tópico:', error);
             toast.error('Erro ao atualizar tópico');
         } finally {
             setEditandoTopicoId(null);
@@ -223,7 +218,6 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
             atualizarOrdemTopicos(updatedTopicos);
             toast.success('Tópico excluído com sucesso!');
         } catch (error) {
-            console.error('Erro ao excluir tópico:', error);
             toast.error('Erro ao excluir tópico');
         } finally {
             setConfirmDialogOpen(false);
@@ -247,7 +241,6 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
 
             toast.success(`Tópico ${novoValor ? 'marcado como' : 'desmarcado do'} edital`);
         } catch (error) {
-            console.error('Erro ao atualizar tópico:', error);
             toast.error('Erro ao atualizar tópico');
         }
     };

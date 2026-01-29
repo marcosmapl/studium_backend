@@ -1,0 +1,29 @@
+.time-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--color-accent, #3FAF82);
+    box-shadow: 0 0 0 3px rgba(63, 175, 130, 0.1);
+}
+
+.time-input-error {
+    border-color: var(--color-danger, #dc3545);
+}
+
+.time-input-error:focus {
+    border-color: var(--color-danger, #dc3545);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.time-input:disabled {
+    background-color: var(--color-background-secondary, #f5f5f5);
+    cursor: not-allowed;
+    opacity: 0.6;
+}

@@ -236,12 +236,12 @@ const PlanosEstudo = () => {
                         {MESSAGES.LOADING}
                     </div>
                 ) : planos.length === 0 ? (
-                    <div className="empty-message" role="status">
-                        {MESSAGES.EMPTY.NO_PLANS}
+                    <div className="planos-vazio" role="status">
+                        <p>{MESSAGES.EMPTY.NO_PLANS}</p>
                     </div>
                 ) : filteredPlanos.length === 0 ? (
-                    <div className="empty-message" role="status">
-                        {MESSAGES.EMPTY.NO_RESULTS}
+                    <div className="planos-vazio" role="status">
+                        <p>{MESSAGES.EMPTY.NO_RESULTS}</p>
                     </div>
                 ) : (
                     <div className="planos-lista">

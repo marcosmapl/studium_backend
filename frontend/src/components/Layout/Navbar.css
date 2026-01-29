@@ -95,6 +95,49 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SELETOR DE PLANO DE ESTUDO
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.studium-nav-plano-selector {
+    display: flex;
+    align-items: center;
+}
+
+.studium-nav-plano-loading {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.studium-nav-plano-select {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: var(--border-width-2) solid var(--color-gray-600);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    outline: none;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.studium-nav-plano-select:hover:not(:disabled) {
+    border-color: var(--color-accent);
+}
+
+.studium-nav-plano-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(63, 175, 130, 0.2);
+}
+
+.studium-nav-plano-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    BOTÕES DE AÇÃO (Notificações, Tema)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 

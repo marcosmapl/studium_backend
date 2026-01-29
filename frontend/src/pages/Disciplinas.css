@@ -102,7 +102,6 @@
 .disciplinas-vazio p {
     font-size: var(--font-size-md);
     color: var(--color-text-secondary-light);
-    margin-bottom: var(--spacing-lg);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -36,8 +36,6 @@ const Login = () => {
             toast.success('Login realizado com sucesso!');
             navigate('/dashboard');
         } catch (error) {
-            console.error('Erro ao fazer login:', error);
-
             if (error.response?.status === 401) {
                 toast.error('Usuário ou senha inválidos');
             } else if (error.response?.status === 403) {

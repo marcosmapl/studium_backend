@@ -1,69 +1,56 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import PlanejamentoForm from '../components/PlanejamentoForm';
-import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData';
+import SessaoEstudoForm from '../components/SessaoEstudoForm';
+import BoardViewSemanal from '../components/BoardViewSemanal';
+import BoardViewMensal from '../components/BoardViewMensal';
+import { usePlanoEstudoContext } from '../contexts/PlanoEstudoContext';
 import { useAuth } from '../contexts/AuthContext';
-import { diasSemanaOptions, horasToHHMM } from '../utils/utils';
+import { diasSemanaOptions, formatarPeriodoSemana, formatarPeriodoMensal, getDiasDoMes } from '../utils/utils';
 import api from '../services/api';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCalendarWeek,
     faCalendarAlt,
-    faCalendar,
     faPlus,
     faEdit,
-    faClock,
-    faBook,
-    faVideo,
-    faQuestionCircle,
-    faSync,
     faChevronLeft,
     faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 import './Planejamento.css';
 
+// Constantes
+const VISUALIZACAO_SEMANAL = 'semanal';
+const VISUALIZACAO_MENSAL = 'mensal';
+const isDevelopment = import.meta.env.DEV;
+
 const Planejamento = () => {
-    // Contexto de autenticação
     const { usuario } = useAuth();
     const location = useLocation();
 
     // Hook customizado para carregar planos de estudo
-    const { loading: loadingPlanos, planosEstudo } = usePlanoEstudoData(usuario?.id);
+    const { planoSelecionado } = usePlanoEstudoContext();
 
-    const [visualizacao, setVisualizacao] = useState('semanal'); // semanal, mensal, anual
+    const [visualizacao, setVisualizacao] = useState(VISUALIZACAO_SEMANAL);
     const [semanaAtual, setSemanaAtual] = useState(new Date());
     const [mesAtual, setMesAtual] = useState(new Date());
-    const [planoSelecionado, setPlanoSelecionado] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [disciplinasPlano, setDisciplinasPlano] = useState([]);
     const [loadingDisciplinas, setLoadingDisciplinas] = useState(false);
     const [blocosEstudo, setBlocosEstudo] = useState([]);
     const [loadingBlocos, setLoadingBlocos] = useState(false);
+    const [tempoEstudadoPorBloco, setTempoEstudadoPorBloco] = useState({});
 
-    // Log para debug de re-renderizações
-    console.log('🎨 COMPONENTE RENDERIZADO - Estado atual:', {
-        planoSelecionado,
-        totalBlocos: blocosEstudo.length,
-        loadingBlocos,
-        visualizacao
-    });
-
-    // Inicializa plano selecionado quando planos carregarem
-    useEffect(() => {
-        if (planosEstudo && planosEstudo.length > 0) {
-            // Se veio de navegação com planoId, usa ele, senão usa o primeiro
-            const planoIdFromNav = location.state?.planoId;
-            const planoInicial = planoIdFromNav
-                ? planosEstudo.find(p => p.id === planoIdFromNav)?.id || planosEstudo[0].id
-                : planosEstudo[0].id;
-            setPlanoSelecionado(planoInicial);
-        }
-    }, [planosEstudo, location.state]);
+    // Estados para sessão de estudo
+    const [isSessaoFormOpen, setIsSessaoFormOpen] = useState(false);
+    const [blocoSelecionado, setBlocoSelecionado] = useState(null);
 
     // Carrega disciplinas quando plano selecionado mudar
     useEffect(() => {
+        let isMounted = true; // Para evitar race conditions
+
         const carregarDisciplinas = async () => {
             if (!planoSelecionado) {
                 setDisciplinasPlano([]);
@@ -73,20 +60,31 @@ const Planejamento = () => {
             setLoadingDisciplinas(true);
             try {
                 const response = await api.get(`/disciplina/plano/${planoSelecionado}`);
-                setDisciplinasPlano(response.data || []);
+                if (isMounted) {
+                    setDisciplinasPlano(response.data || []);
+                }
             } catch (error) {
-                console.error('Erro ao carregar disciplinas:', error);
-                setDisciplinasPlano([]);
+                if (isMounted) {
+                    setDisciplinasPlano([]);
+                }
             } finally {
-                setLoadingDisciplinas(false);
+                if (isMounted) {
+                    setLoadingDisciplinas(false);
+                }
             }
         };
 
         carregarDisciplinas();
+
+        return () => {
+            isMounted = false; // Cleanup
+        };
     }, [planoSelecionado]);
 
     // Carrega blocos de estudo quando plano selecionado mudar
     useEffect(() => {
+        let isMounted = true; // Para evitar race conditions
+
         const carregarBlocos = async () => {
             if (!planoSelecionado) {
                 setBlocosEstudo([]);
@@ -99,25 +97,105 @@ const Planejamento = () => {
             setLoadingBlocos(true);
 
             try {
-                console.log('🔄 Carregando blocos para plano:', planoSelecionado);
+
                 const response = await api.get(`/blocoEstudo/plano/${planoSelecionado}`);
-                console.log('✅ Blocos carregados:', response.data?.length || 0, 'blocos');
-                console.log('📊 IDs dos blocos:', response.data?.map(b => `${b.id}(dia${b.diaSemana})`).join(', '));
-                console.log('📊 Dados completos:', response.data);
-                setBlocosEstudo(response.data || []);
+                if (isMounted) {
+                    setBlocosEstudo(response.data || []);
+                }
             } catch (error) {
-                console.error('❌ Erro ao carregar blocos de estudo:', error);
-                toast.error('Erro ao carregar blocos de estudo');
-                setBlocosEstudo([]);
+                if (isMounted) {
+                    toast.error('Erro ao carregar blocos de estudo');
+                    setBlocosEstudo([]);
+                }
             } finally {
-                setLoadingBlocos(false);
+                if (isMounted) {
+                    setLoadingBlocos(false);
+                }
             }
         };
 
         carregarBlocos();
+
+        return () => {
+            isMounted = false; // Cleanup
+        };
     }, [planoSelecionado]);
 
-    const handleCriarPlanejamento = () => {
+    // Carrega tempo estudado de cada bloco
+    useEffect(() => {
+        const carregarTempoEstudado = async () => {
+            if (!blocosEstudo || blocosEstudo.length === 0) {
+                setTempoEstudadoPorBloco({});
+                return;
+            }
+
+            try {
+                // Busca sessões de todos os blocos em paralelo
+                const promises = blocosEstudo.map(bloco =>
+                    api.get(`/sessaoEstudo/blocoEstudo/${bloco.id}`)
+                        .then(response => ({
+                            blocoId: bloco.id,
+                            sessoes: response.data || []
+                        }))
+                        .catch(() => ({ blocoId: bloco.id, sessoes: [] }))
+                );
+
+                const resultados = await Promise.all(promises);
+
+                // Calcula tempo estudado total por bloco
+                const tempoMap = {};
+                resultados.forEach(({ blocoId, sessoes }) => {
+                    const tempoTotal = sessoes.reduce((sum, sessao) =>
+                        sum + Number(sessao.tempoEstudo || 0), 0
+                    );
+                    tempoMap[blocoId] = tempoTotal;
+                });
+
+                setTempoEstudadoPorBloco(tempoMap);
+            } catch (error) {
+                setTempoEstudadoPorBloco({});
+            }
+        };
+
+        carregarTempoEstudado();
+    }, [blocosEstudo]);
+
+    // Memoização de blocos por dia da semana (com tempo estudado)
+    const blocosPorDia = useMemo(() => {
+        const mapa = {};
+        diasSemanaOptions.forEach(dia => {
+            mapa[dia.id] = blocosEstudo
+                .filter(bloco => bloco.diaSemana === dia.id)
+                .sort((a, b) => a.ordem - b.ordem)
+                .map(bloco => ({
+                    ...bloco,
+                    tempoEstudado: tempoEstudadoPorBloco[bloco.id] || 0
+                }));
+        });
+        return mapa;
+    }, [blocosEstudo, tempoEstudadoPorBloco]);
+
+    // Memoização de horas totais por dia
+    const horasPorDia = useMemo(() => {
+        const mapa = {};
+        Object.keys(blocosPorDia).forEach(diaSemana => {
+            mapa[diaSemana] = blocosPorDia[diaSemana].reduce(
+                (total, bloco) => total + Number(bloco.totalHorasPlanejadas),
+                0
+            );
+        });
+        return mapa;
+    }, [blocosPorDia]);
+
+    // Memoização de disciplinas por ID
+    const disciplinasMap = useMemo(() => {
+        const map = new Map();
+        disciplinasPlano.forEach(d => map.set(d.id, d));
+        return map;
+    }, [disciplinasPlano]);
+
+    // Handler para abrir formulário de planejamento
+    const handleAbrirFormulario = useCallback(() => {
         if (!planoSelecionado) {
             toast.error('Selecione um plano de estudo primeiro!');
             return;
@@ -129,38 +207,17 @@ const Planejamento = () => {
         }
 
         if (!disciplinasPlano || disciplinasPlano.length === 0) {
-            toast.error('Este plano não possui disciplinas cadastradas. Cadastre disciplinas antes de criar um planejamento.');
+            toast.error('Este plano não possui disciplinas cadastradas.');
             return;
         }
 
         setIsFormOpen(true);
-    };
+    }, [planoSelecionado, loadingDisciplinas, loadingBlocos, disciplinasPlano]);
 
-    const handleAjustarPlanejamento = () => {
-        if (!planoSelecionado) {
-            toast.error('Selecione um plano de estudo primeiro!');
-            return;
-        }
-
-        if (loadingDisciplinas || loadingBlocos) {
-            toast.warning('Aguarde o carregamento dos dados...');
-            return;
-        }
-
-        if (!disciplinasPlano || disciplinasPlano.length === 0) {
-            toast.error('Este plano não possui disciplinas cadastradas. Cadastre disciplinas antes de ajustar o planejamento.');
-            return;
-        }
-
-        setIsFormOpen(true);
-    };
-
-    const handleFormSubmit = async (data) => {
+    // Handler para submissão do formulário
+    const handleFormSubmit = useCallback(async (data) => {
         try {
             const { blocos, dadosPlano, disciplinasAtualizadas } = data;
-
-            console.log('📦 Blocos gerados:', blocos);
-            console.log('📦 Exemplo do primeiro bloco:', blocos[0]);
 
             // Valida blocos antes de enviar
             const blocosInvalidos = blocos.filter(b =>
@@ -172,58 +229,44 @@ const Planejamento = () => {
             );
 
             if (blocosInvalidos.length > 0) {
-                console.error('❌ Blocos inválidos encontrados:', blocosInvalidos);
                 toast.error('Erro na geração dos blocos. Por favor, tente novamente.');
                 return;
             }
 
             // 1. Atualizar PlanoEstudo com dias ativos e horas
-            console.log('📝 Atualizando PlanoEstudo:', planoSelecionado, dadosPlano);
             await api.put(`/planoEstudo/${planoSelecionado}`, dadosPlano);
-            console.log('✅ PlanoEstudo atualizado');
 
             // 2. Atualizar horasSemanais das disciplinas
-            console.log('📝 Atualizando', disciplinasAtualizadas.length, 'disciplinas');
-            for (const disciplina of disciplinasAtualizadas) {
-                console.log('📝 Atualizando disciplina:', disciplina.id);
-                await api.put(`/disciplina/${disciplina.id}`, {
-                    horasSemanais: disciplina.horasSemanais,
-                    selecionada: disciplina.selecionada
-                });
-            }
-            console.log('✅ Disciplinas atualizadas');
+            await Promise.all(
+                disciplinasAtualizadas.map(disciplina =>
+                    api.put(`/disciplina/${disciplina.id}`, {
+                        horasSemanais: disciplina.horasSemanais,
+                        selecionada: disciplina.selecionada
+                    })
+                )
+            );
 
-            // 3. Remover blocos antigos do plano
-            console.log('🗑️ Removendo', blocosEstudo.length, 'blocos antigos');
-            for (const blocoAntigo of blocosEstudo) {
-                console.log('🗑️ Removendo bloco:', blocoAntigo.id);
-                try {
-                    await api.delete(`/blocoEstudo/${blocoAntigo.id}`);
-                } catch (error) {
-                    console.error('❌ Erro ao deletar bloco', blocoAntigo.id, ':', error.response?.status, error.response?.data);
-                    // Continua mesmo se falhar (bloco pode já ter sido deletado)
-                }
-            }
-            console.log('✅ Blocos antigos removidos');
+            // 3. Remover blocos antigos do plano (em paralelo)
+            await Promise.allSettled(
+                blocosEstudo.map(blocoAntigo =>
+                    api.delete(`/blocoEstudo/${blocoAntigo.id}`)
+                )
+            );
 
             // 4. Criar novos blocos
-            console.log('➕ Criando', blocos.length, 'novos blocos');
-            for (const bloco of blocos) {
-                const blocoData = {
-                    diaSemana: bloco.diaSemana,
-                    ordem: bloco.ordem,
-                    totalHorasPlanejadas: bloco.totalHorasPlanejadas,
-                    planoEstudoId: planoSelecionado,
-                    disciplinaId: bloco.disciplinaId
-                };
-                console.log('📤 Enviando bloco:', blocoData);
-
-                await api.post('/blocoEstudo', blocoData);
-            }
-            console.log('✅ Novos blocos criados');
+            await Promise.all(
+                blocos.map(bloco =>
+                    api.post('/blocoEstudo', {
+                        diaSemana: bloco.diaSemana,
+                        ordem: bloco.ordem,
+                        totalHorasPlanejadas: bloco.totalHorasPlanejadas,
+                        planoEstudoId: planoSelecionado,
+                        disciplinaId: bloco.disciplinaId
+                    })
+                )
+            );
 
             // 5. Recarregar dados
-            console.log('🔄 Recarregando dados...');
             const [blocosResponse, disciplinasResponse] = await Promise.all([
                 api.get(`/blocoEstudo/plano/${planoSelecionado}`),
                 api.get(`/disciplina/plano/${planoSelecionado}`)
@@ -231,245 +274,71 @@ const Planejamento = () => {
 
             setBlocosEstudo(blocosResponse.data || []);
             setDisciplinasPlano(disciplinasResponse.data || []);
-            console.log('✅ Dados recarregados');
 
             toast.success('Planejamento salvo com sucesso!');
             setIsFormOpen(false);
         } catch (error) {
-            console.error('❌ Erro ao salvar planejamento:', error);
-            console.error('❌ Detalhes do erro:', {
-                message: error.message,
-                status: error.response?.status,
-                statusText: error.response?.statusText,
-                data: error.response?.data,
-                url: error.config?.url,
-                method: error.config?.method
-            });
             toast.error('Erro ao salvar planejamento: ' + (error.response?.data?.message || error.message));
         }
-    };
+    }, [planoSelecionado, blocosEstudo]);
 
-    const handleAnterior = () => {
-        if (visualizacao === 'semanal') {
-            const novaSemana = new Date(semanaAtual);
-            novaSemana.setDate(novaSemana.getDate() - 7);
-            setSemanaAtual(novaSemana);
+    // Handlers de navegação
+    const handleAnterior = useCallback(() => {
+        if (visualizacao === VISUALIZACAO_SEMANAL) {
+            setSemanaAtual(prev => {
+                const nova = new Date(prev);
+                nova.setDate(nova.getDate() - 7);
+                return nova;
+            });
         } else {
-            const novoMes = new Date(mesAtual);
-            novoMes.setMonth(novoMes.getMonth() - 1);
-            setMesAtual(novoMes);
+            setMesAtual(prev => {
+                const novo = new Date(prev);
+                novo.setMonth(novo.getMonth() - 1);
+                return novo;
+            });
         }
-    };
+    }, [visualizacao]);
 
-    const handleProximo = () => {
-        if (visualizacao === 'semanal') {
-            const novaSemana = new Date(semanaAtual);
-            novaSemana.setDate(novaSemana.getDate() + 7);
-            setSemanaAtual(novaSemana);
+    const handleProximo = useCallback(() => {
+        if (visualizacao === VISUALIZACAO_SEMANAL) {
+            setSemanaAtual(prev => {
+                const nova = new Date(prev);
+                nova.setDate(nova.getDate() + 7);
+                return nova;
+            });
         } else {
-            const novoMes = new Date(mesAtual);
-            novoMes.setMonth(novoMes.getMonth() + 1);
-            setMesAtual(novoMes);
-        }
-    };
-
-    const formatarPeriodoSemana = () => {
-        const inicio = new Date(semanaAtual);
-        inicio.setDate(inicio.getDate() - inicio.getDay());
-
-        const fim = new Date(inicio);
-        fim.setDate(fim.getDate() + 6);
-
-        return `${inicio.getDate()}/${inicio.getMonth() + 1}/${fim.getFullYear()} - ${fim.getDate()}/${fim.getMonth() + 1}/${fim.getFullYear()}`;
-    };
-
-    const formatarPeriodoMensal = () => {
-        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        return `${meses[mesAtual.getMonth()]} ${mesAtual.getFullYear()}`;
-    };
-
-    const getDiasDoMes = () => {
-        const ano = mesAtual.getFullYear();
-        const mes = mesAtual.getMonth();
-
-        const primeiroDia = new Date(ano, mes, 1);
-        const ultimoDia = new Date(ano, mes + 1, 0);
-
-        const diasAnteriores = primeiroDia.getDay();
-        const totalDias = ultimoDia.getDate();
-
-        const dias = [];
-
-        // Dias do mês anterior
-        const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
-        for (let i = diasAnteriores - 1; i >= 0; i--) {
-            dias.push({
-                dia: ultimoDiaMesAnterior - i,
-                mesAtual: false,
-                data: new Date(ano, mes - 1, ultimoDiaMesAnterior - i)
+            setMesAtual(prev => {
+                const novo = new Date(prev);
+                novo.setMonth(novo.getMonth() + 1);
+                return novo;
             });
         }
+    }, [visualizacao]);
 
-        // Dias do mês atual
-        for (let i = 1; i <= totalDias; i++) {
-            dias.push({
-                dia: i,
-                mesAtual: true,
-                data: new Date(ano, mes, i)
-            });
+    // Memoização dos dias do mês
+    const diasDoMes = useMemo(() => getDiasDoMes(mesAtual), [mesAtual]);
+
+    // Handler para abrir formulário de sessão de estudo
+    const handleBlocoClick = useCallback((bloco) => {
+        if (bloco.concluido) {
+            toast.info('Este bloco já foi concluído');
+            return;
         }
 
-        // Dias do próximo mês
-        const diasRestantes = 42 - dias.length; // 6 semanas x 7 dias
-        for (let i = 1; i <= diasRestantes; i++) {
-            dias.push({
-                dia: i,
-                mesAtual: false,
-                data: new Date(ano, mes + 1, i)
-            });
+        setBlocoSelecionado(bloco);
+        setIsSessaoFormOpen(true);
+    }, []);
+
+    // Handler para sucesso no registro de sessão
+    const handleSessaoSuccess = useCallback(async () => {
+        // Recarregar blocos de estudo
+        try {
+            const response = await api.get(`/blocoEstudo/plano/${planoSelecionado}`);
+            setBlocosEstudo(response.data || []);
+        } catch (error) {
+            toast.error('Erro ao salvar planejamento: ' + (error.response?.data?.message || error.message));
         }
-
-        return dias;
-    };
-
-    const getBlocosDoDia = (diaSemana) => {
-        const blocosFiltrados = blocosEstudo
-            .filter(bloco => bloco.diaSemana === diaSemana)
-            .sort((a, b) => a.ordem - b.ordem);
-
-        if (blocosFiltrados.length > 0) {
-            const ids = blocosFiltrados.map(b => b.id).join(',');
-            console.log(`📅 Dia ${diaSemana}: ${blocosFiltrados.length} blocos (IDs: ${ids})`);
-        }
-
-        return blocosFiltrados;
-    };
-
-    const calcularTotalHoras = (diaSemana) => {
-        const blocos = getBlocosDoDia(diaSemana);
-        return blocos.reduce((total, bloco) => total + Number(bloco.totalHorasPlanejadas), 0);
-    };
-
-    const renderBlocoCard = (bloco) => {
-        // O backend retorna bloco.disciplina com os dados completos
-        const disciplina = bloco.disciplina || disciplinasPlano.find(d => d.id === bloco.disciplinaId);
-
-        return (
-            <div key={bloco.id} className="sessao-card" style={{ borderLeftColor: disciplina?.cor || '#ccc' }}>
-                <div className="sessao-card-header">
-                    <div className="sessao-categoria">
-                        <FontAwesomeIcon icon={faBook} />
-                        <span>Bloco {bloco.ordem}</span>
-                    </div>
-                    <div className="sessao-tempo">
-                        <FontAwesomeIcon icon={faClock} />
-                        <span>{horasToHHMM(Number(bloco.totalHorasPlanejadas))}</span>
-                    </div>
-                </div>
-                <h4 className="sessao-disciplina">{disciplina?.titulo || 'Disciplina não encontrada'}</h4>
-            </div>
-        );
-    };
-
-    const renderBlocoCardMensal = (bloco) => {
-        // O backend retorna bloco.disciplina com os dados completos
-        const disciplina = bloco.disciplina || disciplinasPlano.find(d => d.id === bloco.disciplinaId);
-
-        return (
-            <div key={bloco.id} className="sessao-card-mensal" style={{ borderLeftColor: disciplina?.cor || '#ccc' }}>
-                <div className="sessao-mensal-info">
-                    <FontAwesomeIcon icon={faBook} className="sessao-mensal-icon" />
-                    <span className="sessao-mensal-disciplina">{disciplina?.titulo || 'N/A'}</span>
-                </div>
-                <span className="sessao-mensal-tempo">{horasToHHMM(Number(bloco.totalHorasPlanejadas))}</span>
-            </div>
-        );
-    };
-
-    const renderVisualizacaoSemanal = () => {
-        console.log('🔄 Renderizando visualização semanal com', blocosEstudo.length, 'blocos no estado');
-        return (
-            <div className="calendario-semanal">
-                {diasSemanaOptions.map((dia) => {
-                    const blocos = getBlocosDoDia(dia.id);
-                    const totalHoras = calcularTotalHoras(dia.id);
-
-                    return (
-                        <div key={dia.id} className="dia-coluna">
-                            <div className="dia-header">
-                                <h3 className="dia-nome">{dia.sigla}</h3>
-                                {totalHoras > 0 && (
-                                    <span className="dia-total-horas">
-                                        <FontAwesomeIcon icon={faClock} />
-                                        {horasToHHMM(totalHoras)}
-                                    </span>
-                                )}
-                            </div>
-                            <div className="dia-sessoes">
-                                {blocos.length > 0 ? (
-                                    blocos.map(bloco => renderBlocoCard(bloco))
-                                ) : (
-                                    <div className="dia-vazio">
-                                        <p>Nenhum bloco planejado</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-
-    const renderVisualizacaoMensal = () => {
-        console.log('🔄 Renderizando visualização mensal com', blocosEstudo.length, 'blocos no estado');
-        const dias = getDiasDoMes();
-
-        return (
-            <div className="calendario-mensal">
-                {/* Cabeçalhos dos dias da semana */}
-                <div className="calendario-mensal-header">
-                    {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((dia, index) => (
-                        <div key={index} className="calendario-mensal-dia-semana">
-                            {dia}
-                        </div>
-                    ))}
-                </div>
-
-                {/* Grid de dias */}
-                <div className="calendario-mensal-grid">
-                    {dias.map((diaInfo, index) => {
-                        const diaSemana = diaInfo.data.getDay();
-                        const blocos = getBlocosDoDia(diaSemana);
-                        const totalHoras = calcularTotalHoras(diaSemana);
-
-                        return (
-                            <div
-                                key={index}
-                                className={`calendario-mensal-dia ${diaInfo.mesAtual ? 'mes-atual' : 'mes-outro'
-                                    } ${blocos.length > 0 ? 'com-sessoes' : ''
-                                    }`}
-                            >
-                                <div className="dia-mensal-header">
-                                    <span className="dia-mensal-numero">{diaInfo.dia}</span>
-                                    {totalHoras > 0 && (
-                                        <span className="dia-mensal-total">
-                                            <FontAwesomeIcon icon={faClock} />
-                                            {horasToHHMM(totalHoras)}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="dia-mensal-sessoes">
-                                    {blocos.map(bloco => renderBlocoCardMensal(bloco))}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        );
-    };
+    }, [planoSelecionado]);
 
     return (
         <Layout>
@@ -478,47 +347,25 @@ const Planejamento = () => {
                 <div className="studium-page-header planejamento-header">
                     <div className="planejamento-header-left">
                         <h2 className="studium-page-title">Planejamento de Estudos</h2>
-                        <div className="plano-selector">
-                            <label htmlFor="planoSelect" className="plano-selector-label">
-                                Plano de Estudo:
-                            </label>
-                            {loadingPlanos ? (
-                                <span>Carregando planos...</span>
-                            ) : (
-                                <select
-                                    id="planoSelect"
-                                    value={planoSelecionado || ''}
-                                    onChange={(e) => {
-                                        const novoPlano = Number(e.target.value);
-                                        console.log('🔀 Trocando plano de', planoSelecionado, 'para', novoPlano);
-                                        setPlanoSelecionado(novoPlano);
-                                    }}
-                                    className="plano-select"
-                                    disabled={!planosEstudo || planosEstudo.length === 0}
-                                >
-                                    {planosEstudo && planosEstudo.length > 0 ? (
-                                        planosEstudo.map(plano => (
-                                            <option key={plano.id} value={plano.id}>
-                                                {plano.titulo}
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <option value="">Nenhum plano disponível</option>
-                                    )}
-                                </select>
-                            )}
-                        </div>
                     </div>
                     <div className="planejamento-header-right">
                         {blocosEstudo && blocosEstudo.length > 0 ? (
-                            <button className="btn btn-primary" onClick={handleAjustarPlanejamento}>
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleAbrirFormulario}
+                                disabled={!planoSelecionado}
+                            >
                                 <FontAwesomeIcon icon={faEdit} />
                                 Ajustar Planejamento
                             </button>
                         ) : (
-                            <button className="btn btn-primary" onClick={handleCriarPlanejamento}>
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleAbrirFormulario}
+                                disabled={!planoSelecionado}
+                            >
                                 <FontAwesomeIcon icon={faPlus} />
-                                Criar Novo Planejamento
+                                Novo Planejamento
                             </button>
                         )}
                     </div>
@@ -532,7 +379,9 @@ const Planejamento = () => {
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </button>
                             <span className="periodo-texto">
-                                {visualizacao === 'semanal' ? formatarPeriodoSemana() : formatarPeriodoMensal()}
+                                {visualizacao === VISUALIZACAO_SEMANAL
+                                    ? formatarPeriodoSemana(semanaAtual)
+                                    : formatarPeriodoMensal(mesAtual)}
                             </span>
                             <button className="btn btn-icon" onClick={handleProximo}>
                                 <FontAwesomeIcon icon={faChevronRight} />
@@ -541,15 +390,15 @@ const Planejamento = () => {
 
                         <div className="visualizacao-toggle">
                             <button
-                                className={`btn btn-toggle ${visualizacao === 'semanal' ? 'active' : ''}`}
-                                onClick={() => setVisualizacao('semanal')}
+                                className={`btn btn-toggle ${visualizacao === VISUALIZACAO_SEMANAL ? 'active' : ''}`}
+                                onClick={() => setVisualizacao(VISUALIZACAO_SEMANAL)}
                             >
                                 <FontAwesomeIcon icon={faCalendarWeek} />
                                 Semanal
                             </button>
                             <button
-                                className={`btn btn-toggle ${visualizacao === 'mensal' ? 'active' : ''}`}
-                                onClick={() => setVisualizacao('mensal')}
+                                className={`btn btn-toggle ${visualizacao === VISUALIZACAO_MENSAL ? 'active' : ''}`}
+                                onClick={() => setVisualizacao(VISUALIZACAO_MENSAL)}
                             >
                                 <FontAwesomeIcon icon={faCalendarAlt} />
                                 Mensal
@@ -566,13 +415,28 @@ const Planejamento = () => {
                         </div>
                     ) : (
                         <>
-                            {visualizacao === 'semanal' && renderVisualizacaoSemanal()}
-                            {visualizacao === 'mensal' && renderVisualizacaoMensal()}
+                            {visualizacao === VISUALIZACAO_SEMANAL && (
+                                <BoardViewSemanal
+                                    blocosPorDia={blocosPorDia}
+                                    horasPorDia={horasPorDia}
+                                    disciplinasMap={disciplinasMap}
+                                    onBlocoClick={handleBlocoClick}
+                                />
+                            )}
+                            {visualizacao === VISUALIZACAO_MENSAL && (
+                                <BoardViewMensal
+                                    diasDoMes={diasDoMes}
+                                    blocosPorDia={blocosPorDia}
+                                    horasPorDia={horasPorDia}
+                                    disciplinasMap={disciplinasMap}
+                                    onBlocoClick={handleBlocoClick}
+                                />
+                            )}
                         </>
                     )}
                 </div>
 
-                {/* Modal de Formulário */}
+                {/* Modal de Formulário de Planejamento */}
                 <PlanejamentoForm
                     planoEstudoId={planoSelecionado}
                     disciplinas={disciplinasPlano}
@@ -580,6 +444,19 @@ const Planejamento = () => {
                     isOpen={isFormOpen}
                     onClose={() => setIsFormOpen(false)}
                     onSubmit={handleFormSubmit}
+                />
+
+                {/* Modal de Formulário de Sessão de Estudo */}
+                <SessaoEstudoForm
+                    isOpen={isSessaoFormOpen}
+                    onClose={() => {
+                        setIsSessaoFormOpen(false);
+                        setBlocoSelecionado(null);
+                    }}
+                    blocoEstudo={blocoSelecionado}
+                    disciplina={blocoSelecionado ? disciplinasMap.get(blocoSelecionado.disciplinaId) : null}
+                    planoEstudoId={planoSelecionado}
+                    onSuccess={handleSessaoSuccess}
                 />
             </div>
         </Layout>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faFloppyDisk, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { diasSemanaOptions, horasToHHMM, hhmmToHoras } from '../utils/utils';
 import { toast } from 'react-toastify';
 import './PlanejamentoForm.css';
@@ -33,8 +33,8 @@ const PlanejamentoForm = ({ planoEstudoId, disciplinas, blocosAtuais, isOpen, on
                 id: d.id,
                 titulo: d.titulo,
                 cor: d.cor || '#FFFFFF',
-                importancia: Number(d.importancia) || 2.5,
-                conhecimento: Number(d.conhecimento) || 2.5,
+                importancia: Number(d.importancia) || 1.0,
+                conhecimento: Number(d.conhecimento) || 0.0,
                 horasSemanais: Number(d.horasSemanais) || 0,
                 selecionada: d.selecionada !== undefined ? d.selecionada : true // Usa valor do banco ou true por padrão
             }));
@@ -422,13 +422,9 @@ const PlanejamentoForm = ({ planoEstudoId, disciplinas, blocosAtuais, isOpen, on
             (total, d) => total + (d.horasSemanais || 0),
             0
         );
-        const totalHorasDias = formData.diasEstudo.reduce(
-            (total, d) => total + (d.horasPlanejadas || 0),
-            0
-        );
 
         if (totalHorasDisciplinas === 0) {
-            newErrors.horas = 'Configure as horas semanais das disciplinas (use o botão "Distribuir Automaticamente")';
+            newErrors.horas = 'Configure as horas semanais das disciplinas';
         }
 
         setErrors(newErrors);
@@ -474,18 +470,8 @@ const PlanejamentoForm = ({ planoEstudoId, disciplinas, blocosAtuais, isOpen, on
         onClose();
     };
 
-    const handleCancel = () => {
-        onClose();
-    };
-
     const getTotalHorasSemana = () => {
         return formData.diasEstudo.reduce((total, dia) => total + (dia.horasPlanejadas || 0), 0);
-    };
-
-    const getTotalHorasDisciplinas = () => {
-        return formData.disciplinas
-            .filter(d => d.selecionada)
-            .reduce((total, d) => total + (d.horasSemanais || 0), 0);
     };
 
     const getDisciplinasSelecionadas = () => {

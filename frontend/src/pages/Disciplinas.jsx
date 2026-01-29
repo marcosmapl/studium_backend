@@ -4,7 +4,7 @@ import Layout from '../components/Layout/Layout';
 import DisciplinaForm from '../components/DisciplinaForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import TopicosModal from '../components/TopicosModal';
-import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData';
+import { usePlanoEstudoContext } from '../contexts/PlanoEstudoContext';
 import { useAuth } from '../contexts/AuthContext';
 import { getDisciplinasByPlanoId, createDisciplina, updateDisciplina, deleteDisciplina } from '../services/api';
 import { formatDateToLocaleString, calculateTotalHours, calculatePerformance, calculateTopicCoverage } from '../utils/utils';
@@ -31,8 +31,8 @@ const Disciplinas = () => {
     const { usuario } = useAuth();
     const location = useLocation();
 
-    // Hook customizado para carregar planos de estudo
-    const { loading: loadingPlanos, planosEstudo } = usePlanoEstudoData(usuario?.id);
+    // Contexto global do plano de estudo
+    const { planoSelecionado } = usePlanoEstudoContext();
 
     // Estado para controle do modal
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,22 +46,8 @@ const Disciplinas = () => {
     const [isTopicosModalOpen, setIsTopicosModalOpen] = useState(false);
     const [disciplinaSelecionada, setDisciplinaSelecionada] = useState(null);
 
-    // Estado para o plano selecionado - pega do state de navegação ou primeiro plano
-    const [planoSelecionado, setPlanoSelecionado] = useState(null);
     const [disciplinas, setDisciplinas] = useState([]);
     const [loadingDisciplinas, setLoadingDisciplinas] = useState(false);
-
-    // Inicializa plano selecionado quando planos carregarem
-    useEffect(() => {
-        if (planosEstudo && planosEstudo.length > 0) {
-            // Se veio de navegação com planoId, usa ele, senão usa o primeiro
-            const planoIdFromNav = location.state?.planoId;
-            const planoInicial = planoIdFromNav
-                ? planosEstudo.find(p => p.id === planoIdFromNav)?.id || planosEstudo[0].id
-                : planosEstudo[0].id;
-            setPlanoSelecionado(planoInicial);
-        }
-    }, [planosEstudo, location.state]);
 
     // Carregar disciplinas quando plano mudar
     useEffect(() => {
@@ -71,7 +57,6 @@ const Disciplinas = () => {
             setLoadingDisciplinas(true);
             try {
                 const response = await getDisciplinasByPlanoId(planoSelecionado);
-                // console.log('Disciplinas carregadas:', response.data);
                 setDisciplinas(response.data || []);
             } catch (error) {
                 if (error.response?.status !== 404) {
@@ -120,7 +105,6 @@ const Disciplinas = () => {
             }
             handleCloseModal();
         } catch (error) {
-            console.error('Erro ao salvar disciplina:', error);
             toast.error(error.response?.data?.error || 'Erro ao salvar disciplina');
         }
     };
@@ -137,7 +121,6 @@ const Disciplinas = () => {
                 setDisciplinas(disciplinas.filter(d => d.id !== disciplinaParaExcluir.id));
                 toast.success('Disciplina excluída com sucesso!');
             } catch (error) {
-                console.error('Erro ao excluir disciplina:', error);
                 toast.error(error.response?.data?.error || 'Erro ao excluir disciplina');
             }
         }
@@ -166,32 +149,6 @@ const Disciplinas = () => {
                 <div className="studium-page-header disciplinas-header">
                     <div className="disciplinas-header-left">
                         <h2 className="studium-page-title">Disciplinas</h2>
-                        <div className="plano-selector">
-                            <label htmlFor="planoSelect" className="plano-selector-label">
-                                Plano de Estudo:
-                            </label>
-                            {loadingPlanos ? (
-                                <span>Carregando planos...</span>
-                            ) : (
-                                <select
-                                    id="planoSelect"
-                                    value={planoSelecionado || ''}
-                                    onChange={(e) => setPlanoSelecionado(Number(e.target.value))}
-                                    className="plano-select"
-                                    disabled={!planosEstudo || planosEstudo.length === 0}
-                                >
-                                    {planosEstudo && planosEstudo.length > 0 ? (
-                                        planosEstudo.map(plano => (
-                                            <option key={plano.id} value={plano.id}>
-                                                {plano.titulo}
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <option value="">Nenhum plano disponível</option>
-                                    )}
-                                </select>
-                            )}
-                        </div>
                     </div>
                     <div className="disciplinas-header-right">
                         <button
@@ -219,11 +176,11 @@ const Disciplinas = () => {
                     <div className="disciplinas-lista">
                         {disciplinas.length === 0 ? (
                             <div className="disciplinas-vazio">
-                                <p>Nenhuma disciplina cadastrada para este plano.</p>
-                                <button className="btn btn btn-primary" onClick={handleNovaDisciplina}>
-                                    <FontAwesomeIcon icon={faPlus} />
-                                    Adicionar Primeira Disciplina
-                                </button>
+                                <p>
+                                    {!planoSelecionado
+                                        ? 'Selecione um plano de estudo para gerenciar disciplinas.'
+                                        : 'Nenhuma disciplina cadastrada para este plano.'}
+                                </p>
                             </div>
                         ) : (
                             disciplinas.map((disciplina) => (

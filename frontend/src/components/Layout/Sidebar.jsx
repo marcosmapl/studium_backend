@@ -9,10 +9,10 @@ import {
     faFileAlt, 
     faCalendarAlt, 
     faRotate, 
-    faChartBar, 
     faChartLine, 
     faPenToSquare, 
-    faLightbulb 
+    faLightbulb,
+    faClockRotateLeft
 } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
 
@@ -25,12 +25,12 @@ const Sidebar = ({ isOpen }) => {
         { id: 'home', label: 'Home', icon: faHome, path: '/dashboard' },
         { id: 'planos', label: 'Planos de Estudo', icon: faClipboardList, path: '/planos' },
         { id: 'disciplinas', label: 'Disciplinas', icon: faBook, path: '/disciplinas' },
-        { id: 'edital', label: 'Edital', icon: faFileAlt, path: '/edital' },
+        // { id: 'edital', label: 'Edital', icon: faFileAlt, path: '/edital' },
         { id: 'planejamento', label: 'Planejamento', icon: faCalendarAlt, path: '/planejamento' },
-        { id: 'revisoes', label: 'Revisões', icon: faRotate, path: '/revisoes' },
-        { id: 'historico', label: 'Histórico', icon: faChartBar, path: '/historico' },
-        { id: 'estatisticas', label: 'Estatísticas', icon: faChartLine, path: '/estatisticas' },
-        { id: 'simulados', label: 'Simulados', icon: faPenToSquare, path: '/simulados' },
+        // { id: 'revisoes', label: 'Revisões', icon: faRotate, path: '/revisoes' },
+        { id: 'historico', label: 'Histórico', icon: faClockRotateLeft, path: '/historico' },
+        // { id: 'estatisticas', label: 'Estatísticas', icon: faChartLine, path: '/estatisticas' },
+        // { id: 'simulados', label: 'Simulados', icon: faPenToSquare, path: '/simulados' },
         { id: 'dicas', label: 'Dicas de Estudo', icon: faLightbulb, path: '/dicas' },
     ];
 

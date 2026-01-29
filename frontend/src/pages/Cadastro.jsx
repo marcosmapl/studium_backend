@@ -50,7 +50,6 @@ const Cadastro = () => {
                 // Limpa a cidade selecionada ao mudar a UF
                 setFormData(prev => ({ ...prev, cidadeId: '' }));
             } catch (error) {
-                console.error('Erro ao carregar cidades:', error);
                 toast.error('Erro ao carregar cidades');
                 setCidades([]);
             }
@@ -151,8 +150,6 @@ const Cadastro = () => {
             // Redirecionar para login com o nome de usuário preenchido
             navigate('/', { state: { username: formData.username } });
         } catch (error) {
-            console.error('Erro ao cadastrar:', error);
-
             if (error.response?.status === 409) {
                 // Conflito - usuário ou email já existe
                 const mensagem = error.response.data?.message || 'Usuário ou e-mail já cadastrado';

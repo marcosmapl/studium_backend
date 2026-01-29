@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePlanoEstudoContext } from '../../contexts/PlanoEstudoContext';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faCog, faCreditCard, faLightbulb, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +8,7 @@ import './Navbar.css';
 
 const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
     const { usuario, logout } = useAuth();
+    const { planoSelecionado, setPlanoSelecionado, planosEstudo, loadingPlanos } = usePlanoEstudoContext();
     const [showNotifications, setShowNotifications] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
@@ -44,6 +46,30 @@ const Navbar = ({ onToggleSidebar, sidebarOpen }) => {
                     </span>
 
                     <div className="studium-nav-actions">
+                        {/* Seletor de Plano de Estudo */}
+                        <div className="studium-nav-plano-selector">
+                            {loadingPlanos ? (
+                                <span className="studium-nav-plano-loading">Carregando...</span>
+                            ) : (
+                                <select
+                                    value={planoSelecionado || ''}
+                                    onChange={(e) => setPlanoSelecionado(Number(e.target.value))}
+                                    className="studium-nav-plano-select"
+                                    disabled={!planosEstudo || planosEstudo.length === 0}
+                                >
+                                    {planosEstudo && planosEstudo.length > 0 ? (
+                                        planosEstudo.map(plano => (
+                                            <option key={plano.id} value={plano.id}>
+                                                {plano.titulo}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value="">Nenhum plano disponível</option>
+                                    )}
+                                </select>
+                            )}
+                        </div>
+
                         {/* Ícone de Notificações */}
                         <div className="studium-nav-action-wrapper">
                             <button

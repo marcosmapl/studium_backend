@@ -596,3 +596,48 @@ button.btn.btn-icon:hover {
         font-size: 0.6rem;
     }
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ESTILOS PARA BLOCOS CLICÁVEIS E CONCLUÍDOS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.sessao-card-clickable {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sessao-card-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sessao-card-concluido {
+    position: relative;
+    filter: grayscale(30%);
+}
+
+.sessao-card-concluido::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(0, 0, 0, 0.02) 10px,
+            rgba(0, 0, 0, 0.02) 20px);
+    pointer-events: none;
+}
+
+.bloco-badge-icon {
+    margin-left: 0.5rem;
+    color: #10b981;
+    font-size: 0.875rem;
+}
+
+.bloco-badge-icon-small {
+    margin-left: 0.25rem;
+    color: #10b981;
+    font-size: 0.75rem;
+}
