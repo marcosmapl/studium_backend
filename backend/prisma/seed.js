@@ -87,182 +87,8 @@ async function main() {
 
     logger.info("Usuário admin criado");
 
-    // Criar PlanoEstudo exemplo
-    const planoEstudo = await prisma.planoEstudo.upsert({
-        where: {
-            titulo_usuarioId: {
-                titulo: "Plano de Estudos - Concurso Exemplo",
-                usuarioId: usuarioAdmin.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Plano de Estudos - Concurso Exemplo",
-            concurso: "Concurso Público Federal",
-            cargo: "Analista",
-            banca: "CESPE",
-            dataProva: new Date("2026-06-15"),
-            situacao: "EM_ANDAMENTO",
-            segunda_horas: 3.0,
-            segunda_ativo: true,
-            terca_horas: 3.0,
-            terca_ativo: true,
-            quarta_horas: 3.0,
-            quarta_ativo: true,
-            quinta_horas: 3.0,
-            quinta_ativo: true,
-            sexta_horas: 3.0,
-            sexta_ativo: true,
-            sabado_horas: 5.0,
-            sabado_ativo: true,
-            domingo_horas: 5.0,
-            domingo_ativo: true,
-            usuarioId: usuarioAdmin.id,
-        },
-    });
-
-    logger.info("PlanoEstudo criado");
-
-    // Criar Disciplinas
-    const disciplinaPortugues = await prisma.disciplina.upsert({
-        where: {
-            titulo_planoId: {
-                titulo: "Língua Portuguesa",
-                planoId: planoEstudo.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Língua Portuguesa",
-            cor: "#FF6B6B",
-            importancia: 5.0,
-            conhecimento: 3.0,
-            horasSemanais: 8.0,
-            planoId: planoEstudo.id,
-        },
-    });
-
-    const disciplinaRaciocinio = await prisma.disciplina.upsert({
-        where: {
-            titulo_planoId: {
-                titulo: "Raciocínio Lógico",
-                planoId: planoEstudo.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Raciocínio Lógico",
-            cor: "#4ECDC4",
-            importancia: 4.5,
-            conhecimento: 2.5,
-            horasSemanais: 6.0,
-            planoId: planoEstudo.id,
-        },
-    });
-
-    const disciplinaDireito = await prisma.disciplina.upsert({
-        where: {
-            titulo_planoId: {
-                titulo: "Direito Constitucional",
-                planoId: planoEstudo.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Direito Constitucional",
-            cor: "#95E1D3",
-            importancia: 5.0,
-            conhecimento: 2.0,
-            horasSemanais: 10.0,
-            planoId: planoEstudo.id,
-        },
-    });
-
-    logger.info("Disciplinas criadas");
-
-    // Criar Tópicos
-    const topico1 = await prisma.topico.upsert({
-        where: {
-            titulo_disciplinaId: {
-                titulo: "Sintaxe",
-                disciplinaId: disciplinaPortugues.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Sintaxe",
-            ordem: 1,
-            estabilidade: 2.0,
-            dificuldade: 3.5,
-            disciplinaId: disciplinaPortugues.id,
-        },
-    });
-
-    const topico2 = await prisma.topico.upsert({
-        where: {
-            titulo_disciplinaId: {
-                titulo: "Semântica",
-                disciplinaId: disciplinaPortugues.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Semântica",
-            ordem: 2,
-            estabilidade: 2.5,
-            dificuldade: 3.0,
-            disciplinaId: disciplinaPortugues.id,
-        },
-    });
-
-    const topico3 = await prisma.topico.upsert({
-        where: {
-            titulo_disciplinaId: {
-                titulo: "Proposições Lógicas",
-                disciplinaId: disciplinaRaciocinio.id,
-            },
-        },
-        update: {},
-        create: {
-            titulo: "Proposições Lógicas",
-            ordem: 1,
-            estabilidade: 1.5,
-            dificuldade: 4.0,
-            disciplinaId: disciplinaRaciocinio.id,
-        },
-    });
-
-    logger.info("Tópicos criados");
-
-    // Criar BlocoEstudo
-    await prisma.blocoEstudo.deleteMany({
-        where: { planoEstudoId: planoEstudo.id }
-    });
-
-    const blocoEstudo1 = await prisma.blocoEstudo.create({
-        data: {
-            ordem: 1,
-            diaSemana: 1, // Segunda-feira
-            totalHorasPlanejadas: 3.0,
-            planoEstudoId: planoEstudo.id,
-            disciplinaId: disciplinaPortugues.id,
-        },
-    });
-
-    const blocoEstudo2 = await prisma.blocoEstudo.create({
-        data: {
-            ordem: 1,
-            diaSemana: 2, // Terça-feira
-            totalHorasPlanejadas: 3.0,
-            planoEstudoId: planoEstudo.id,
-            disciplinaId: disciplinaRaciocinio.id,
-        },
-    });
-
-    logger.info("BlocoEstudo criados");
-
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // PLANO 2: TRF - Tribunal Regional Federal
+    // PLANO 1: TRF - Tribunal Regional Federal
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     const planoTRF = await prisma.planoEstudo.upsert({
@@ -280,20 +106,20 @@ async function main() {
             banca: "CESPE/CEBRASPE",
             dataProva: new Date("2026-08-20"),
             situacao: "NOVO",
-            segunda_horas: 4.0,
-            segunda_ativo: true,
-            terca_horas: 4.0,
-            terca_ativo: true,
-            quarta_horas: 4.0,
-            quarta_ativo: true,
-            quinta_horas: 4.0,
-            quinta_ativo: true,
-            sexta_horas: 4.0,
-            sexta_ativo: true,
-            sabado_horas: 6.0,
-            sabado_ativo: true,
-            domingo_horas: 4.0,
-            domingo_ativo: true,
+            segunda_horas: 0.0,
+            segunda_ativo: false,
+            terca_horas: 0.0,
+            terca_ativo: false,
+            quarta_horas: 0.0,
+            quarta_ativo: false,
+            quinta_horas: 0.0,
+            quinta_ativo: false,
+            sexta_horas: 0.0,
+            sexta_ativo: false,
+            sabado_horas: 0.0,
+            sabado_ativo: false,
+            domingo_horas: 0.0,
+            domingo_ativo: false,
             usuarioId: usuarioAdmin.id,
         },
     });
@@ -315,7 +141,7 @@ async function main() {
             cor: "#4ECDC4",
             importancia: 5.0,
             conhecimento: 2.0,
-            horasSemanais: 8.0,
+            horasSemanais: 0.0,
             planoId: planoTRF.id,
         },
     });
@@ -326,7 +152,7 @@ async function main() {
             cor: "#FF6B6B",
             importancia: 5.0,
             conhecimento: 2.5,
-            horasSemanais: 8.0,
+            horasSemanais: 0.0,
             planoId: planoTRF.id,
         },
     });
@@ -337,7 +163,7 @@ async function main() {
             cor: "#95E1D3",
             importancia: 3.0,
             conhecimento: 4.0,
-            horasSemanais: 4.0,
+            horasSemanais: 0.0,
             planoId: planoTRF.id,
         },
     });
@@ -372,7 +198,7 @@ async function main() {
     logger.info("Plano TRF criado com disciplinas e tópicos");
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // PLANO 3: Polícia Federal
+    // PLANO 2: Polícia Federal
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     const planoPF = await prisma.planoEstudo.upsert({
@@ -390,20 +216,20 @@ async function main() {
             banca: "CESPE/CEBRASPE",
             dataProva: new Date("2026-10-15"),
             situacao: "CONCLUIDO",
-            segunda_horas: 5.0,
-            segunda_ativo: true,
-            terca_horas: 5.0,
-            terca_ativo: true,
-            quarta_horas: 5.0,
-            quarta_ativo: true,
-            quinta_horas: 5.0,
-            quinta_ativo: true,
-            sexta_horas: 5.0,
-            sexta_ativo: true,
-            sabado_horas: 8.0,
-            sabado_ativo: true,
-            domingo_horas: 6.0,
-            domingo_ativo: true,
+            segunda_horas: 0.0,
+            segunda_ativo: false,
+            terca_horas: 0.0,
+            terca_ativo: false,
+            quarta_horas: 0.0,
+            quarta_ativo: false,
+            quinta_horas: 0.0,
+            quinta_ativo: false,
+            sexta_horas: 0.0,
+            sexta_ativo: false,
+            sabado_horas: 0.0,
+            sabado_ativo: false,
+            domingo_horas: 0.0,
+            domingo_ativo: false,
             usuarioId: usuarioAdmin.id,
         },
     });
@@ -425,7 +251,7 @@ async function main() {
             cor: "#F38181",
             importancia: 5.0,
             conhecimento: 1.5,
-            horasSemanais: 10.0,
+            horasSemanais: 0.0,
             planoId: planoPF.id,
         },
     });
@@ -434,9 +260,9 @@ async function main() {
         data: {
             titulo: "Direito Processual Penal",
             cor: "#AA96DA",
-            importancia: 5.0,
+            importancia: 1.0,
             conhecimento: 1.5,
-            horasSemanais: 10.0,
+            horasSemanais: 0.0,
             planoId: planoPF.id,
         },
     });
@@ -447,7 +273,7 @@ async function main() {
             cor: "#FCBAD3",
             importancia: 4.5,
             conhecimento: 2.0,
-            horasSemanais: 8.0,
+            horasSemanais: 0.0,
             planoId: planoPF.id,
         },
     });
@@ -483,7 +309,7 @@ async function main() {
     logger.info("Plano Polícia Federal criado com disciplinas e tópicos");
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // PLANO 4: TCU - Tribunal de Contas da União
+    // PLANO 3: TCU - Tribunal de Contas da União
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     const planoTCU = await prisma.planoEstudo.upsert({
@@ -501,20 +327,20 @@ async function main() {
             banca: "CESPE/CEBRASPE",
             dataProva: new Date("2027-03-10"),
             situacao: "NOVO",
-            segunda_horas: 6.0,
-            segunda_ativo: true,
-            terca_horas: 6.0,
-            terca_ativo: true,
-            quarta_horas: 6.0,
-            quarta_ativo: true,
-            quinta_horas: 6.0,
-            quinta_ativo: true,
-            sexta_horas: 6.0,
-            sexta_ativo: true,
-            sabado_horas: 8.0,
-            sabado_ativo: true,
-            domingo_horas: 8.0,
-            domingo_ativo: true,
+            segunda_horas: 0.0,
+            segunda_ativo: false,
+            terca_horas: 0.0,
+            terca_ativo: false,
+            quarta_horas: 0.0,
+            quarta_ativo: false,
+            quinta_horas: 0.0,
+            quinta_ativo: false,
+            sexta_horas: 0.0,
+            sexta_ativo: false,
+            sabado_horas: 0.0,
+            sabado_ativo: false,
+            domingo_horas: 0.0,
+            domingo_ativo: false,
             usuarioId: usuarioAdmin.id,
         },
     });
@@ -536,7 +362,7 @@ async function main() {
             cor: "#A8E6CF",
             importancia: 5.0,
             conhecimento: 1.0,
-            horasSemanais: 12.0,
+            horasSemanais: 0.0,
             planoId: planoTCU.id,
         },
     });
@@ -547,7 +373,7 @@ async function main() {
             cor: "#FFD3B6",
             importancia: 5.0,
             conhecimento: 1.5,
-            horasSemanais: 10.0,
+            horasSemanais: 0.0,
             planoId: planoTCU.id,
         },
     });
@@ -558,7 +384,7 @@ async function main() {
             cor: "#FFAAA5",
             importancia: 4.5,
             conhecimento: 2.0,
-            horasSemanais: 8.0,
+            horasSemanais: 0.0,
             planoId: planoTCU.id,
         },
     });

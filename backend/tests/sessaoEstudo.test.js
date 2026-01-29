@@ -152,12 +152,14 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             expect(response.body[0].planoEstudoId).toBe(planoEstudoTeste.id);
         });
 
-        it("deve retornar 404 quando não houver sessões para o plano", async () => {
+        it("deve retornar array vazio quando não houver sessões para o plano", async () => {
             const response = await request(app)
                 .get("/api/sessaoEstudo/planoEstudo/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -173,12 +175,14 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             expect(response.body[0].disciplinaId).toBe(disciplinaTeste.id);
         });
 
-        it("deve retornar 404 quando não houver sessões para a disciplina", async () => {
+        it("deve retornar array vazio quando não houver sessões para a disciplina", async () => {
             const response = await request(app)
                 .get("/api/sessaoEstudo/disciplina/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -194,12 +198,14 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             expect(response.body[0].topicoId).toBe(topicoTeste.id);
         });
 
-        it("deve retornar 404 quando não houver sessões para o tópico", async () => {
+        it("deve retornar array vazio quando não houver sessões para o tópico", async () => {
             const response = await request(app)
                 .get("/api/sessaoEstudo/topico/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -215,12 +221,14 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             expect(response.body[0].blocoEstudoId).toBe(blocoEstudoTeste.id);
         });
 
-        it("deve retornar 404 quando não houver sessões para o bloco", async () => {
+        it("deve retornar array vazio quando não houver sessões para o bloco", async () => {
             const response = await request(app)
                 .get("/api/sessaoEstudo/blocoEstudo/99999")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -236,12 +244,14 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             expect(response.body[0].categoriaSessao).toBe("TEORIA");
         });
 
-        it("deve retornar 404 quando não houver sessões para a categoria", async () => {
+        it("deve retornar array vazio quando não houver sessões para a categoria", async () => {
             const response = await request(app)
                 .get("/api/sessaoEstudo/categoria/LEITURA")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -257,12 +267,14 @@ describe("Sessão de Estudo - /api/sessaoEstudo", () => {
             expect(response.body[0].situacaoSessao).toBe("AGENDADA");
         });
 
-        it("deve retornar 404 quando não houver sessões para a situação", async () => {
+        it("deve retornar array vazio quando não houver sessões para a situação", async () => {
             const response = await request(app)
                 .get("/api/sessaoEstudo/situacao/CONCLUIDA")
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 

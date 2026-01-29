@@ -133,15 +133,13 @@ router.get("/", verifyToken, controller.findAll);
  *         example: 1
  *     responses:
  *       200:
- *         description: Sessões de estudo encontradas
+ *         description: Sessões de estudo encontradas (array vazio se não houver sessões)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma sessão de estudo encontrada para este plano
  *       401:
  *         description: Não autorizado
  *       500:
@@ -167,15 +165,13 @@ router.get("/planoEstudo/:planoEstudoId", verifyToken, controller.findManyByPlan
  *         example: 1
  *     responses:
  *       200:
- *         description: Sessões de estudo encontradas
+ *         description: Sessões de estudo encontradas (array vazio se não houver sessões)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma sessão de estudo encontrada para esta disciplina
  *       401:
  *         description: Não autorizado
  *       500:
@@ -201,15 +197,13 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
  *         example: 1
  *     responses:
  *       200:
- *         description: Sessões de estudo encontradas
+ *         description: Sessões de estudo encontradas (array vazio se não houver sessões)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma sessão de estudo encontrada para este tópico
  *       401:
  *         description: Não autorizado
  *       500:
@@ -235,15 +229,13 @@ router.get("/topico/:topicoId", verifyToken, controller.findManyByTopicoId);
  *         example: 1
  *     responses:
  *       200:
- *         description: Sessões de estudo encontradas
+ *         description: Sessões de estudo encontradas (array vazio se não houver sessões)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma sessão de estudo encontrada para este bloco
  *       401:
  *         description: Não autorizado
  *       500:
@@ -270,15 +262,13 @@ router.get("/blocoEstudo/:blocoEstudoId", verifyToken, controller.findManyByBloc
  *         example: TEORIA
  *     responses:
  *       200:
- *         description: Sessões de estudo encontradas
+ *         description: Sessões de estudo encontradas (array vazio se não houver sessões)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma sessão de estudo encontrada para esta categoria
  *       401:
  *         description: Não autorizado
  *       500:
@@ -305,15 +295,13 @@ router.get("/categoria/:categoriaSessao", verifyToken, controller.findManyByCate
  *         example: AGENDADA
  *     responses:
  *       200:
- *         description: Sessões de estudo encontradas
+ *         description: Sessões de estudo encontradas (array vazio se não houver sessões)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
- *       404:
- *         description: Nenhuma sessão de estudo encontrada para esta situação
  *       401:
  *         description: Não autorizado
  *       500:

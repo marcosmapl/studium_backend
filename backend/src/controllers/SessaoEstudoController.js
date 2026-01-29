@@ -31,9 +31,7 @@ class SessaoEstudoController extends BaseController {
                     planoEstudoId: parseInt(planoEstudoId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este plano de estudo`
-                });
+                return res.json([]);
             }
 
             return res.json(sessoes);
@@ -66,9 +64,7 @@ class SessaoEstudoController extends BaseController {
                     disciplinaId: parseInt(disciplinaId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta disciplina`
-                });
+                return res.json([]);
             }
 
             return res.json(sessoes);
@@ -101,9 +97,7 @@ class SessaoEstudoController extends BaseController {
                     topicoId: parseInt(topicoId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este tópico`
-                });
+                return res.json([]);
             }
 
             return res.json(sessoes);
@@ -136,9 +130,7 @@ class SessaoEstudoController extends BaseController {
                     blocoEstudoId: parseInt(blocoEstudoId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este bloco de estudo`
-                });
+                return res.json([]);
             }
 
             return res.json(sessoes);
@@ -171,9 +163,7 @@ class SessaoEstudoController extends BaseController {
                     categoriaSessao: categoriaSessao,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta categoria`
-                });
+                return res.json([]);
             }
 
             return res.json(sessoes);
@@ -206,9 +196,7 @@ class SessaoEstudoController extends BaseController {
                     situacaoSessao: situacaoSessao,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para esta situação`
-                });
+                return res.json([]);
             }
 
             return res.json(sessoes);
