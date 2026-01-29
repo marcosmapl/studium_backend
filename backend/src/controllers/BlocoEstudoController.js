@@ -51,14 +51,8 @@ class BlocoEstudoController extends BaseController {
 
             return res.status(HttpStatus.CREATED).json(resultado);
         } catch (error) {
-            logger.info(`Erro capturado no BlocoEstudoController:`, {
-                errorType: error.constructor.name,
-                errorCode: error.code,
-                isPrismaError: error instanceof Prisma.PrismaClientKnownRequestError,
-            });
-
             // Tratamento específico para violação de constraint única
-            // Verifica o código diretamente (P2002 ou P2003) sem instanceof
+            // Verifica o código diretamente (P2002 ou P2003)
             if (error.code === "P2002") {
                 const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
                 const diaSemanaTexto = diasSemana[req.body.diaSemana] || req.body.diaSemana;

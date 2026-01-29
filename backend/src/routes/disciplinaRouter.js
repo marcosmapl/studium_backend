@@ -238,7 +238,7 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *         example: "Direito"
  *     responses:
  *       200:
- *         description: Disciplinas encontradas
+ *         description: Lista de disciplinas (array vazio se não houver disciplinas com esse padrão)
  *         content:
  *           application/json:
  *             schema:
@@ -268,8 +268,6 @@ router.get("/titulo/exact/:titulo", verifyToken, controller.findUniqueByTitulo);
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
- *       404:
- *         description: Nenhuma disciplina encontrada com esse padrão
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:
@@ -295,7 +293,7 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *         example: 1
  *     responses:
  *       200:
- *         description: Disciplinas encontradas
+ *         description: Lista de disciplinas (array vazio se o plano não tiver disciplinas)
  *         content:
  *           application/json:
  *             schema:
@@ -325,8 +323,6 @@ router.get("/titulo/search/:titulo", verifyToken, controller.findManyByTitulo);
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
- *       404:
- *         description: Nenhuma disciplina encontrada para este plano de estudo
  *       401:
  *         description: Não autorizado - Token inválido ou ausente
  *       500:

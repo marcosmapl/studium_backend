@@ -39,8 +39,8 @@ class DisciplinaController extends BaseController {
                 titulo,
                 cor,
                 concluido: concluido !== undefined ? concluido : false,
-                importancia: importancia !== undefined ? parseInt(importancia) : 1,
-                conhecimento: conhecimento !== undefined ? parseInt(conhecimento) : 0,
+                importancia: importancia !== undefined ? parseFloat(importancia) : 1.0,
+                conhecimento: conhecimento !== undefined ? parseFloat(conhecimento) : 0.0,
                 horasSemanais: horasSemanais !== undefined ? parseFloat(horasSemanais) : 0.0,
                 planoId: parseInt(planoId),
             });
@@ -73,7 +73,7 @@ class DisciplinaController extends BaseController {
                     });
                 }
             }
-            
+
             next(error);
         }
     }
@@ -133,17 +133,15 @@ class DisciplinaController extends BaseController {
                 tituloDecodificado
             );
 
+            // Retorna array vazio se não houver disciplinas (não é erro)
             if (!disciplinas || disciplinas.length === 0) {
                 logger.info(`Nenhuma ${this.entityName} encontrada com esse padrão`, {
                     titulo: tituloDecodificado,
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada com esse padrão`
-                });
             }
 
-            return res.json(disciplinas);
+            return res.json(disciplinas || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por título parcial`, {
                 error: error.message,
@@ -168,17 +166,15 @@ class DisciplinaController extends BaseController {
 
             const disciplinas = await this.repository.findManyByPlanoId(parseInt(planoId));
 
+            // Retorna array vazio se não houver disciplinas (não é erro)
             if (!disciplinas || disciplinas.length === 0) {
                 logger.info(`Nenhuma ${this.entityName} encontrada para este plano de estudo`, {
                     planoId: parseInt(planoId),
                     route: req.originalUrl,
                 });
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    error: `Nenhuma ${this.entityName} encontrada para este plano de estudo`
-                });
             }
 
-            return res.json(disciplinas);
+            return res.json(disciplinas || []);
         } catch (error) {
             logger.error(`Erro ao buscar ${this.entityNamePlural} por plano de estudo`, {
                 error: error.message,

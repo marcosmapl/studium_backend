@@ -195,12 +195,14 @@ describe("Disciplina - /api/disciplina", () => {
             expect(response.body[0].titulo).toContain("Cont");
         });
 
-        it("deve retornar 404 quando não encontrar resultados", async () => {
+        it("deve retornar array vazio quando não encontrar disciplinas com o padrão", async () => {
             const response = await request(app)
                 .get(`/api/disciplina/titulo/search/${encodeURIComponent("XYZ123")}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -216,7 +218,7 @@ describe("Disciplina - /api/disciplina", () => {
             expect(response.body[0].planoId).toBe(seedData.planoEstudo.id);
         });
 
-        it("deve retornar 404 quando plano não tiver disciplinas", async () => {
+        it("deve retornar array vazio quando plano não tiver disciplinas", async () => {
             // Criar plano vazio
             const planoVazio = await prisma.planoEstudo.create({
                 data: {
@@ -230,7 +232,9 @@ describe("Disciplina - /api/disciplina", () => {
                 .get(`/api/disciplina/plano/${planoVazio.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.NOT_FOUND);
+            expect(response.status).toBe(HttpStatus.OK);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
         });
     });
 
@@ -280,7 +284,7 @@ describe("Disciplina - /api/disciplina", () => {
                 .delete(`/api/disciplina/${disciplinaParaExcluir.id}`)
                 .set("Authorization", `Bearer ${token}`);
 
-            expect(response.status).toBe(HttpStatus.OK);
+            expect(response.status).toBe(HttpStatus.NO_CONTENT);
 
             // Verificar se foi excluída
             const checkResponse = await request(app)
