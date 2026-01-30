@@ -1,11 +1,12 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/generate-build-info.js && vite build",
+    "build:prod": "NODE_ENV=production node scripts/generate-build-info.js && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

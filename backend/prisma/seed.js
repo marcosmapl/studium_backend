@@ -12,13 +12,32 @@ async function main() {
         create: { descricao: "Administrador" },
     });
 
-    const grupoUsuario = await prisma.grupoUsuario.upsert({
-        where: { descricao: "Usuário" },
+    const grupoGratuito = await prisma.grupoUsuario.upsert({
+        where: { descricao: "Gratuito" },
         update: {},
-        create: { descricao: "Usuário" },
+        create: { descricao: "Gratuito" },
     });
 
-    logger.info("GrupoUsuario criados");
+    const grupoAssinanteBasico = await prisma.grupoUsuario.upsert({
+        where: { descricao: "Assinante Básico" },
+        update: {},
+        create: { descricao: "Assinante Básico" },
+    });
+
+    const grupoAssinantePremium = await prisma.grupoUsuario.upsert({
+        where: { descricao: "Assinante Premium" },
+        update: {},
+        create: { descricao: "Assinante Premium" },
+    });
+
+    logger.info("GrupoUsuario criados", {
+        ids: {
+            administrador: grupoAdmin.id,
+            gratuito: grupoGratuito.id,
+            assinanteBasico: grupoAssinanteBasico.id,
+            assinantePremium: grupoAssinantePremium.id,
+        },
+    });
 
     // Criar Cidades
     const cidadeSP = await prisma.cidade.upsert({

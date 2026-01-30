@@ -388,6 +388,80 @@ router.get("/disciplina/:disciplinaId", verifyToken, controller.findManyByDiscip
 
 /**
  * @swagger
+ * /api/topico/planoEstudo/{planoEstudoId}:
+ *   get:
+ *     summary: Busca todos os tópicos de um plano de estudo
+ *     tags: [Tópico]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: planoEstudoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do plano de estudo
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Lista de tópicos (array vazio se não houver tópicos para este plano de estudo)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   titulo:
+ *                     type: string
+ *                     example: "Teoria Geral dos Direitos Fundamentais"
+ *                   ordem:
+ *                     type: integer
+ *                     example: 1
+ *                   disciplinaId:
+ *                     type: integer
+ *                     example: 1
+ *                   concluido:
+ *                     type: boolean
+ *                     example: false
+ *                   edital:
+ *                     type: boolean
+ *                     example: true
+ *                   estabilidade:
+ *                     type: number
+ *                     format: decimal
+ *                     example: 1.0
+ *                   dificuldade:
+ *                     type: number
+ *                     format: decimal
+ *                     example: 5.0
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                   disciplina:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       titulo:
+ *                         type: string
+ *                         example: "Contabilidade Geral"
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/planoEstudo/:planoEstudoId", verifyToken, controller.findManyByPlanoEstudoId);
+
+/**
+ * @swagger
  * /api/topico/{id}:
  *   get:
  *     summary: Busca um tópico por ID

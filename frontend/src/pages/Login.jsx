@@ -63,9 +63,26 @@ const Login = () => {
                 <div className="login-logo-wrapper">
                     <div className="login-logo-content">
                         <img src="studium-logo.png" alt="Studium Logo" />
-                    <h1 className="login-logo-title">STUDIUM</h1>
-                    <p className="login-logo-subtitle">Seu sistema de gestão de estudos</p>
+                        <h1 className="login-logo-title">STUDIUM</h1>
                     </div>
+                </div>
+
+                <div className="login-info-section">
+                    <p className="login-info-highlight">
+                        Aprovação não é acaso.<br />
+                        É planejamento, método e decisão correta.
+                    </p>
+                    <p className="login-info-footer">
+                        O STUDIUM transforma o estudo em um processo gerenciável.
+                        <br />
+                        Planeje com estratégia, acompanhe o progresso e ajuste o que não funciona.
+                        <br /><br />
+                        <strong>Menos improviso.</strong> Mais método.
+                        <br />
+                        <strong>Menos promessa.</strong> Mais execução.
+                        <br /><br />
+                        Aqui, o estudo é tratado como projeto — com começo, meio e aprovação.
+                    </p>
                 </div>
             </div>
 
@@ -122,7 +139,7 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={handleEsqueciSenha}
-                            className="login-forgot-link"
+                            className="login-link login-forgot-link"
                         >
                             Esqueci minha senha
                         </button>
@@ -142,7 +159,7 @@ const Login = () => {
                             <button
                                 type="button"
                                 onClick={handleCadastrar}
-                                className="login-register-link"
+                                className="login-link login-register-link"
                             >
                                 Faça seu cadastro aqui!
                             </button>

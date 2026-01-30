@@ -216,6 +216,7 @@ const { verifyToken } = require("../middleware/auth");
  *         description: Erro interno do servidor
  */
 router.post("/", usuarioController.createUsuario); // Rota pública para cadastro
+router.get("/availability", usuarioController.checkAvailability);
 router.get("/", verifyToken, usuarioController.findAllUsuarios);
 
 /**

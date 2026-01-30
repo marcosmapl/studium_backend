@@ -19,11 +19,13 @@
     width: 40%;
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: var(--spacing-3xl);
     position: relative;
     overflow: hidden;
+    gap: var(--spacing-3xl);
 }
 
 .login-left::before {
@@ -33,15 +35,18 @@
     right: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(63, 175, 130, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(63, 175, 130, 0.15) 0%, transparent 70%);
     animation: pulse 15s ease-in-out infinite;
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
         opacity: 0.5;
     }
+
     50% {
         transform: scale(1.1);
         opacity: 0.3;
@@ -51,9 +56,10 @@
 .login-logo-wrapper {
     text-align: center;
     z-index: 1;
+    padding-top: var(--spacing-2xl);
 }
 
-.login-logo-content  {
+.login-logo-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -62,22 +68,12 @@
 
 .login-logo-title {
     font-family: 'Montserrat', 'IBM Plex Sans', sans-serif;
-    font-size: 5rem;
+    font-size: 4rem;
     font-weight: var(--font-weight-extrabold);
     color: var(--color-white);
     letter-spacing: 0.2em;
-    margin: 0;
     text-shadow: 0 4px 20px rgba(63, 175, 130, 0.3);
     animation: fadeInUp 0.8s ease-out;
-}
-
-.login-logo-subtitle {
-    font-size: var(--font-size-lg);
-    color: var(--color-accent-light);
-    margin-top: var(--spacing-lg);
-    font-weight: var(--font-weight-normal);
-    letter-spacing: 0.05em;
-    animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 @keyframes fadeInUp {
@@ -85,10 +81,53 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEÇÃO DE INFORMAÇÕES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.login-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    color: var(--color-white);
+    z-index: 1;
+    max-width: 500px;
+    width: 100%;
+}
+
+.login-info-highlight {
+    background-color: rgba(63, 175, 130, 0.2);
+    color: var(--color-accent-light);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    line-height: 1.6;
+    padding: var(--spacing-md);
+    border-left: 3px solid var(--color-accent-light);
+}
+
+.login-info-text {
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+    opacity: 0.9;
+    margin: 0;
+    text-align: left;
+}
+
+.login-info-footer {
+    background-color: rgba(142, 160, 153, 0.2);
+    font-size: var(--font-size-sm);
+    line-height: 1.8;
+    padding: var(--spacing-lg);
+    text-align: left;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -97,7 +136,7 @@
 
 .login-right {
     width: 60%;
-    background-color: var(--color-white);
+    background: linear-gradient(135deg, rgba(63, 175, 130, 0.03) 0%, rgba(17, 33, 54, 0.02) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,30 +179,33 @@
 
 .login-form-label {
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary-dark);
+    display: block;
+    margin-bottom: var(--spacing-xs);
 }
 
 .login-form-input {
-    padding: var(--spacing-md);
     border: var(--border-width-2) solid var(--color-gray-200);
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
+    background-color: var(--color-white);
+    color: var(--color-primary-dark);
     font-size: var(--font-size-base);
-    color: var(--color-primary);
+    font-family: var(--font-family-base);
+    outline: none;
+    padding: var(--spacing-md);
     transition: var(--transition-all-fast);
     width: 100%;
 }
 
 .login-form-input:focus {
     outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(63, 175, 130, 0.1);
+    border: var(--border-width-2) solid var(--color-accent);
 }
 
 .login-form-input::placeholder {
-    color: var(--color-gray-400);
+    color: var(--color-gray-700);
+    opacity: 0.5;
 }
 
 .login-pwd-field {
@@ -173,39 +215,48 @@
 
 .login-pwd-toggle {
     position: absolute;
-    right: var(--spacing-md);
+    right: var(--spacing-sm);
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
     border: none;
-    color: var(--color-gray-400);
+    color: var(--color-secondary-dark);
     cursor: pointer;
     padding: var(--spacing-xs);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: var(--transition-all-fast);
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .login-pwd-toggle:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-light);
+}
+
+.login-pwd-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    LINKS E BOTÕES
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.login-forgot-link {
-    align-self: flex-end;
+.login-link {
     background: none;
     border: none;
     color: var(--color-accent);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
     cursor: pointer;
-    transition: var(--transition-all-fast);
+    font-weight: var(--font-weight-medium);
     padding: 0;
-    margin-top: calc(var(--spacing-xs) * -1);
+    transition: var(--transition-all-fast);
+}
+
+.login-forgot-link {
+    align-self: flex-end;
+    font-size: var(--font-size-sm);
 }
 
 .login-forgot-link:hover {
@@ -229,18 +280,9 @@
 
 .login-submit-btn:hover:not(:disabled) {
     background-color: var(--color-accent-dark);
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(63, 175, 130, 0.3);
 }
 
-.login-submit-btn:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-.login-submit-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SEÇÃO DE CADASTRO
@@ -260,13 +302,7 @@
 }
 
 .login-register-link {
-    background: none;
-    border: none;
-    color: var(--color-accent);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: var(--transition-all-fast);
-    padding: 0;
+    font-size: var(--font-size-base);
 }
 
 .login-register-link:hover {
@@ -291,14 +327,15 @@
     .login-left {
         min-height: 30vh;
         padding: var(--spacing-2xl);
+        gap: var(--spacing-2xl);
     }
 
     .login-logo-title {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
 
-    .login-logo-subtitle {
-        font-size: var(--font-size-base);
+    .login-info-section {
+        max-width: 100%;
     }
 
     .login-right {

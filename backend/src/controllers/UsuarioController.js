@@ -2,6 +2,7 @@ const { Prisma } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const BaseController = require("./BaseController");
 const repository = require("../repositories/UsuarioRepository");
+const grupoUsuarioRepository = require("../repositories/GrupoUsuarioRepository");
 const logger = require("../config/logger");
 const HttpStatus = require("../utils/httpStatus");
 
@@ -19,7 +20,7 @@ class UsuarioController extends BaseController {
      */
     async create(req, res, next) {
         try {
-            const {
+            let {
                 username,
                 nome,
                 sobrenome,
@@ -31,6 +32,27 @@ class UsuarioController extends BaseController {
                 grupoUsuarioId,
                 dataNascimento
             } = req.body;
+
+            if (!grupoUsuarioId) {
+                const descricoesPreferenciais = ["Gratuito", "Usuário", "Usuario", "Básico", "Basico"];
+
+                for (const descricao of descricoesPreferenciais) {
+                    const grupoPadrao = await grupoUsuarioRepository.findUniqueByDescricao(descricao);
+
+                    if (grupoPadrao?.id) {
+                        grupoUsuarioId = grupoPadrao.id;
+                        req.body.grupoUsuarioId = String(grupoPadrao.id);
+                        break;
+                    }
+                }
+
+                if (!grupoUsuarioId) {
+                    logger.warn("Grupo de usuário padrão não encontrado", {
+                        route: req.originalUrl,
+                        descricoesPreferenciais,
+                    });
+                }
+            }
 
             // Validação de campos obrigatórios
             const missingFields = this.requiredFields.filter((field) => !req.body[field]);
@@ -80,7 +102,7 @@ class UsuarioController extends BaseController {
                 generoUsuario,
                 cidadeId: parseInt(cidadeId),
                 situacaoUsuario,
-                grupoUsuarioId: parseInt(grupoUsuarioId),
+                grupoUsuarioId: parseInt(grupoUsuarioId, 10),
                 dataNascimento: dataNascimento ? new Date(dataNascimento) : null
             });
 
@@ -457,6 +479,75 @@ class UsuarioController extends BaseController {
             next(error);
         }
     }
+
+    /**
+     * Verifica disponibilidade de username e email sem exigir autenticação
+     */
+    async checkAvailability(req, res, next) {
+        try {
+            const { username, email } = req.query;
+
+            if (!username && !email) {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    error: "Informe username ou email para verificação",
+                });
+            }
+
+            const resultado = {};
+
+            if (username !== undefined) {
+                const usernameNormalizado = String(username).trim();
+
+                if (usernameNormalizado.length === 0) {
+                    resultado.username = {
+                        available: false,
+                        reason: "Nome de usuário é obrigatório",
+                    };
+                } else if (usernameNormalizado.length < 3) {
+                    resultado.username = {
+                        available: false,
+                        reason: "Nome de usuário deve ter pelo menos 3 caracteres",
+                    };
+                } else {
+                    const existente = await this.repository.findByUsername(usernameNormalizado);
+                    resultado.username = {
+                        available: !existente,
+                        reason: existente ? "Nome de usuário já cadastrado" : undefined,
+                    };
+                }
+            }
+
+            if (email !== undefined) {
+                const emailNormalizado = String(email).trim().toLowerCase();
+
+                if (emailNormalizado.length === 0) {
+                    resultado.email = {
+                        available: false,
+                        reason: "E-mail é obrigatório",
+                    };
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    if (!emailRegex.test(emailNormalizado)) {
+                        resultado.email = {
+                            available: false,
+                            reason: "Formato de e-mail inválido",
+                        };
+                    } else {
+                        const existente = await this.repository.findByEmail(emailNormalizado);
+                        resultado.email = {
+                            available: !existente,
+                            reason: existente ? "E-mail já cadastrado" : undefined,
+                        };
+                    }
+                }
+            }
+
+            return res.json(resultado);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 const controller = new UsuarioController();
@@ -469,5 +560,6 @@ module.exports = {
     deleteUsuario: controller.delete.bind(controller),
     findByUsername: controller.findByUsername.bind(controller),
     findByNome: controller.findByNome.bind(controller),
-    findByEmail: controller.findByEmail.bind(controller)
+    findByEmail: controller.findByEmail.bind(controller),
+    checkAvailability: controller.checkAvailability.bind(controller)
 };

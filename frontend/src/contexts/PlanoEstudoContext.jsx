@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData.js';
+import usePlanosEstudo from '../hooks/usePlanosEstudo.js';
 import { useAuth } from './AuthContext';
 import PropTypes from 'prop-types';
 
@@ -17,9 +17,10 @@ export const usePlanoEstudoContext = () => {
 export const PlanoEstudoProvider = ({ children }) => {
     const { usuario } = useAuth();
     const location = useLocation();
-    const { loading: loadingPlanos, planosEstudo } = usePlanoEstudoData(usuario?.id);
+    const { planos: planosEstudo, loading: loadingPlanos, reload: recarregar } = usePlanosEstudo(usuario?.id);
 
     const [planoSelecionado, setPlanoSelecionado] = useState(null);
+    const [plano, setPlano] = useState(null);
 
     // Inicializa plano selecionado quando planos carregarem
     useEffect(() => {
@@ -30,14 +31,29 @@ export const PlanoEstudoProvider = ({ children }) => {
                 ? planosEstudo.find(p => p.id === planoIdFromNav)?.id || planosEstudo[0].id
                 : planosEstudo[0].id;
             setPlanoSelecionado(planoInicial);
+        } else {
+            setPlanoSelecionado(null);
+            setPlano(null);
         }
     }, [planosEstudo, location.state]);
+
+    // Atualiza objeto plano completo quando planoSelecionado mudar
+    useEffect(() => {
+        if (planoSelecionado && planosEstudo) {
+            const planoEncontrado = planosEstudo.find(p => p.id === planoSelecionado);
+            setPlano(planoEncontrado || null);
+        } else {
+            setPlano(null);
+        }
+    }, [planoSelecionado, planosEstudo]);
 
     const value = {
         planoSelecionado,
         setPlanoSelecionado,
+        plano,
         planosEstudo,
-        loadingPlanos
+        loadingPlanos,
+        recarregarPlanos: recarregar
     };
 
     return (

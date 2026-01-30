@@ -16,6 +16,6 @@ export const GeneroUsuarioLabels = {
 };
 
 export const generoUsuarioOptions = Object.entries(GeneroUsuarioLabels).map(([value, label]) => ({
-    value,
-    label,
+    id: value,
+    descricao: label,
 }));

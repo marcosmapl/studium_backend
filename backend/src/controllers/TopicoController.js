@@ -206,6 +206,39 @@ class TopicoController extends BaseController {
         }
     }
 
+    /**
+     * Busca todos os tópicos de um plano de estudo
+     */
+    async findManyByPlanoEstudoId(req, res, next) {
+        try {
+            const { planoEstudoId } = req.params;
+
+            logger.info(`Buscando ${this.entityNamePlural} do plano de estudo`, {
+                planoEstudoId: parseInt(planoEstudoId),
+                route: req.originalUrl,
+            });
+
+            const topicos = await this.repository.findManyByPlanoEstudoId(planoEstudoId);
+
+            // Retorna array vazio se não houver tópicos (não é erro)
+            if (!topicos || topicos.length === 0) {
+                logger.info(`Nenhum ${this.entityName} encontrado para este plano de estudo`, {
+                    planoEstudoId: parseInt(planoEstudoId),
+                    route: req.originalUrl,
+                });
+            }
+
+            return res.json(topicos || []);
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.entityNamePlural} por plano de estudo`, {
+                error: error.message,
+                stack: error.stack,
+            });
+
+            next(error);
+        }
+    }
+
 
 }
 
@@ -218,6 +251,7 @@ module.exports = {
     findUniqueByTitulo: controller.findUniqueByTitulo.bind(controller),
     findManyByTitulo: controller.findManyByTitulo.bind(controller),
     findManyByDisciplinaId: controller.findManyByDisciplinaId.bind(controller),
+    findManyByPlanoEstudoId: controller.findManyByPlanoEstudoId.bind(controller),
     update: controller.update.bind(controller),
     delete: controller.delete.bind(controller)
 };

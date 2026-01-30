@@ -64,6 +64,7 @@ export const UnidadeFederativaLabels = {
 };
 
 export const unidadesFederativasOptions = Object.entries(UnidadeFederativaLabels).map(([sigla, nome]) => ({
-    value: sigla,
-    label: `${sigla} - ${nome}`,
+    id: sigla,
+    sigla: sigla,
+    descricao: nome,
 }));

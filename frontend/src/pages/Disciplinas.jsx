@@ -6,7 +6,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import TopicosModal from '../components/TopicosModal';
 import { usePlanoEstudoContext } from '../contexts/PlanoEstudoContext';
 import { useAuth } from '../contexts/AuthContext';
-import { getDisciplinasByPlanoId, createDisciplina, updateDisciplina, deleteDisciplina } from '../services/api';
+import { disciplinaService } from '../services/api';
 import { formatDateToLocaleString, calculateTotalHours, calculatePerformance, calculateTopicCoverage } from '../utils/utils';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -56,8 +56,8 @@ const Disciplinas = () => {
 
             setLoadingDisciplinas(true);
             try {
-                const response = await getDisciplinasByPlanoId(planoSelecionado);
-                setDisciplinas(response.data || []);
+                const disciplinas = await disciplinaService.getByPlanoId(planoSelecionado);
+                setDisciplinas(disciplinas || []);
             } catch (error) {
                 if (error.response?.status !== 404) {
                     toast.error('Erro ao carregar disciplinas');
@@ -90,7 +90,7 @@ const Disciplinas = () => {
         try {
             if (disciplinaParaEditar) {
                 // Editar disciplina existente
-                await updateDisciplina(disciplinaData.id, disciplinaData);
+                await disciplinaService.update(disciplinaData.id, disciplinaData);
                 setDisciplinas(disciplinas.map(d => d.id === disciplinaData.id ? { ...d, ...disciplinaData } : d));
                 toast.success('Disciplina atualizada com sucesso!');
             } else {
@@ -99,8 +99,8 @@ const Disciplinas = () => {
                     ...disciplinaData,
                     planoId: planoSelecionado
                 };
-                const response = await createDisciplina(novaDisciplinaData);
-                setDisciplinas([...disciplinas, response.data]);
+                const novaDisciplina = await disciplinaService.create(novaDisciplinaData);
+                setDisciplinas([...disciplinas, novaDisciplina]);
                 toast.success('Disciplina criada com sucesso!');
             }
             handleCloseModal();
@@ -117,7 +117,7 @@ const Disciplinas = () => {
     const handleConfirmExclusao = async () => {
         if (disciplinaParaExcluir) {
             try {
-                await deleteDisciplina(disciplinaParaExcluir.id);
+                await disciplinaService.delete(disciplinaParaExcluir.id);
                 setDisciplinas(disciplinas.filter(d => d.id !== disciplinaParaExcluir.id));
                 toast.success('Disciplina excluída com sucesso!');
             } catch (error) {

@@ -69,6 +69,40 @@ class PrismaTopicoRepository extends BaseRepository {
         return await this.findMany(query);
     }
 
+    /**
+     * Busca todos os tópicos de um plano de estudo
+     * @param {number} planoEstudoId - ID do plano de estudo
+     * @returns {Promise<Array>} Lista de tópicos do plano de estudo
+     */
+    async findManyByPlanoEstudoId(planoEstudoId) {
+        try {
+            const topicos = await this.model.findMany({
+                where: {
+                    disciplina: {
+                        is: {
+                            planoId: parseInt(planoEstudoId)
+                        }
+                    }
+                },
+                include: {
+                    disciplina: true
+                },
+                orderBy: {
+                    ordem: this.orderDirection
+                }
+            });
+
+            return topicos;
+        } catch (error) {
+            logger.error(`Erro ao buscar ${this.modelName} por plano de estudo`, {
+                error: error.message,
+                planoEstudoId,
+                file: this.repositoryName,
+            });
+            throw error;
+        }
+    }
+
 }
 
 module.exports = new PrismaTopicoRepository();

@@ -1,20 +1,24 @@
 /* ================================================================
    CADASTRO - PÁGINA DE REGISTRO
    ================================================================
-   Estilos da tela de cadastro usando variáveis globais do index.css
+   Ajustes específicos para complementar AuthShared.css
    ================================================================ */
-   
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    BUTTONS
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .btn-cadastrar {
-    align-self: center;
+    align-self: flex-start;
     font-size: var(--font-size-md);
-    height: var(--spacing-2xl);
-    margin-top: var(--spacing-md);
-    width: 80%;
+    min-width: 220px;
+    transition: all 0.3s ease;
 }
+
+.btn-cadastrar:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FOOTER DO CADASTRO
@@ -22,7 +26,9 @@
 
 .cadastro-footer {
     margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
     text-align: center;
+    border-top: 1px solid var(--color-border-light);
 }
 
 .cadastro-footer-text {
@@ -31,13 +37,61 @@
 }
 
 .cadastro-link {
-    color: var(--btn-primary-bg);
+    color: var(--color-accent);
     font-weight: var(--font-weight-medium);
     text-decoration: none;
     transition: var(--transition-all-fast);
+    position: relative;
 }
 
 .cadastro-link:hover {
-    color: var(--btn-primary-bg-hover);
-    text-decoration: underline;
+    color: var(--color-accent-dark);
+}
+
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MELHORIAS VISUAIS NOS INPUTS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+
+.studium-form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xs);
+}
+
+.studium-form-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary-light);
+    margin-bottom: var(--spacing-xs);
+    text-align: left;
+}
+
+.error-message {
+    display: block;
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.field-feedback {
+    display: block;
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.field-feedback.checking {
+    color: var(--color-gray-500);
+}
+
+.field-feedback.success {
+    color: var(--color-success);
+}
+
+.field-helper {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary-light);
+    margin-bottom: var(--spacing-xs);
 }

@@ -8,7 +8,7 @@ import BoardViewMensal from '../components/BoardViewMensal';
 import { usePlanoEstudoContext } from '../contexts/PlanoEstudoContext';
 import { useAuth } from '../contexts/AuthContext';
 import { diasSemanaOptions, formatarPeriodoSemana, formatarPeriodoMensal, getDiasDoMes } from '../utils/utils';
-import api from '../services/api';
+import { planoEstudoService, disciplinaService, blocoEstudoService, sessaoEstudoService } from '../services/api';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -59,9 +59,9 @@ const Planejamento = () => {
 
             setLoadingDisciplinas(true);
             try {
-                const response = await api.get(`/disciplina/plano/${planoSelecionado}`);
+                const disciplinas = await disciplinaService.getByPlanoId(planoSelecionado);
                 if (isMounted) {
-                    setDisciplinasPlano(response.data || []);
+                    setDisciplinasPlano(disciplinas || []);
                 }
             } catch (error) {
                 if (isMounted) {
@@ -98,9 +98,9 @@ const Planejamento = () => {
 
             try {
 
-                const response = await api.get(`/blocoEstudo/plano/${planoSelecionado}`);
+                const blocos = await blocoEstudoService.getByPlanoId(planoSelecionado);
                 if (isMounted) {
-                    setBlocosEstudo(response.data || []);
+                    setBlocosEstudo(blocos || []);
                 }
             } catch (error) {
                 if (isMounted) {
@@ -132,10 +132,10 @@ const Planejamento = () => {
             try {
                 // Busca sessões de todos os blocos em paralelo
                 const promises = blocosEstudo.map(bloco =>
-                    api.get(`/sessaoEstudo/blocoEstudo/${bloco.id}`)
-                        .then(response => ({
+                    sessaoEstudoService.getByBlocoId(bloco.id)
+                        .then(sessoes => ({
                             blocoId: bloco.id,
-                            sessoes: response.data || []
+                            sessoes: sessoes || []
                         }))
                         .catch(() => ({ blocoId: bloco.id, sessoes: [] }))
                 );
@@ -234,12 +234,12 @@ const Planejamento = () => {
             }
 
             // 1. Atualizar PlanoEstudo com dias ativos e horas
-            await api.put(`/planoEstudo/${planoSelecionado}`, dadosPlano);
+            await planoEstudoService.update(planoSelecionado, dadosPlano);
 
             // 2. Atualizar horasSemanais das disciplinas
             await Promise.all(
                 disciplinasAtualizadas.map(disciplina =>
-                    api.put(`/disciplina/${disciplina.id}`, {
+                    disciplinaService.update(disciplina.id, {
                         horasSemanais: disciplina.horasSemanais,
                         selecionada: disciplina.selecionada
                     })
@@ -249,14 +249,14 @@ const Planejamento = () => {
             // 3. Remover blocos antigos do plano (em paralelo)
             await Promise.allSettled(
                 blocosEstudo.map(blocoAntigo =>
-                    api.delete(`/blocoEstudo/${blocoAntigo.id}`)
+                    blocoEstudoService.delete(blocoAntigo.id)
                 )
             );
 
             // 4. Criar novos blocos
             await Promise.all(
                 blocos.map(bloco =>
-                    api.post('/blocoEstudo', {
+                    blocoEstudoService.create({
                         diaSemana: bloco.diaSemana,
                         ordem: bloco.ordem,
                         totalHorasPlanejadas: bloco.totalHorasPlanejadas,
@@ -267,13 +267,13 @@ const Planejamento = () => {
             );
 
             // 5. Recarregar dados
-            const [blocosResponse, disciplinasResponse] = await Promise.all([
-                api.get(`/blocoEstudo/plano/${planoSelecionado}`),
-                api.get(`/disciplina/plano/${planoSelecionado}`)
+            const [blocosAtualizados, disciplinas] = await Promise.all([
+                blocoEstudoService.getByPlanoId(planoSelecionado),
+                disciplinaService.getByPlanoId(planoSelecionado)
             ]);
 
-            setBlocosEstudo(blocosResponse.data || []);
-            setDisciplinasPlano(disciplinasResponse.data || []);
+            setBlocosEstudo(blocosAtualizados || []);
+            setDisciplinasPlano(disciplinas || []);
 
             toast.success('Planejamento salvo com sucesso!');
             setIsFormOpen(false);
@@ -333,8 +333,8 @@ const Planejamento = () => {
     const handleSessaoSuccess = useCallback(async () => {
         // Recarregar blocos de estudo
         try {
-            const response = await api.get(`/blocoEstudo/plano/${planoSelecionado}`);
-            setBlocosEstudo(response.data || []);
+            const blocos = await blocoEstudoService.getByPlanoId(planoSelecionado);
+            setBlocosEstudo(blocos || []);
         } catch (error) {
             toast.error('Erro ao salvar planejamento: ' + (error.response?.data?.message || error.message));
         }

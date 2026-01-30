@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { getGeneros, getUnidadesFederativas, getGruposUsuario, getSituacoesUsuario } from '../services/api';
+import {
+    generoUsuarioOptions,
+    unidadesFederativasOptions,
+    SituacaoUsuario
+} from '../constants';
+import { grupoUsuarioService } from '../services/api';
 
 /**
  * Hook customizado para carregar dados iniciais do formulário de cadastro
@@ -9,70 +14,52 @@ import { getGeneros, getUnidadesFederativas, getGruposUsuario, getSituacoesUsuar
  *   - loading: boolean indicando se está carregando
  *   - generos: array de gêneros disponíveis
  *   - unidadesFederativas: array de UFs disponíveis
- *   - grupoBasicoId: ID do grupo "Básico" (null se não encontrado)
- *   - situacaoAtivoId: ID da situação "Ativo" (null se não encontrado)
+ *   - grupoGratuitoId: ID do grupo de usuário "Gratuito"
+ *   - situacaoAtivoId: valor enum da situação "Ativo"
  */
 export const useCadastroData = () => {
     const [loading, setLoading] = useState(true);
     const [generos, setGeneros] = useState([]);
-    const [unidadesFederativas, setUnidadesFederativas] = useState([]);
-    const [grupoBasicoId, setGrupoBasicoId] = useState(null);
+    const [unidadesFederativasData, setUnidadesFederativasData] = useState([]);
     const [situacaoAtivoId, setSituacaoAtivoId] = useState(null);
+    const [grupoGratuitoId, setGrupoGratuitoId] = useState(null);
 
     useEffect(() => {
         const carregarDadosIniciais = async () => {
             setLoading(true);
+
             try {
-                // Executa todas as requisições em paralelo
-                const [generosResponse, unidadesResponse, gruposResponse, situacoesResponse] = await Promise.all([
-                    getGeneros(),
-                    getUnidadesFederativas(),
-                    getGruposUsuario(),
-                    getSituacoesUsuario()
-                ]);
+                // Usa constantes existentes em vez de buscar do backend
+                setGeneros(generoUsuarioOptions);
+                setUnidadesFederativasData(unidadesFederativasOptions);
 
-                // Log para debug (remover em produção)
-                console.log('Gêneros:', generosResponse.data);
-                console.log('Unidades Federativas:', unidadesResponse.data);
-                console.log('Grupos:', gruposResponse.data);
-                console.log('Situações:', situacoesResponse.data);
+                // Define situação "Ativo"
+                setSituacaoAtivoId(SituacaoUsuario.ATIVO);
 
-                // Atualiza estados com os dados recebidos
-                if (generosResponse.data) {
-                    setGeneros(generosResponse.data);
-                }
+                // Busca grupo padrão "Gratuito" no backend para garantir ID correto
+                const normalizar = (valor) =>
+                    valor.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-                if (unidadesResponse.data) {
-                    setUnidadesFederativas(unidadesResponse.data);
-                }
-
-                // Buscar automaticamente o grupo "Básico"
-                if (gruposResponse.data) {
-                    const grupoBasico = gruposResponse.data.find(g => g.descricao === 'Básico');
-                    if (grupoBasico) {
-                        setGrupoBasicoId(grupoBasico.id);
-                        console.log('Grupo Básico ID:', grupoBasico.id);
-                    } else {
-                        console.error('Grupo "Básico" não encontrado');
-                        toast.error('Erro: Grupo de usuário "Básico" não configurado');
+                const grupos = await grupoUsuarioService.listAll();
+                const nomesPadrao = ['gratuito', 'usuario', 'basico'];
+                const grupoPadrao = grupos?.find((grupo) => {
+                    if (typeof grupo.descricao !== 'string') {
+                        return false;
                     }
-                }
 
-                // Buscar automaticamente a situação "Ativo"
-                if (situacoesResponse.data) {
-                    const situacaoAtivo = situacoesResponse.data.find(s => s.descricao === 'Ativo');
-                    if (situacaoAtivo) {
-                        setSituacaoAtivoId(situacaoAtivo.id);
-                        console.log('Situação Ativo ID:', situacaoAtivo.id);
-                    } else {
-                        console.error('Situação "Ativo" não encontrada');
-                        toast.error('Erro: Situação de usuário "Ativo" não configurada');
-                    }
+                    const descricaoNormalizada = normalizar(grupo.descricao.trim());
+                    return nomesPadrao.includes(descricaoNormalizada);
+                });
+
+                if (grupoPadrao?.id) {
+                    setGrupoGratuitoId(grupoPadrao.id);
+                } else {
+                    toast.error('Grupo de usuário padrão não encontrado. Contate o administrador.');
+                    setGrupoGratuitoId(null);
                 }
             } catch (error) {
-                console.error('Erro ao carregar dados iniciais:', error);
-                console.error('Detalhes do erro:', error.response);
                 toast.error('Erro ao carregar dados do formulário');
+                setGrupoGratuitoId(null);
             } finally {
                 setLoading(false);
             }
@@ -84,8 +71,8 @@ export const useCadastroData = () => {
     return {
         loading,
         generos,
-        unidadesFederativas,
-        grupoBasicoId,
+        unidadesFederativas: unidadesFederativasData,
+        grupoGratuitoId,
         situacaoAtivoId
     };
 };

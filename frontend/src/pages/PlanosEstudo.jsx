@@ -4,10 +4,11 @@ import Layout from '../components/Layout/Layout';
 import PlanoEstudoForm from '../components/PlanoEstudoForm';
 import PlanoEstudoCard from '../components/PlanoEstudoCard';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { usePlanoEstudoData } from '../hooks/usePlanoEstudoData';
+import usePlanosEstudo from '../hooks/usePlanosEstudo';
+import { usePlanoEstudoContext } from '../contexts/PlanoEstudoContext';
 import { useDebounce } from '../hooks/useDebounce';
 import { useAuth } from '../contexts/AuthContext';
-import { createPlanoEstudo, updatePlanoEstudo, deletePlanoEstudo } from '../services/api';
+import { planoEstudoService } from '../services/api';
 import { toast } from 'react-toastify';
 import { formatDateToLocaleString } from '../utils/utils';
 import { MESSAGES, SEARCH_CONFIG, ARIA_LABELS } from '../constants/planosEstudo.constants';
@@ -39,7 +40,10 @@ const PlanosEstudo = () => {
     const navigate = useNavigate();
 
     /** Hook customizado que carrega planos de estudo do backend */
-    const { loading: loadingData, planosEstudo } = usePlanoEstudoData(usuario?.id);
+    const { planos: planosEstudo, loading: loadingData, create, update, remove } = usePlanosEstudo(usuario?.id);
+
+    /** Contexto global para recarregar planos na navbar */
+    const { recarregarPlanos } = usePlanoEstudoContext();
 
     // ==================== ESTADO LOCAL ====================
 
@@ -55,26 +59,11 @@ const PlanosEstudo = () => {
     /** Armazena o plano marcado para exclusão */
     const [planoParaExcluir, setPlanoParaExcluir] = useState(null);
 
-    /** Lista local de planos (cópia manipulável dos dados do hook) */
-    const [planos, setPlanos] = useState([]);
-
     /** Termo de busca para filtrar planos */
     const [searchTerm, setSearchTerm] = useState('');
 
     /** Termo de busca com debounce aplicado (reduz re-renders durante digitação) */
     const debouncedSearchTerm = useDebounce(searchTerm, SEARCH_CONFIG.DEBOUNCE_DELAY);
-
-    // ==================== EFEITOS ====================
-
-    /**
-     * Sincroniza estado local com dados do hook quando estes mudam
-     * Mantém uma cópia local para permitir atualizações otimistas na UI
-     */
-    useEffect(() => {
-        if (planosEstudo && planosEstudo.length > 0) {
-            setPlanos(planosEstudo);
-        }
-    }, [planosEstudo]);
 
     // ==================== HANDLERS ====================
 
@@ -113,10 +102,7 @@ const PlanosEstudo = () => {
         try {
             if (planoParaEditar) {
                 // Modo edição: atualiza plano existente
-                await updatePlanoEstudo(planoData.id, planoData);
-                setPlanos(prevPlanos =>
-                    prevPlanos.map(p => p.id === planoData.id ? { ...p, ...planoData } : p)
-                );
+                await update(planoData.id, planoData);
                 toast.success(MESSAGES.SUCCESS.UPDATE);
             } else {
                 // Modo criação: adiciona novo plano
@@ -124,14 +110,15 @@ const PlanosEstudo = () => {
                     ...planoData,
                     usuarioId: usuario.id,
                 };
-                const response = await createPlanoEstudo(novoPlanoData);
-                setPlanos(prevPlanos => [...prevPlanos, response.data]);
+                await create(novoPlanoData);
                 toast.success(MESSAGES.SUCCESS.CREATE);
             }
+            // Recarrega planos no contexto global
+            await recarregarPlanos();
         } catch (error) {
             toast.error(error.response?.data?.error || MESSAGES.ERROR.SAVE);
         }
-    }, [planoParaEditar, usuario?.id]);
+    }, [planoParaEditar, usuario?.id, recarregarPlanos, create, update]);
 
     /**
      * Prepara exclusão de plano (abre diálogo de confirmação)
@@ -149,16 +136,17 @@ const PlanosEstudo = () => {
     const handleConfirmExclusao = useCallback(async () => {
         if (planoParaExcluir) {
             try {
-                await deletePlanoEstudo(planoParaExcluir.id);
-                setPlanos(prevPlanos => prevPlanos.filter(p => p.id !== planoParaExcluir.id));
+                await remove(planoParaExcluir.id);
                 toast.success(MESSAGES.SUCCESS.DELETE);
+                // Recarrega planos no contexto global
+                await recarregarPlanos();
             } catch (error) {
                 toast.error(error.response?.data?.error || MESSAGES.ERROR.DELETE);
             }
         }
         setIsConfirmOpen(false);
         setPlanoParaExcluir(null);
-    }, [planoParaExcluir]);
+    }, [planoParaExcluir, recarregarPlanos, remove]);
 
     /**
      * Cancela exclusão e fecha diálogo
@@ -185,11 +173,11 @@ const PlanosEstudo = () => {
      */
     const filteredPlanos = useMemo(() => {
         // Early return se não houver termo de busca
-        if (!debouncedSearchTerm) return planos;
+        if (!debouncedSearchTerm) return planosEstudo;
 
         const searchLower = debouncedSearchTerm.toLowerCase();
 
-        return planos.filter((plano) => {
+        return planosEstudo.filter((plano) => {
             // Cache da formatação de data
             const dataProvaFormatted = formatDateToLocaleString(plano.dataProva).toLowerCase();
 
@@ -201,7 +189,7 @@ const PlanosEstudo = () => {
                 dataProvaFormatted.includes(searchLower)
             );
         });
-    }, [planos, debouncedSearchTerm]);
+    }, [planosEstudo, debouncedSearchTerm]);
 
     return (
         <Layout>
@@ -235,7 +223,7 @@ const PlanosEstudo = () => {
                     <div className="loading-message" role="status" aria-live="polite">
                         {MESSAGES.LOADING}
                     </div>
-                ) : planos.length === 0 ? (
+                ) : planosEstudo.length === 0 ? (
                     <div className="planos-vazio" role="status">
                         <p>{MESSAGES.EMPTY.NO_PLANS}</p>
                     </div>

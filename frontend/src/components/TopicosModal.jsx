@@ -14,7 +14,7 @@ import {
     faListCheck,
     faTrash
 } from '@fortawesome/free-solid-svg-icons';
-import { getTopicosByDisciplinaId, createTopico, updateTopico, deleteTopico } from '../services/api';
+import { topicoService } from '../services/api';
 import { formatDateToLocaleString, getMostRecentEstudoDate, getNextRevisaoDate, calculateTotalHours, calculatePerformance } from '../utils/utils';
 import { toast } from 'react-toastify';
 import ConfirmDialog from './ConfirmDialog';
@@ -45,8 +45,8 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
 
         setLoading(true);
         try {
-            const response = await getTopicosByDisciplinaId(disciplina.id);
-            setTopicos(response.data || []);
+            const topicos = await topicoService.getByDisciplinaId(disciplina.id);
+            setTopicos(topicos || []);
         } catch (error) {
             setTopicos([]);
             toast.error('Erro ao carregar tópicos');
@@ -81,10 +81,10 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
                 disciplinaId: disciplina.id
             };
 
-            const response = await createTopico(novoTopico);
+            const topicoCreated = await topicoService.create(novoTopico);
 
             // Adiciona o novo tópico à lista
-            setTopicos([...topicos, response.data]);
+            setTopicos([...topicos, topicoCreated]);
             setNovoTopicoTitulo('');
             toast.success('Tópico criado com sucesso!');
             //TODO: atualizar a lista de disciplina para refletir o novo tópico 
@@ -121,11 +121,11 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
                 ...topico,
                 ordem: index + 1
             }));
-            
+
             // Atualiza as ordens no backend
             await Promise.all(
                 topicosAtualizados.map(topico =>
-                    updateTopico(topico.id, { ordem: topico.ordem })
+                    topicoService.update(topico.id, { ordem: topico.ordem })
                 )
             );
             toast.success('Ordem dos tópicos atualizada!');
@@ -188,7 +188,7 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
         }
 
         try {
-            await updateTopico(topicoId, { titulo: tituloEditado.trim() });
+            await topicoService.update(topicoId, { titulo: tituloEditado.trim() });
 
             setTopicos(topicos.map(t =>
                 t.id === topicoId ? { ...t, titulo: tituloEditado.trim() } : t
@@ -212,7 +212,7 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
         if (!topicoParaExcluir) return;
 
         try {
-            await deleteTopico(topicoParaExcluir.id);
+            await topicoService.delete(topicoParaExcluir.id);
             const updatedTopicos = topicos.filter(t => t.id !== topicoParaExcluir.id);
             // Atualiza as ordens
             atualizarOrdemTopicos(updatedTopicos);
@@ -233,7 +233,7 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
     const handleToggleEdital = async (topicoId, valorAtual) => {
         try {
             const novoValor = !valorAtual;
-            await updateTopico(topicoId, { edital: novoValor });
+            await topicoService.update(topicoId, { edital: novoValor });
 
             setTopicos(topicos.map(t =>
                 t.id === topicoId ? { ...t, edital: novoValor } : t
@@ -438,9 +438,9 @@ const TopicosModal = ({ isOpen, onClose, disciplina }) => {
                                                 <div className="topico-stat-item">
                                                     <div className="topico-stat-content">
                                                         <span className={`topico-stat-valor ${topico.edital ? '' : 'disabled'} topico-stat-valor-small`}>
-                                                            <input 
-                                                                type="checkbox" 
-                                                                name={`checkbox-${topico.id}`} 
+                                                            <input
+                                                                type="checkbox"
+                                                                name={`checkbox-${topico.id}`}
                                                                 checked={topico.edital || false}
                                                                 onChange={() => handleToggleEdital(topico.id, topico.edital)}
                                                             />
